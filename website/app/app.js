@@ -13,6 +13,10 @@
                 controller: 'ProjectController',
                 templateUrl: 'views/project_details.html'
             })
+            .when('/submit', {
+                controller: 'ProjectSubmisionController',
+                templateUrl: 'views/submit_project.html'
+            })
             .otherwise( { redirectTo: '/' } );
     });
     

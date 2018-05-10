@@ -40,21 +40,20 @@
     margin: 50px 0px;
 }
 
-.contribute{
+.contribute, .project-creation{
     padding: 10px;
     position: relative;
 }
 
-.contribute input{
-    margin: 10px 0px;
+.contribute input,
+.project-creation input,
+.project-creation textarea{
     border: solid 1px  #007BFF;
-    width: 92%;
     color:  #007BFF;
 }
 
-.contribute input[type="text"],
-.contribute input[type="email"]{
-    width: 98%;
+.contribute input{
+    margin: 10px 0px;
 }
 
 #contribute-send{
@@ -71,15 +70,35 @@
     color: white;
     border: solid 1px  #007BFF;
     cursor: pointer;
-
 }
-
 
 
 #currency{
     border: solid 1px #007BFF;
     padding: 4px;
-    margin-left: -4px;
+    margin-left: -45px;
     color: #007BFF;
     font-weight: lighter;
+}
+
+.project-creation h1{
+    margin: 50px 0px;
+}
+
+.contribute input,
+.project-creation input,
+.project-creation textarea{
+    width: 98%;
+}
+
+.project-creation textarea{
+    height: 300px;
+}
+
+.project-creation input{
+    margin-bottom:  10px;
+}
+
+#publish-project{
+    height: 50px;
 }
