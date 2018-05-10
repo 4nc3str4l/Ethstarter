@@ -67,6 +67,38 @@
                 raised: '1.2',
                 start_date: '10-02-2018',
                 end_date: '10-3-2018',
+            },
+            {
+                title : 'Project 9',
+                description: lorem,
+                goal: '10',
+                raised: '1.2',
+                start_date: '10-02-2018',
+                end_date: '10-3-2018',
+            },
+            {
+                title : 'Project 10',
+                description: lorem,
+                goal: '10',
+                raised: '1.2',
+                start_date: '10-02-2018',
+                end_date: '10-3-2018',
+            },
+            {
+                title : 'Project 11',
+                description: lorem,
+                goal: '10',
+                raised: '1.2',
+                start_date: '10-02-2018',
+                end_date: '10-3-2018',
+            },
+            {
+                title : 'Project 12',
+                description: lorem,
+                goal: '10',
+                raised: '1.2',
+                start_date: '10-02-2018',
+                end_date: '10-3-2018',
             }
         ]
 
