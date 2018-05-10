@@ -15,6 +15,7 @@
             if(isInteger($routeParams.id)){
                 projectID = $routeParams.id;
                 $scope.project = DataFactory.getProjectWithID(projectID);
+
             }else{
                 $window.location.href = '/'
             }

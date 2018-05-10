@@ -1,9 +1,8 @@
+var EthStarter = null;
 (function() {
-
-    var MetaCoin = null;
-    
     var blockchainFactory = function($http, $log, appSettings){
         
+
         // Init Web3
         function initWeb3(){
             // Use the truffle provider for web3
@@ -27,19 +26,25 @@
         }
 
         function initContract(){
-            var contract = new web3.eth.contract(appSettings.contractABI);
-            MetaCoin = contract.at(appSettings.contractAddress);
+            var contract = web3.eth.contract(appSettings.contractABI);
+            EthStarter = contract.at(appSettings.contractAddress);
         }
 
         initWeb3();
         initContract();
 
+        /*
+            NOTE: Send dates
+            let date = (new Date()).getTime();
+            let birthDateInUnixTimestamp = date/1000;
+        */
+
         return{
             getAddress : function(){
                 return web3.eth.coinbase;
             },
-            getNumMetaCoins: function(){
-                MetaCoin.getBalance(web3.eth.coinbase, {from: web3.eth.coinbase});
+            getTestString: function(){
+                EthStarter.getTestString();
             }
         };
     }

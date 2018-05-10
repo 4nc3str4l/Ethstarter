@@ -56,16 +56,19 @@
     margin: 10px 0px;
 }
 
-#contribute-send{
+#contribute-send,
+#publish-project{
     color:  #007BFF;
     border: solid 1px  #007BFF;
     cursor: pointer;
     padding: 10px;
     width: 150px;
     width: 98%;
+    background: white;
 }
 
-#contribute-send:hover{
+#contribute-send:hover, 
+#publish-project:hover{
     background:  #007BFF;
     color: white;
     border: solid 1px  #007BFF;
@@ -75,8 +78,8 @@
 
 #currency{
     border: solid 1px #007BFF;
-    padding: 4px;
-    margin-left: -45px;
+    padding: 2px;
+    margin-left: -38px;
     color: #007BFF;
     font-weight: lighter;
 }
