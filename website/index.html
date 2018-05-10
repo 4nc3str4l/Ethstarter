@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html ng-app="EthStarter">
+    <head>
+        <title>EthStarter</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+        <link rel="stylesheet" type="text/css" href="libs/bootstrap_v.4.1.1/bootstrap.min.css">
+    </head>
+    <body>
+        
+        <div ng-view></div>
+
+        <!-- AngularJS  -->
+        <script type="text/javascript" src="libs/angular_v.1.6.9/angular.min.js"></script>
+        <script type="text/javascript" src="libs/angular_v.1.6.9/angular-route.min.js"></script>
+        <script type="text/javascript" src="libs/angular_v.1.6.9/angular-animate.min.js"></script>
+
+        <!-- Web3.js -->
+        <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js/dist/web3.min.js"></script>
+
+        <script type="text/javascript" src="app/app.js"></script>
+        <script type="text/javascript" src="app/values/values.js"></script>
+        
+        <!-- Services And Factories -->
+        <script type="text/javascript" src="app/factories/blockchainFactory.js"></script>
+        
+        <!--- Controllers -->
+        <script type="text/javascript" src="app/controllers/landingController.js"></script>
+        
+    </body>
+</html>
