@@ -10,16 +10,16 @@
                         <input type="text" placeholder="Project's Title" name="title" ng-model="title">
                         
                         <label for="title">Website</label>
-                        <input type="text" placeholder="Project's Wesite" name="website">
+                        <input type="text" placeholder="Project's Wesite" name="website" ng-model="website">
                         
                         <label for="title">Campaign end date</label>
-                        <input type="date" name="deadline">
+                        <input type="date" name="deadline" ng-model="endDate">
                         
                         <label for="title">Campaign's Goal</label>
                         <input type="number" min="0" id="goal-ammount" name="goal" value="1" step="0.0001" ng-model="contributionAmmount"> <span id="currency">ETH</span>
                         
                         <label for="title">Project Descritpion</label>
-                        <textarea name="project-description" name="Describe your project"></textarea>
+                        <textarea name="project-description" name="Describe your project" ng-model="description"></textarea>
 
                         <input type="submit" id="publish-project" value="Start {{title}}'s Campaign">
                     </form>

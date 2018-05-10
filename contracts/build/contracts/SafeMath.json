@@ -1,23 +1,23 @@
 {
   "contractName": "SafeMath",
   "abi": [],
-  "bytecode": "0x60606040523415600e57600080fd5b604380601b6000396000f3006060604052600080fd00a265627a7a72305820de25db1ecb7c6582b9c3e2e741e53ef4e28dd625e26addda9342c300850071466c6578706572696d656e74616cf50037",
-  "deployedBytecode": "0x6060604052600080fd00a265627a7a72305820de25db1ecb7c6582b9c3e2e741e53ef4e28dd625e26addda9342c300850071466c6578706572696d656e74616cf50037",
+  "bytecode": "0x60606040523415600e57600080fd5b604380601b6000396000f3006060604052600080fd00a265627a7a72305820c1c81c812872557d48e321167cbf797a63302f432fdb3a28d9c822ecaf7b07f06c6578706572696d656e74616cf50037",
+  "deployedBytecode": "0x6060604052600080fd00a265627a7a72305820c1c81c812872557d48e321167cbf797a63302f432fdb3a28d9c822ecaf7b07f06c6578706572696d656e74616cf50037",
   "sourceMap": "110:651:0:-;;;;;;;;;;;;;;;;;",
   "deployedSourceMap": "110:651:0:-;;;;;",
-  "source": "pragma solidity ^0.4.0;\r\n// To return structs\r\npragma experimental ABIEncoderV2;\r\n\r\nimport \"./Mortal.sol\";\r\n\r\nlibrary SafeMath {\r\n    function mul(uint256 a, uint256 b) internal pure returns (uint256) {\r\n        if (a == 0) {\r\n            return 0;\r\n        }\r\n        uint256 c = a * b;\r\n        assert(c / a == b);\r\n        return c;\r\n    }\r\n\r\n    function div(uint256 a, uint256 b) internal pure returns (uint256) {\r\n        uint256 c = a / b;\r\n        return c;\r\n    }\r\n\r\n    function sub(uint256 a, uint256 b) internal pure returns (uint256) {\r\n        assert(b <= a);\r\n        return a - b;\r\n    }\r\n\r\n    function add(uint256 a, uint256 b) internal pure returns (uint256) {\r\n        uint256 c = a + b;\r\n        assert(c >= a);\r\n        return c;\r\n    }\r\n}\r\n\r\ncontract EthStarter is mortal{\r\n    \r\n    // Campaign\r\n    struct Campaign {\r\n        // NOTE: Those will stay here\r\n        uint id;\r\n        uint256 goalAmmount;\r\n        uint256 endDate;\r\n        uint256 creationDate;\r\n\r\n        //TODO: Move to another storage system\r\n        bool isPublished;\r\n        string title;\r\n        string website;\r\n        string description;\r\n    }\r\n\r\n    uint campaignCounter = 0;\r\n\r\n    // A regular map\r\n    mapping(address => Campaign[]) userCampaigns;\r\n    Campaign[] allCampaigns;\r\n\r\n    // Create an event when someone is added\r\n    event onCampaignCreated(address _creator, uint _campaignID);\r\n\r\n    function hasCampaigns(address _address) public view returns(bool) {\r\n        return userCampaigns[_address].length > 0;\r\n    }\r\n    \r\n    function createCampaign(uint _goalAmmount, string _title, string _website, string _description, uint256 _endDate, bool _isPublished) public {\r\n        Campaign memory campaign = Campaign(campaignCounter++, _goalAmmount, _endDate, block.timestamp, _isPublished, _title, _website, _description);     \r\n        userCampaigns[msg.sender].push(campaign);\r\n        allCampaigns.push(campaign);\r\n        onCampaignCreated(msg.sender, campaign.id);\r\n    }\r\n\r\n    function getCampaigns(uint256 _startIndex, uint256 _limit) public view returns (Campaign[]){\r\n        Campaign[] memory toReturn = new Campaign[](_limit);\r\n        if(_startIndex >= allCampaigns.length)\r\n            return toReturn;\r\n        \r\n        uint256 i = _startIndex;\r\n        uint256 end = _startIndex + _limit; \r\n        while(i < end && i < allCampaigns.length)\r\n            toReturn[i - _startIndex] = allCampaigns[i++];\r\n        \r\n        return toReturn;   \r\n    }\r\n\r\n    function getTestString() public pure returns(string){\r\n        return \"Merengue Merengue\";\r\n    }\r\n\r\n    // Like that we can send ether to the contract\r\n    function() payable public{\r\n        \r\n    }\r\n\r\n       \r\n}",
+  "source": "pragma solidity ^0.4.0;\r\n// To return structs\r\npragma experimental ABIEncoderV2;\r\n\r\nimport \"./Mortal.sol\";\r\n\r\nlibrary SafeMath {\r\n    function mul(uint256 a, uint256 b) internal pure returns (uint256) {\r\n        if (a == 0) {\r\n            return 0;\r\n        }\r\n        uint256 c = a * b;\r\n        assert(c / a == b);\r\n        return c;\r\n    }\r\n\r\n    function div(uint256 a, uint256 b) internal pure returns (uint256) {\r\n        uint256 c = a / b;\r\n        return c;\r\n    }\r\n\r\n    function sub(uint256 a, uint256 b) internal pure returns (uint256) {\r\n        assert(b <= a);\r\n        return a - b;\r\n    }\r\n\r\n    function add(uint256 a, uint256 b) internal pure returns (uint256) {\r\n        uint256 c = a + b;\r\n        assert(c >= a);\r\n        return c;\r\n    }\r\n}\r\n\r\ncontract EthStarter is mortal{\r\n    \r\n    // Campaign\r\n    struct Campaign {\r\n        // NOTE: Those will stay here\r\n        uint id;\r\n        uint256 goalAmmount;\r\n        uint256 endDate;\r\n        uint256 creationDate;\r\n\r\n        //TODO: Move to another storage system\r\n        bool isPublished;\r\n        string title;\r\n        string website;\r\n        string description;\r\n    }\r\n\r\n    uint campaignCounter = 0;\r\n\r\n    // A regular map\r\n    mapping(address => Campaign[]) userCampaigns;\r\n    Campaign[] allCampaigns;\r\n\r\n    // Create an event when someone is added\r\n    event onCampaignCreated(address _creator, uint _campaignID);\r\n\r\n    function createCampaign(uint _goalAmmount, string _title, string _website, string _description, uint256 _endDate, bool _isPublished) public {\r\n        Campaign memory campaign = Campaign(campaignCounter++, _goalAmmount, _endDate, block.timestamp, _isPublished, _title, _website, _description);     \r\n        userCampaigns[msg.sender].push(campaign);\r\n        allCampaigns.push(campaign);\r\n        onCampaignCreated(msg.sender, campaign.id);\r\n    }\r\n\r\n    function getCampaigns(uint256 _startIndex, uint256 _limit) public view returns (Campaign[]){\r\n        Campaign[] memory toReturn = new Campaign[](_limit);\r\n        if(_startIndex >= allCampaigns.length)\r\n            return toReturn;\r\n        \r\n        uint256 i = _startIndex;\r\n        uint256 end = _startIndex + _limit; \r\n        while(i < end && i < allCampaigns.length)\r\n            toReturn[i - _startIndex] = allCampaigns[i++];\r\n        \r\n        return toReturn;   \r\n    }\r\n\r\n    function getTestString() public pure returns(string){\r\n        return \"Merengue Merengue\";\r\n    }\r\n\r\n    // Like that we can send ether to the contract\r\n    function() payable public{\r\n        \r\n    }       \r\n}",
   "sourcePath": "C:\\Users\\cmuri\\Desktop\\Ethstarter\\contracts\\contracts\\EthStarter.sol",
   "ast": {
     "absolutePath": "/C/Users/cmuri/Desktop/Ethstarter/contracts/contracts/EthStarter.sol",
     "exportedSymbols": {
       "EthStarter": [
-        275
+        260
       ],
       "SafeMath": [
         99
       ]
     },
-    "id": 276,
+    "id": 261,
     "nodeType": "SourceUnit",
     "nodes": [
       {
@@ -45,8 +45,8 @@
         "file": "./Mortal.sol",
         "id": 3,
         "nodeType": "ImportDirective",
-        "scope": 276,
-        "sourceUnit": 352,
+        "scope": 261,
+        "sourceUnit": 280,
         "src": "84:22:0",
         "symbolAliases": [],
         "unitAlias": ""
@@ -331,7 +331,7 @@
                       "name": "assert",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 378,
+                      "referencedDeclaration": 306,
                       "src": "297:6:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_assert_pure$_t_bool_$returns$__$",
@@ -764,7 +764,7 @@
                       "name": "assert",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 378,
+                      "referencedDeclaration": 306,
                       "src": "558:6:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_assert_pure$_t_bool_$returns$__$",
@@ -1096,7 +1096,7 @@
                       "name": "assert",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 378,
+                      "referencedDeclaration": 306,
                       "src": "717:6:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_assert_pure$_t_bool_$returns$__$",
@@ -1249,7 +1249,7 @@
             "visibility": "internal"
           }
         ],
-        "scope": 276,
+        "scope": 261,
         "src": "110:651:0"
       },
       {
@@ -1261,10 +1261,10 @@
               "id": 100,
               "name": "mortal",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 351,
+              "referencedDeclaration": 279,
               "src": "788:6:0",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_mortal_$351",
+                "typeIdentifier": "t_contract$_mortal_$279",
                 "typeString": "contract mortal"
               }
             },
@@ -1274,17 +1274,17 @@
           }
         ],
         "contractDependencies": [
-          351,
-          375
+          279,
+          303
         ],
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 275,
+        "id": 260,
         "linearizedBaseContracts": [
-          275,
-          351,
-          375
+          260,
+          279,
+          303
         ],
         "name": "EthStarter",
         "nodeType": "ContractDefinition",
@@ -1504,7 +1504,7 @@
             ],
             "name": "Campaign",
             "nodeType": "StructDefinition",
-            "scope": 275,
+            "scope": 260,
             "src": "824:322:0",
             "visibility": "public"
           },
@@ -1513,7 +1513,7 @@
             "id": 121,
             "name": "campaignCounter",
             "nodeType": "VariableDeclaration",
-            "scope": 275,
+            "scope": 260,
             "src": "1154:24:0",
             "stateVariable": true,
             "storageLocation": "default",
@@ -1556,7 +1556,7 @@
             "id": 126,
             "name": "userCampaigns",
             "nodeType": "VariableDeclaration",
-            "scope": 275,
+            "scope": 260,
             "src": "1209:44:0",
             "stateVariable": true,
             "storageLocation": "default",
@@ -1613,7 +1613,7 @@
             "id": 129,
             "name": "allCampaigns",
             "nodeType": "VariableDeclaration",
-            "scope": 275,
+            "scope": 260,
             "src": "1260:23:0",
             "stateVariable": true,
             "storageLocation": "default",
@@ -1716,209 +1716,22 @@
           },
           {
             "body": {
-              "id": 149,
+              "id": 186,
               "nodeType": "Block",
-              "src": "1472:60:0",
-              "statements": [
-                {
-                  "expression": {
-                    "argumentTypes": null,
-                    "commonType": {
-                      "typeIdentifier": "t_uint256",
-                      "typeString": "uint256"
-                    },
-                    "id": 147,
-                    "isConstant": false,
-                    "isLValue": false,
-                    "isPure": false,
-                    "lValueRequested": false,
-                    "leftExpression": {
-                      "argumentTypes": null,
-                      "expression": {
-                        "argumentTypes": null,
-                        "baseExpression": {
-                          "argumentTypes": null,
-                          "id": 142,
-                          "name": "userCampaigns",
-                          "nodeType": "Identifier",
-                          "overloadedDeclarations": [],
-                          "referencedDeclaration": 126,
-                          "src": "1490:13:0",
-                          "typeDescriptions": {
-                            "typeIdentifier": "t_mapping$_t_address_$_t_array$_t_struct$_Campaign_$118_storage_$dyn_storage_$",
-                            "typeString": "mapping(address => struct EthStarter.Campaign storage ref[] storage ref)"
-                          }
-                        },
-                        "id": 144,
-                        "indexExpression": {
-                          "argumentTypes": null,
-                          "id": 143,
-                          "name": "_address",
-                          "nodeType": "Identifier",
-                          "overloadedDeclarations": [],
-                          "referencedDeclaration": 137,
-                          "src": "1504:8:0",
-                          "typeDescriptions": {
-                            "typeIdentifier": "t_address",
-                            "typeString": "address"
-                          }
-                        },
-                        "isConstant": false,
-                        "isLValue": true,
-                        "isPure": false,
-                        "lValueRequested": false,
-                        "nodeType": "IndexAccess",
-                        "src": "1490:23:0",
-                        "typeDescriptions": {
-                          "typeIdentifier": "t_array$_t_struct$_Campaign_$118_storage_$dyn_storage",
-                          "typeString": "struct EthStarter.Campaign storage ref[] storage ref"
-                        }
-                      },
-                      "id": 145,
-                      "isConstant": false,
-                      "isLValue": true,
-                      "isPure": false,
-                      "lValueRequested": false,
-                      "memberName": "length",
-                      "nodeType": "MemberAccess",
-                      "referencedDeclaration": null,
-                      "src": "1490:30:0",
-                      "typeDescriptions": {
-                        "typeIdentifier": "t_uint256",
-                        "typeString": "uint256"
-                      }
-                    },
-                    "nodeType": "BinaryOperation",
-                    "operator": ">",
-                    "rightExpression": {
-                      "argumentTypes": null,
-                      "hexValue": "30",
-                      "id": 146,
-                      "isConstant": false,
-                      "isLValue": false,
-                      "isPure": true,
-                      "kind": "number",
-                      "lValueRequested": false,
-                      "nodeType": "Literal",
-                      "src": "1523:1:0",
-                      "subdenomination": null,
-                      "typeDescriptions": {
-                        "typeIdentifier": "t_rational_0_by_1",
-                        "typeString": "int_const 0"
-                      },
-                      "value": "0"
-                    },
-                    "src": "1490:34:0",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_bool",
-                      "typeString": "bool"
-                    }
-                  },
-                  "functionReturnParameters": 141,
-                  "id": 148,
-                  "nodeType": "Return",
-                  "src": "1483:41:0"
-                }
-              ]
-            },
-            "id": 150,
-            "implemented": true,
-            "isConstructor": false,
-            "isDeclaredConst": true,
-            "modifiers": [],
-            "name": "hasCampaigns",
-            "nodeType": "FunctionDefinition",
-            "parameters": {
-              "id": 138,
-              "nodeType": "ParameterList",
-              "parameters": [
-                {
-                  "constant": false,
-                  "id": 137,
-                  "name": "_address",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 150,
-                  "src": "1428:16:0",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_address",
-                    "typeString": "address"
-                  },
-                  "typeName": {
-                    "id": 136,
-                    "name": "address",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "1428:7:0",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_address",
-                      "typeString": "address"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                }
-              ],
-              "src": "1427:18:0"
-            },
-            "payable": false,
-            "returnParameters": {
-              "id": 141,
-              "nodeType": "ParameterList",
-              "parameters": [
-                {
-                  "constant": false,
-                  "id": 140,
-                  "name": "",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 150,
-                  "src": "1466:4:0",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_bool",
-                    "typeString": "bool"
-                  },
-                  "typeName": {
-                    "id": 139,
-                    "name": "bool",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "1466:4:0",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_bool",
-                      "typeString": "bool"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                }
-              ],
-              "src": "1465:6:0"
-            },
-            "scope": 275,
-            "src": "1406:126:0",
-            "stateMutability": "view",
-            "superFunction": null,
-            "visibility": "public"
-          },
-          {
-            "body": {
-              "id": 201,
-              "nodeType": "Block",
-              "src": "1684:307:0",
+              "src": "1546:307:0",
               "statements": [
                 {
                   "assignments": [
-                    166
+                    151
                   ],
                   "declarations": [
                     {
                       "constant": false,
-                      "id": 166,
+                      "id": 151,
                       "name": "campaign",
                       "nodeType": "VariableDeclaration",
-                      "scope": 202,
-                      "src": "1695:24:0",
+                      "scope": 187,
+                      "src": "1557:24:0",
                       "stateVariable": false,
                       "storageLocation": "memory",
                       "typeDescriptions": {
@@ -1927,11 +1740,11 @@
                       },
                       "typeName": {
                         "contractScope": null,
-                        "id": 165,
+                        "id": 150,
                         "name": "Campaign",
                         "nodeType": "UserDefinedTypeName",
                         "referencedDeclaration": 118,
-                        "src": "1695:8:0",
+                        "src": "1557:8:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_struct$_Campaign_$118_storage_ptr",
                           "typeString": "struct EthStarter.Campaign storage pointer"
@@ -1941,13 +1754,13 @@
                       "visibility": "internal"
                     }
                   ],
-                  "id": 179,
+                  "id": 164,
                   "initialValue": {
                     "argumentTypes": null,
                     "arguments": [
                       {
                         "argumentTypes": null,
-                        "id": 169,
+                        "id": 154,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -1955,15 +1768,15 @@
                         "nodeType": "UnaryOperation",
                         "operator": "++",
                         "prefix": false,
-                        "src": "1731:17:0",
+                        "src": "1593:17:0",
                         "subExpression": {
                           "argumentTypes": null,
-                          "id": 168,
+                          "id": 153,
                           "name": "campaignCounter",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
                           "referencedDeclaration": 121,
-                          "src": "1731:15:0",
+                          "src": "1593:15:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_uint256",
                             "typeString": "uint256"
@@ -1976,12 +1789,12 @@
                       },
                       {
                         "argumentTypes": null,
-                        "id": 170,
+                        "id": 155,
                         "name": "_goalAmmount",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 152,
-                        "src": "1750:12:0",
+                        "referencedDeclaration": 137,
+                        "src": "1612:12:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -1989,12 +1802,12 @@
                       },
                       {
                         "argumentTypes": null,
-                        "id": 171,
+                        "id": 156,
                         "name": "_endDate",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 160,
-                        "src": "1764:8:0",
+                        "referencedDeclaration": 145,
+                        "src": "1626:8:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -2004,18 +1817,18 @@
                         "argumentTypes": null,
                         "expression": {
                           "argumentTypes": null,
-                          "id": 172,
+                          "id": 157,
                           "name": "block",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 379,
-                          "src": "1774:5:0",
+                          "referencedDeclaration": 307,
+                          "src": "1636:5:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_block",
                             "typeString": "block"
                           }
                         },
-                        "id": 173,
+                        "id": 158,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -2023,7 +1836,7 @@
                         "memberName": "timestamp",
                         "nodeType": "MemberAccess",
                         "referencedDeclaration": null,
-                        "src": "1774:15:0",
+                        "src": "1636:15:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -2031,12 +1844,12 @@
                       },
                       {
                         "argumentTypes": null,
-                        "id": 174,
+                        "id": 159,
                         "name": "_isPublished",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 162,
-                        "src": "1791:12:0",
+                        "referencedDeclaration": 147,
+                        "src": "1653:12:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_bool",
                           "typeString": "bool"
@@ -2044,12 +1857,12 @@
                       },
                       {
                         "argumentTypes": null,
-                        "id": 175,
+                        "id": 160,
                         "name": "_title",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 154,
-                        "src": "1805:6:0",
+                        "referencedDeclaration": 139,
+                        "src": "1667:6:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_string_memory_ptr",
                           "typeString": "string memory"
@@ -2057,12 +1870,12 @@
                       },
                       {
                         "argumentTypes": null,
-                        "id": 176,
+                        "id": 161,
                         "name": "_website",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 156,
-                        "src": "1813:8:0",
+                        "referencedDeclaration": 141,
+                        "src": "1675:8:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_string_memory_ptr",
                           "typeString": "string memory"
@@ -2070,12 +1883,12 @@
                       },
                       {
                         "argumentTypes": null,
-                        "id": 177,
+                        "id": 162,
                         "name": "_description",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 158,
-                        "src": "1823:12:0",
+                        "referencedDeclaration": 143,
+                        "src": "1685:12:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_string_memory_ptr",
                           "typeString": "string memory"
@@ -2117,18 +1930,18 @@
                           "typeString": "string memory"
                         }
                       ],
-                      "id": 167,
+                      "id": 152,
                       "name": "Campaign",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
                       "referencedDeclaration": 118,
-                      "src": "1722:8:0",
+                      "src": "1584:8:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_type$_t_struct$_Campaign_$118_storage_ptr_$",
                         "typeString": "type(struct EthStarter.Campaign storage pointer)"
                       }
                     },
-                    "id": 178,
+                    "id": 163,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -2136,14 +1949,14 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "1722:114:0",
+                    "src": "1584:114:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_struct$_Campaign_$118_memory",
                       "typeString": "struct EthStarter.Campaign memory"
                     }
                   },
                   "nodeType": "VariableDeclarationStatement",
-                  "src": "1695:141:0"
+                  "src": "1557:141:0"
                 },
                 {
                   "expression": {
@@ -2151,12 +1964,12 @@
                     "arguments": [
                       {
                         "argumentTypes": null,
-                        "id": 185,
+                        "id": 170,
                         "name": "campaign",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 166,
-                        "src": "1883:8:0",
+                        "referencedDeclaration": 151,
+                        "src": "1745:8:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_struct$_Campaign_$118_memory_ptr",
                           "typeString": "struct EthStarter.Campaign memory"
@@ -2174,34 +1987,34 @@
                         "argumentTypes": null,
                         "baseExpression": {
                           "argumentTypes": null,
-                          "id": 180,
+                          "id": 165,
                           "name": "userCampaigns",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
                           "referencedDeclaration": 126,
-                          "src": "1852:13:0",
+                          "src": "1714:13:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_mapping$_t_address_$_t_array$_t_struct$_Campaign_$118_storage_$dyn_storage_$",
                             "typeString": "mapping(address => struct EthStarter.Campaign storage ref[] storage ref)"
                           }
                         },
-                        "id": 183,
+                        "id": 168,
                         "indexExpression": {
                           "argumentTypes": null,
                           "expression": {
                             "argumentTypes": null,
-                            "id": 181,
+                            "id": 166,
                             "name": "msg",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 387,
-                            "src": "1866:3:0",
+                            "referencedDeclaration": 315,
+                            "src": "1728:3:0",
                             "typeDescriptions": {
                               "typeIdentifier": "t_magic_message",
                               "typeString": "msg"
                             }
                           },
-                          "id": 182,
+                          "id": 167,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -2209,7 +2022,7 @@
                           "memberName": "sender",
                           "nodeType": "MemberAccess",
                           "referencedDeclaration": null,
-                          "src": "1866:10:0",
+                          "src": "1728:10:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_address",
                             "typeString": "address"
@@ -2220,13 +2033,13 @@
                         "isPure": false,
                         "lValueRequested": false,
                         "nodeType": "IndexAccess",
-                        "src": "1852:25:0",
+                        "src": "1714:25:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_array$_t_struct$_Campaign_$118_storage_$dyn_storage",
                           "typeString": "struct EthStarter.Campaign storage ref[] storage ref"
                         }
                       },
-                      "id": 184,
+                      "id": 169,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -2234,13 +2047,13 @@
                       "memberName": "push",
                       "nodeType": "MemberAccess",
                       "referencedDeclaration": null,
-                      "src": "1852:30:0",
+                      "src": "1714:30:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_arraypush_nonpayable$_t_struct$_Campaign_$118_storage_$returns$_t_uint256_$",
                         "typeString": "function (struct EthStarter.Campaign storage ref) returns (uint256)"
                       }
                     },
-                    "id": 186,
+                    "id": 171,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -2248,15 +2061,15 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "1852:40:0",
+                    "src": "1714:40:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     }
                   },
-                  "id": 187,
+                  "id": 172,
                   "nodeType": "ExpressionStatement",
-                  "src": "1852:40:0"
+                  "src": "1714:40:0"
                 },
                 {
                   "expression": {
@@ -2264,12 +2077,12 @@
                     "arguments": [
                       {
                         "argumentTypes": null,
-                        "id": 191,
+                        "id": 176,
                         "name": "campaign",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 166,
-                        "src": "1921:8:0",
+                        "referencedDeclaration": 151,
+                        "src": "1783:8:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_struct$_Campaign_$118_memory_ptr",
                           "typeString": "struct EthStarter.Campaign memory"
@@ -2285,18 +2098,18 @@
                       ],
                       "expression": {
                         "argumentTypes": null,
-                        "id": 188,
+                        "id": 173,
                         "name": "allCampaigns",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
                         "referencedDeclaration": 129,
-                        "src": "1903:12:0",
+                        "src": "1765:12:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_array$_t_struct$_Campaign_$118_storage_$dyn_storage",
                           "typeString": "struct EthStarter.Campaign storage ref[] storage ref"
                         }
                       },
-                      "id": 190,
+                      "id": 175,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -2304,13 +2117,13 @@
                       "memberName": "push",
                       "nodeType": "MemberAccess",
                       "referencedDeclaration": null,
-                      "src": "1903:17:0",
+                      "src": "1765:17:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_arraypush_nonpayable$_t_struct$_Campaign_$118_storage_$returns$_t_uint256_$",
                         "typeString": "function (struct EthStarter.Campaign storage ref) returns (uint256)"
                       }
                     },
-                    "id": 192,
+                    "id": 177,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -2318,15 +2131,15 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "1903:27:0",
+                    "src": "1765:27:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     }
                   },
-                  "id": 193,
+                  "id": 178,
                   "nodeType": "ExpressionStatement",
-                  "src": "1903:27:0"
+                  "src": "1765:27:0"
                 },
                 {
                   "expression": {
@@ -2336,18 +2149,18 @@
                         "argumentTypes": null,
                         "expression": {
                           "argumentTypes": null,
-                          "id": 195,
+                          "id": 180,
                           "name": "msg",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 387,
-                          "src": "1959:3:0",
+                          "referencedDeclaration": 315,
+                          "src": "1821:3:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_message",
                             "typeString": "msg"
                           }
                         },
-                        "id": 196,
+                        "id": 181,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -2355,7 +2168,7 @@
                         "memberName": "sender",
                         "nodeType": "MemberAccess",
                         "referencedDeclaration": null,
-                        "src": "1959:10:0",
+                        "src": "1821:10:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_address",
                           "typeString": "address"
@@ -2365,18 +2178,18 @@
                         "argumentTypes": null,
                         "expression": {
                           "argumentTypes": null,
-                          "id": 197,
+                          "id": 182,
                           "name": "campaign",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 166,
-                          "src": "1971:8:0",
+                          "referencedDeclaration": 151,
+                          "src": "1833:8:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_struct$_Campaign_$118_memory_ptr",
                             "typeString": "struct EthStarter.Campaign memory"
                           }
                         },
-                        "id": 198,
+                        "id": 183,
                         "isConstant": false,
                         "isLValue": true,
                         "isPure": false,
@@ -2384,7 +2197,7 @@
                         "memberName": "id",
                         "nodeType": "MemberAccess",
                         "referencedDeclaration": 103,
-                        "src": "1971:11:0",
+                        "src": "1833:11:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -2402,18 +2215,18 @@
                           "typeString": "uint256"
                         }
                       ],
-                      "id": 194,
+                      "id": 179,
                       "name": "onCampaignCreated",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
                       "referencedDeclaration": 135,
-                      "src": "1941:17:0",
+                      "src": "1803:17:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_event_nonpayable$_t_address_$_t_uint256_$returns$__$",
                         "typeString": "function (address,uint256)"
                       }
                     },
-                    "id": 199,
+                    "id": 184,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -2421,19 +2234,19 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "1941:42:0",
+                    "src": "1803:42:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$__$",
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 200,
+                  "id": 185,
                   "nodeType": "ExpressionStatement",
-                  "src": "1941:42:0"
+                  "src": "1803:42:0"
                 }
               ]
             },
-            "id": 202,
+            "id": 187,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -2441,16 +2254,16 @@
             "name": "createCampaign",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 163,
+              "id": 148,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 152,
+                  "id": 137,
                   "name": "_goalAmmount",
                   "nodeType": "VariableDeclaration",
-                  "scope": 202,
-                  "src": "1568:17:0",
+                  "scope": 187,
+                  "src": "1430:17:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2458,10 +2271,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 151,
+                    "id": 136,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1568:4:0",
+                    "src": "1430:4:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -2472,11 +2285,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 154,
+                  "id": 139,
                   "name": "_title",
                   "nodeType": "VariableDeclaration",
-                  "scope": 202,
-                  "src": "1587:13:0",
+                  "scope": 187,
+                  "src": "1449:13:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2484,10 +2297,10 @@
                     "typeString": "string memory"
                   },
                   "typeName": {
-                    "id": 153,
+                    "id": 138,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1587:6:0",
+                    "src": "1449:6:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_string_storage_ptr",
                       "typeString": "string storage pointer"
@@ -2498,11 +2311,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 156,
+                  "id": 141,
                   "name": "_website",
                   "nodeType": "VariableDeclaration",
-                  "scope": 202,
-                  "src": "1602:15:0",
+                  "scope": 187,
+                  "src": "1464:15:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2510,10 +2323,10 @@
                     "typeString": "string memory"
                   },
                   "typeName": {
-                    "id": 155,
+                    "id": 140,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1602:6:0",
+                    "src": "1464:6:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_string_storage_ptr",
                       "typeString": "string storage pointer"
@@ -2524,11 +2337,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 158,
+                  "id": 143,
                   "name": "_description",
                   "nodeType": "VariableDeclaration",
-                  "scope": 202,
-                  "src": "1619:19:0",
+                  "scope": 187,
+                  "src": "1481:19:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2536,10 +2349,10 @@
                     "typeString": "string memory"
                   },
                   "typeName": {
-                    "id": 157,
+                    "id": 142,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1619:6:0",
+                    "src": "1481:6:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_string_storage_ptr",
                       "typeString": "string storage pointer"
@@ -2550,11 +2363,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 160,
+                  "id": 145,
                   "name": "_endDate",
                   "nodeType": "VariableDeclaration",
-                  "scope": 202,
-                  "src": "1640:16:0",
+                  "scope": 187,
+                  "src": "1502:16:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2562,10 +2375,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 159,
+                    "id": 144,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1640:7:0",
+                    "src": "1502:7:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -2576,11 +2389,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 162,
+                  "id": 147,
                   "name": "_isPublished",
                   "nodeType": "VariableDeclaration",
-                  "scope": 202,
-                  "src": "1658:17:0",
+                  "scope": 187,
+                  "src": "1520:17:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2588,10 +2401,10 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 161,
+                    "id": 146,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1658:4:0",
+                    "src": "1520:4:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -2601,39 +2414,39 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1567:109:0"
+              "src": "1429:109:0"
             },
             "payable": false,
             "returnParameters": {
-              "id": 164,
+              "id": 149,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1684:0:0"
+              "src": "1546:0:0"
             },
-            "scope": 275,
-            "src": "1544:447:0",
+            "scope": 260,
+            "src": "1406:447:0",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           },
           {
             "body": {
-              "id": 261,
+              "id": 246,
               "nodeType": "Block",
-              "src": "2090:388:0",
+              "src": "1952:388:0",
               "statements": [
                 {
                   "assignments": [
-                    215
+                    200
                   ],
                   "declarations": [
                     {
                       "constant": false,
-                      "id": 215,
+                      "id": 200,
                       "name": "toReturn",
                       "nodeType": "VariableDeclaration",
-                      "scope": 262,
-                      "src": "2101:26:0",
+                      "scope": 247,
+                      "src": "1963:26:0",
                       "stateVariable": false,
                       "storageLocation": "memory",
                       "typeDescriptions": {
@@ -2643,20 +2456,20 @@
                       "typeName": {
                         "baseType": {
                           "contractScope": null,
-                          "id": 213,
+                          "id": 198,
                           "name": "Campaign",
                           "nodeType": "UserDefinedTypeName",
                           "referencedDeclaration": 118,
-                          "src": "2101:8:0",
+                          "src": "1963:8:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_struct$_Campaign_$118_storage_ptr",
                             "typeString": "struct EthStarter.Campaign storage pointer"
                           }
                         },
-                        "id": 214,
+                        "id": 199,
                         "length": null,
                         "nodeType": "ArrayTypeName",
-                        "src": "2101:10:0",
+                        "src": "1963:10:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_array$_t_struct$_Campaign_$118_storage_$dyn_storage_ptr",
                           "typeString": "struct EthStarter.Campaign storage ref[] storage pointer"
@@ -2666,18 +2479,18 @@
                       "visibility": "internal"
                     }
                   ],
-                  "id": 221,
+                  "id": 206,
                   "initialValue": {
                     "argumentTypes": null,
                     "arguments": [
                       {
                         "argumentTypes": null,
-                        "id": 219,
+                        "id": 204,
                         "name": "_limit",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 206,
-                        "src": "2145:6:0",
+                        "referencedDeclaration": 191,
+                        "src": "2007:6:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -2691,13 +2504,13 @@
                           "typeString": "uint256"
                         }
                       ],
-                      "id": 218,
+                      "id": 203,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": true,
                       "lValueRequested": false,
                       "nodeType": "NewExpression",
-                      "src": "2130:14:0",
+                      "src": "1992:14:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_objectcreation_pure$_t_uint256_$returns$_t_array$_t_struct$_Campaign_$118_memory_$dyn_memory_$",
                         "typeString": "function (uint256) pure returns (struct EthStarter.Campaign memory[] memory)"
@@ -2705,27 +2518,27 @@
                       "typeName": {
                         "baseType": {
                           "contractScope": null,
-                          "id": 216,
+                          "id": 201,
                           "name": "Campaign",
                           "nodeType": "UserDefinedTypeName",
                           "referencedDeclaration": 118,
-                          "src": "2134:8:0",
+                          "src": "1996:8:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_struct$_Campaign_$118_storage_ptr",
                             "typeString": "struct EthStarter.Campaign storage pointer"
                           }
                         },
-                        "id": 217,
+                        "id": 202,
                         "length": null,
                         "nodeType": "ArrayTypeName",
-                        "src": "2134:10:0",
+                        "src": "1996:10:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_array$_t_struct$_Campaign_$118_storage_$dyn_storage_ptr",
                           "typeString": "struct EthStarter.Campaign storage ref[] storage pointer"
                         }
                       }
                     },
-                    "id": 220,
+                    "id": 205,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -2733,14 +2546,14 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "2130:22:0",
+                    "src": "1992:22:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_array$_t_struct$_Campaign_$118_memory_$dyn_memory",
                       "typeString": "struct EthStarter.Campaign memory[] memory"
                     }
                   },
                   "nodeType": "VariableDeclarationStatement",
-                  "src": "2101:51:0"
+                  "src": "1963:51:0"
                 },
                 {
                   "condition": {
@@ -2749,19 +2562,19 @@
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     },
-                    "id": 225,
+                    "id": 210,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftExpression": {
                       "argumentTypes": null,
-                      "id": 222,
+                      "id": 207,
                       "name": "_startIndex",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 204,
-                      "src": "2166:11:0",
+                      "referencedDeclaration": 189,
+                      "src": "2028:11:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
@@ -2773,18 +2586,18 @@
                       "argumentTypes": null,
                       "expression": {
                         "argumentTypes": null,
-                        "id": 223,
+                        "id": 208,
                         "name": "allCampaigns",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
                         "referencedDeclaration": 129,
-                        "src": "2181:12:0",
+                        "src": "2043:12:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_array$_t_struct$_Campaign_$118_storage_$dyn_storage",
                           "typeString": "struct EthStarter.Campaign storage ref[] storage ref"
                         }
                       },
-                      "id": 224,
+                      "id": 209,
                       "isConstant": false,
                       "isLValue": true,
                       "isPure": false,
@@ -2792,54 +2605,54 @@
                       "memberName": "length",
                       "nodeType": "MemberAccess",
                       "referencedDeclaration": null,
-                      "src": "2181:19:0",
+                      "src": "2043:19:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
                       }
                     },
-                    "src": "2166:34:0",
+                    "src": "2028:34:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
                     }
                   },
                   "falseBody": null,
-                  "id": 228,
+                  "id": 213,
                   "nodeType": "IfStatement",
-                  "src": "2163:67:0",
+                  "src": "2025:67:0",
                   "trueBody": {
                     "expression": {
                       "argumentTypes": null,
-                      "id": 226,
+                      "id": 211,
                       "name": "toReturn",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 215,
-                      "src": "2222:8:0",
+                      "referencedDeclaration": 200,
+                      "src": "2084:8:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_array$_t_struct$_Campaign_$118_memory_$dyn_memory_ptr",
                         "typeString": "struct EthStarter.Campaign memory[] memory"
                       }
                     },
-                    "functionReturnParameters": 211,
-                    "id": 227,
+                    "functionReturnParameters": 196,
+                    "id": 212,
                     "nodeType": "Return",
-                    "src": "2215:15:0"
+                    "src": "2077:15:0"
                   }
                 },
                 {
                   "assignments": [
-                    230
+                    215
                   ],
                   "declarations": [
                     {
                       "constant": false,
-                      "id": 230,
+                      "id": 215,
                       "name": "i",
                       "nodeType": "VariableDeclaration",
-                      "scope": 262,
-                      "src": "2251:9:0",
+                      "scope": 247,
+                      "src": "2113:9:0",
                       "stateVariable": false,
                       "storageLocation": "default",
                       "typeDescriptions": {
@@ -2847,10 +2660,10 @@
                         "typeString": "uint256"
                       },
                       "typeName": {
-                        "id": 229,
+                        "id": 214,
                         "name": "uint256",
                         "nodeType": "ElementaryTypeName",
-                        "src": "2251:7:0",
+                        "src": "2113:7:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -2860,35 +2673,35 @@
                       "visibility": "internal"
                     }
                   ],
-                  "id": 232,
+                  "id": 217,
                   "initialValue": {
                     "argumentTypes": null,
-                    "id": 231,
+                    "id": 216,
                     "name": "_startIndex",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 204,
-                    "src": "2263:11:0",
+                    "referencedDeclaration": 189,
+                    "src": "2125:11:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     }
                   },
                   "nodeType": "VariableDeclarationStatement",
-                  "src": "2251:23:0"
+                  "src": "2113:23:0"
                 },
                 {
                   "assignments": [
-                    234
+                    219
                   ],
                   "declarations": [
                     {
                       "constant": false,
-                      "id": 234,
+                      "id": 219,
                       "name": "end",
                       "nodeType": "VariableDeclaration",
-                      "scope": 262,
-                      "src": "2285:11:0",
+                      "scope": 247,
+                      "src": "2147:11:0",
                       "stateVariable": false,
                       "storageLocation": "default",
                       "typeDescriptions": {
@@ -2896,10 +2709,10 @@
                         "typeString": "uint256"
                       },
                       "typeName": {
-                        "id": 233,
+                        "id": 218,
                         "name": "uint256",
                         "nodeType": "ElementaryTypeName",
-                        "src": "2285:7:0",
+                        "src": "2147:7:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -2909,26 +2722,26 @@
                       "visibility": "internal"
                     }
                   ],
-                  "id": 238,
+                  "id": 223,
                   "initialValue": {
                     "argumentTypes": null,
                     "commonType": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     },
-                    "id": 237,
+                    "id": 222,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftExpression": {
                       "argumentTypes": null,
-                      "id": 235,
+                      "id": 220,
                       "name": "_startIndex",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 204,
-                      "src": "2299:11:0",
+                      "referencedDeclaration": 189,
+                      "src": "2161:11:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
@@ -2938,31 +2751,31 @@
                     "operator": "+",
                     "rightExpression": {
                       "argumentTypes": null,
-                      "id": 236,
+                      "id": 221,
                       "name": "_limit",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 206,
-                      "src": "2313:6:0",
+                      "referencedDeclaration": 191,
+                      "src": "2175:6:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
                       }
                     },
-                    "src": "2299:20:0",
+                    "src": "2161:20:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     }
                   },
                   "nodeType": "VariableDeclarationStatement",
-                  "src": "2285:34:0"
+                  "src": "2147:34:0"
                 },
                 {
                   "body": {
                     "expression": {
                       "argumentTypes": null,
-                      "id": 256,
+                      "id": 241,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -2971,37 +2784,37 @@
                         "argumentTypes": null,
                         "baseExpression": {
                           "argumentTypes": null,
-                          "id": 247,
+                          "id": 232,
                           "name": "toReturn",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 215,
-                          "src": "2386:8:0",
+                          "referencedDeclaration": 200,
+                          "src": "2248:8:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_array$_t_struct$_Campaign_$118_memory_$dyn_memory_ptr",
                             "typeString": "struct EthStarter.Campaign memory[] memory"
                           }
                         },
-                        "id": 251,
+                        "id": 236,
                         "indexExpression": {
                           "argumentTypes": null,
                           "commonType": {
                             "typeIdentifier": "t_uint256",
                             "typeString": "uint256"
                           },
-                          "id": 250,
+                          "id": 235,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
                           "lValueRequested": false,
                           "leftExpression": {
                             "argumentTypes": null,
-                            "id": 248,
+                            "id": 233,
                             "name": "i",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 230,
-                            "src": "2395:1:0",
+                            "referencedDeclaration": 215,
+                            "src": "2257:1:0",
                             "typeDescriptions": {
                               "typeIdentifier": "t_uint256",
                               "typeString": "uint256"
@@ -3011,18 +2824,18 @@
                           "operator": "-",
                           "rightExpression": {
                             "argumentTypes": null,
-                            "id": 249,
+                            "id": 234,
                             "name": "_startIndex",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 204,
-                            "src": "2399:11:0",
+                            "referencedDeclaration": 189,
+                            "src": "2261:11:0",
                             "typeDescriptions": {
                               "typeIdentifier": "t_uint256",
                               "typeString": "uint256"
                             }
                           },
-                          "src": "2395:15:0",
+                          "src": "2257:15:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_uint256",
                             "typeString": "uint256"
@@ -3033,7 +2846,7 @@
                         "isPure": false,
                         "lValueRequested": true,
                         "nodeType": "IndexAccess",
-                        "src": "2386:25:0",
+                        "src": "2248:25:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_struct$_Campaign_$118_memory",
                           "typeString": "struct EthStarter.Campaign memory"
@@ -3045,21 +2858,21 @@
                         "argumentTypes": null,
                         "baseExpression": {
                           "argumentTypes": null,
-                          "id": 252,
+                          "id": 237,
                           "name": "allCampaigns",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
                           "referencedDeclaration": 129,
-                          "src": "2414:12:0",
+                          "src": "2276:12:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_array$_t_struct$_Campaign_$118_storage_$dyn_storage",
                             "typeString": "struct EthStarter.Campaign storage ref[] storage ref"
                           }
                         },
-                        "id": 255,
+                        "id": 240,
                         "indexExpression": {
                           "argumentTypes": null,
-                          "id": 254,
+                          "id": 239,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -3067,15 +2880,15 @@
                           "nodeType": "UnaryOperation",
                           "operator": "++",
                           "prefix": false,
-                          "src": "2427:3:0",
+                          "src": "2289:3:0",
                           "subExpression": {
                             "argumentTypes": null,
-                            "id": 253,
+                            "id": 238,
                             "name": "i",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 230,
-                            "src": "2427:1:0",
+                            "referencedDeclaration": 215,
+                            "src": "2289:1:0",
                             "typeDescriptions": {
                               "typeIdentifier": "t_uint256",
                               "typeString": "uint256"
@@ -3091,21 +2904,21 @@
                         "isPure": false,
                         "lValueRequested": false,
                         "nodeType": "IndexAccess",
-                        "src": "2414:17:0",
+                        "src": "2276:17:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_struct$_Campaign_$118_storage",
                           "typeString": "struct EthStarter.Campaign storage ref"
                         }
                       },
-                      "src": "2386:45:0",
+                      "src": "2248:45:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_struct$_Campaign_$118_memory",
                         "typeString": "struct EthStarter.Campaign memory"
                       }
                     },
-                    "id": 257,
+                    "id": 242,
                     "nodeType": "ExpressionStatement",
-                    "src": "2386:45:0"
+                    "src": "2248:45:0"
                   },
                   "condition": {
                     "argumentTypes": null,
@@ -3113,7 +2926,7 @@
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
                     },
-                    "id": 246,
+                    "id": 231,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -3124,19 +2937,19 @@
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
                       },
-                      "id": 241,
+                      "id": 226,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
                       "lValueRequested": false,
                       "leftExpression": {
                         "argumentTypes": null,
-                        "id": 239,
+                        "id": 224,
                         "name": "i",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 230,
-                        "src": "2337:1:0",
+                        "referencedDeclaration": 215,
+                        "src": "2199:1:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -3146,18 +2959,18 @@
                       "operator": "<",
                       "rightExpression": {
                         "argumentTypes": null,
-                        "id": 240,
+                        "id": 225,
                         "name": "end",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 234,
-                        "src": "2341:3:0",
+                        "referencedDeclaration": 219,
+                        "src": "2203:3:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
                         }
                       },
-                      "src": "2337:7:0",
+                      "src": "2199:7:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_bool",
                         "typeString": "bool"
@@ -3171,19 +2984,19 @@
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
                       },
-                      "id": 245,
+                      "id": 230,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
                       "lValueRequested": false,
                       "leftExpression": {
                         "argumentTypes": null,
-                        "id": 242,
+                        "id": 227,
                         "name": "i",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 230,
-                        "src": "2348:1:0",
+                        "referencedDeclaration": 215,
+                        "src": "2210:1:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -3195,18 +3008,18 @@
                         "argumentTypes": null,
                         "expression": {
                           "argumentTypes": null,
-                          "id": 243,
+                          "id": 228,
                           "name": "allCampaigns",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
                           "referencedDeclaration": 129,
-                          "src": "2352:12:0",
+                          "src": "2214:12:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_array$_t_struct$_Campaign_$118_storage_$dyn_storage",
                             "typeString": "struct EthStarter.Campaign storage ref[] storage ref"
                           }
                         },
-                        "id": 244,
+                        "id": 229,
                         "isConstant": false,
                         "isLValue": true,
                         "isPure": false,
@@ -3214,50 +3027,50 @@
                         "memberName": "length",
                         "nodeType": "MemberAccess",
                         "referencedDeclaration": null,
-                        "src": "2352:19:0",
+                        "src": "2214:19:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
                         }
                       },
-                      "src": "2348:23:0",
+                      "src": "2210:23:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_bool",
                         "typeString": "bool"
                       }
                     },
-                    "src": "2337:34:0",
+                    "src": "2199:34:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
                     }
                   },
-                  "id": 258,
+                  "id": 243,
                   "nodeType": "WhileStatement",
-                  "src": "2331:100:0"
+                  "src": "2193:100:0"
                 },
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 259,
+                    "id": 244,
                     "name": "toReturn",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 215,
-                    "src": "2459:8:0",
+                    "referencedDeclaration": 200,
+                    "src": "2321:8:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_array$_t_struct$_Campaign_$118_memory_$dyn_memory_ptr",
                       "typeString": "struct EthStarter.Campaign memory[] memory"
                     }
                   },
-                  "functionReturnParameters": 211,
-                  "id": 260,
+                  "functionReturnParameters": 196,
+                  "id": 245,
                   "nodeType": "Return",
-                  "src": "2452:15:0"
+                  "src": "2314:15:0"
                 }
               ]
             },
-            "id": 262,
+            "id": 247,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": true,
@@ -3265,16 +3078,16 @@
             "name": "getCampaigns",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 207,
+              "id": 192,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 204,
+                  "id": 189,
                   "name": "_startIndex",
                   "nodeType": "VariableDeclaration",
-                  "scope": 262,
-                  "src": "2021:19:0",
+                  "scope": 247,
+                  "src": "1883:19:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -3282,10 +3095,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 203,
+                    "id": 188,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "2021:7:0",
+                    "src": "1883:7:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -3296,11 +3109,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 206,
+                  "id": 191,
                   "name": "_limit",
                   "nodeType": "VariableDeclaration",
-                  "scope": 262,
-                  "src": "2042:14:0",
+                  "scope": 247,
+                  "src": "1904:14:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -3308,10 +3121,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 205,
+                    "id": 190,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "2042:7:0",
+                    "src": "1904:7:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -3321,20 +3134,20 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "2020:37:0"
+              "src": "1882:37:0"
             },
             "payable": false,
             "returnParameters": {
-              "id": 211,
+              "id": 196,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 210,
+                  "id": 195,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 262,
-                  "src": "2079:10:0",
+                  "scope": 247,
+                  "src": "1941:10:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -3344,20 +3157,20 @@
                   "typeName": {
                     "baseType": {
                       "contractScope": null,
-                      "id": 208,
+                      "id": 193,
                       "name": "Campaign",
                       "nodeType": "UserDefinedTypeName",
                       "referencedDeclaration": 118,
-                      "src": "2079:8:0",
+                      "src": "1941:8:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_struct$_Campaign_$118_storage_ptr",
                         "typeString": "struct EthStarter.Campaign storage pointer"
                       }
                     },
-                    "id": 209,
+                    "id": 194,
                     "length": null,
                     "nodeType": "ArrayTypeName",
-                    "src": "2079:10:0",
+                    "src": "1941:10:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_array$_t_struct$_Campaign_$118_storage_$dyn_storage_ptr",
                       "typeString": "struct EthStarter.Campaign storage ref[] storage pointer"
@@ -3367,32 +3180,32 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "2078:12:0"
+              "src": "1940:12:0"
             },
-            "scope": 275,
-            "src": "1999:479:0",
+            "scope": 260,
+            "src": "1861:479:0",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "public"
           },
           {
             "body": {
-              "id": 269,
+              "id": 254,
               "nodeType": "Block",
-              "src": "2538:45:0",
+              "src": "2400:45:0",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
                     "hexValue": "4d6572656e677565204d6572656e677565",
-                    "id": 267,
+                    "id": 252,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": true,
                     "kind": "string",
                     "lValueRequested": false,
                     "nodeType": "Literal",
-                    "src": "2556:19:0",
+                    "src": "2418:19:0",
                     "subdenomination": null,
                     "typeDescriptions": {
                       "typeIdentifier": "t_stringliteral_20e53b4382970a97a87a0787a5562362f68939e84c0c5ba0225a8f6313b959dd",
@@ -3400,14 +3213,14 @@
                     },
                     "value": "Merengue Merengue"
                   },
-                  "functionReturnParameters": 266,
-                  "id": 268,
+                  "functionReturnParameters": 251,
+                  "id": 253,
                   "nodeType": "Return",
-                  "src": "2549:26:0"
+                  "src": "2411:26:0"
                 }
               ]
             },
-            "id": 270,
+            "id": 255,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": true,
@@ -3415,23 +3228,23 @@
             "name": "getTestString",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 263,
+              "id": 248,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "2508:2:0"
+              "src": "2370:2:0"
             },
             "payable": false,
             "returnParameters": {
-              "id": 266,
+              "id": 251,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 265,
+                  "id": 250,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 270,
-                  "src": "2531:6:0",
+                  "scope": 255,
+                  "src": "2393:6:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -3439,10 +3252,10 @@
                     "typeString": "string memory"
                   },
                   "typeName": {
-                    "id": 264,
+                    "id": 249,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
-                    "src": "2531:6:0",
+                    "src": "2393:6:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_string_storage_ptr",
                       "typeString": "string storage pointer"
@@ -3452,22 +3265,22 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "2530:8:0"
+              "src": "2392:8:0"
             },
-            "scope": 275,
-            "src": "2486:97:0",
+            "scope": 260,
+            "src": "2348:97:0",
             "stateMutability": "pure",
             "superFunction": null,
             "visibility": "public"
           },
           {
             "body": {
-              "id": 273,
+              "id": 258,
               "nodeType": "Block",
-              "src": "2668:18:0",
+              "src": "2530:18:0",
               "statements": []
             },
-            "id": 274,
+            "id": 259,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -3475,42 +3288,42 @@
             "name": "",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 271,
+              "id": 256,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "2651:2:0"
+              "src": "2513:2:0"
             },
             "payable": true,
             "returnParameters": {
-              "id": 272,
+              "id": 257,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "2668:0:0"
+              "src": "2530:0:0"
             },
-            "scope": 275,
-            "src": "2643:43:0",
+            "scope": 260,
+            "src": "2505:43:0",
             "stateMutability": "payable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 276,
-        "src": "765:1935:0"
+        "scope": 261,
+        "src": "765:1793:0"
       }
     ],
-    "src": "0:2700:0"
+    "src": "0:2558:0"
   },
   "legacyAST": {
     "absolutePath": "/C/Users/cmuri/Desktop/Ethstarter/contracts/contracts/EthStarter.sol",
     "exportedSymbols": {
       "EthStarter": [
-        275
+        260
       ],
       "SafeMath": [
         99
       ]
     },
-    "id": 276,
+    "id": 261,
     "nodeType": "SourceUnit",
     "nodes": [
       {
@@ -3538,8 +3351,8 @@
         "file": "./Mortal.sol",
         "id": 3,
         "nodeType": "ImportDirective",
-        "scope": 276,
-        "sourceUnit": 352,
+        "scope": 261,
+        "sourceUnit": 280,
         "src": "84:22:0",
         "symbolAliases": [],
         "unitAlias": ""
@@ -3824,7 +3637,7 @@
                       "name": "assert",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 378,
+                      "referencedDeclaration": 306,
                       "src": "297:6:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_assert_pure$_t_bool_$returns$__$",
@@ -4257,7 +4070,7 @@
                       "name": "assert",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 378,
+                      "referencedDeclaration": 306,
                       "src": "558:6:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_assert_pure$_t_bool_$returns$__$",
@@ -4589,7 +4402,7 @@
                       "name": "assert",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 378,
+                      "referencedDeclaration": 306,
                       "src": "717:6:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_assert_pure$_t_bool_$returns$__$",
@@ -4742,7 +4555,7 @@
             "visibility": "internal"
           }
         ],
-        "scope": 276,
+        "scope": 261,
         "src": "110:651:0"
       },
       {
@@ -4754,10 +4567,10 @@
               "id": 100,
               "name": "mortal",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 351,
+              "referencedDeclaration": 279,
               "src": "788:6:0",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_mortal_$351",
+                "typeIdentifier": "t_contract$_mortal_$279",
                 "typeString": "contract mortal"
               }
             },
@@ -4767,17 +4580,17 @@
           }
         ],
         "contractDependencies": [
-          351,
-          375
+          279,
+          303
         ],
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 275,
+        "id": 260,
         "linearizedBaseContracts": [
-          275,
-          351,
-          375
+          260,
+          279,
+          303
         ],
         "name": "EthStarter",
         "nodeType": "ContractDefinition",
@@ -4997,7 +4810,7 @@
             ],
             "name": "Campaign",
             "nodeType": "StructDefinition",
-            "scope": 275,
+            "scope": 260,
             "src": "824:322:0",
             "visibility": "public"
           },
@@ -5006,7 +4819,7 @@
             "id": 121,
             "name": "campaignCounter",
             "nodeType": "VariableDeclaration",
-            "scope": 275,
+            "scope": 260,
             "src": "1154:24:0",
             "stateVariable": true,
             "storageLocation": "default",
@@ -5049,7 +4862,7 @@
             "id": 126,
             "name": "userCampaigns",
             "nodeType": "VariableDeclaration",
-            "scope": 275,
+            "scope": 260,
             "src": "1209:44:0",
             "stateVariable": true,
             "storageLocation": "default",
@@ -5106,7 +4919,7 @@
             "id": 129,
             "name": "allCampaigns",
             "nodeType": "VariableDeclaration",
-            "scope": 275,
+            "scope": 260,
             "src": "1260:23:0",
             "stateVariable": true,
             "storageLocation": "default",
@@ -5209,209 +5022,22 @@
           },
           {
             "body": {
-              "id": 149,
+              "id": 186,
               "nodeType": "Block",
-              "src": "1472:60:0",
-              "statements": [
-                {
-                  "expression": {
-                    "argumentTypes": null,
-                    "commonType": {
-                      "typeIdentifier": "t_uint256",
-                      "typeString": "uint256"
-                    },
-                    "id": 147,
-                    "isConstant": false,
-                    "isLValue": false,
-                    "isPure": false,
-                    "lValueRequested": false,
-                    "leftExpression": {
-                      "argumentTypes": null,
-                      "expression": {
-                        "argumentTypes": null,
-                        "baseExpression": {
-                          "argumentTypes": null,
-                          "id": 142,
-                          "name": "userCampaigns",
-                          "nodeType": "Identifier",
-                          "overloadedDeclarations": [],
-                          "referencedDeclaration": 126,
-                          "src": "1490:13:0",
-                          "typeDescriptions": {
-                            "typeIdentifier": "t_mapping$_t_address_$_t_array$_t_struct$_Campaign_$118_storage_$dyn_storage_$",
-                            "typeString": "mapping(address => struct EthStarter.Campaign storage ref[] storage ref)"
-                          }
-                        },
-                        "id": 144,
-                        "indexExpression": {
-                          "argumentTypes": null,
-                          "id": 143,
-                          "name": "_address",
-                          "nodeType": "Identifier",
-                          "overloadedDeclarations": [],
-                          "referencedDeclaration": 137,
-                          "src": "1504:8:0",
-                          "typeDescriptions": {
-                            "typeIdentifier": "t_address",
-                            "typeString": "address"
-                          }
-                        },
-                        "isConstant": false,
-                        "isLValue": true,
-                        "isPure": false,
-                        "lValueRequested": false,
-                        "nodeType": "IndexAccess",
-                        "src": "1490:23:0",
-                        "typeDescriptions": {
-                          "typeIdentifier": "t_array$_t_struct$_Campaign_$118_storage_$dyn_storage",
-                          "typeString": "struct EthStarter.Campaign storage ref[] storage ref"
-                        }
-                      },
-                      "id": 145,
-                      "isConstant": false,
-                      "isLValue": true,
-                      "isPure": false,
-                      "lValueRequested": false,
-                      "memberName": "length",
-                      "nodeType": "MemberAccess",
-                      "referencedDeclaration": null,
-                      "src": "1490:30:0",
-                      "typeDescriptions": {
-                        "typeIdentifier": "t_uint256",
-                        "typeString": "uint256"
-                      }
-                    },
-                    "nodeType": "BinaryOperation",
-                    "operator": ">",
-                    "rightExpression": {
-                      "argumentTypes": null,
-                      "hexValue": "30",
-                      "id": 146,
-                      "isConstant": false,
-                      "isLValue": false,
-                      "isPure": true,
-                      "kind": "number",
-                      "lValueRequested": false,
-                      "nodeType": "Literal",
-                      "src": "1523:1:0",
-                      "subdenomination": null,
-                      "typeDescriptions": {
-                        "typeIdentifier": "t_rational_0_by_1",
-                        "typeString": "int_const 0"
-                      },
-                      "value": "0"
-                    },
-                    "src": "1490:34:0",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_bool",
-                      "typeString": "bool"
-                    }
-                  },
-                  "functionReturnParameters": 141,
-                  "id": 148,
-                  "nodeType": "Return",
-                  "src": "1483:41:0"
-                }
-              ]
-            },
-            "id": 150,
-            "implemented": true,
-            "isConstructor": false,
-            "isDeclaredConst": true,
-            "modifiers": [],
-            "name": "hasCampaigns",
-            "nodeType": "FunctionDefinition",
-            "parameters": {
-              "id": 138,
-              "nodeType": "ParameterList",
-              "parameters": [
-                {
-                  "constant": false,
-                  "id": 137,
-                  "name": "_address",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 150,
-                  "src": "1428:16:0",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_address",
-                    "typeString": "address"
-                  },
-                  "typeName": {
-                    "id": 136,
-                    "name": "address",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "1428:7:0",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_address",
-                      "typeString": "address"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                }
-              ],
-              "src": "1427:18:0"
-            },
-            "payable": false,
-            "returnParameters": {
-              "id": 141,
-              "nodeType": "ParameterList",
-              "parameters": [
-                {
-                  "constant": false,
-                  "id": 140,
-                  "name": "",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 150,
-                  "src": "1466:4:0",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_bool",
-                    "typeString": "bool"
-                  },
-                  "typeName": {
-                    "id": 139,
-                    "name": "bool",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "1466:4:0",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_bool",
-                      "typeString": "bool"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                }
-              ],
-              "src": "1465:6:0"
-            },
-            "scope": 275,
-            "src": "1406:126:0",
-            "stateMutability": "view",
-            "superFunction": null,
-            "visibility": "public"
-          },
-          {
-            "body": {
-              "id": 201,
-              "nodeType": "Block",
-              "src": "1684:307:0",
+              "src": "1546:307:0",
               "statements": [
                 {
                   "assignments": [
-                    166
+                    151
                   ],
                   "declarations": [
                     {
                       "constant": false,
-                      "id": 166,
+                      "id": 151,
                       "name": "campaign",
                       "nodeType": "VariableDeclaration",
-                      "scope": 202,
-                      "src": "1695:24:0",
+                      "scope": 187,
+                      "src": "1557:24:0",
                       "stateVariable": false,
                       "storageLocation": "memory",
                       "typeDescriptions": {
@@ -5420,11 +5046,11 @@
                       },
                       "typeName": {
                         "contractScope": null,
-                        "id": 165,
+                        "id": 150,
                         "name": "Campaign",
                         "nodeType": "UserDefinedTypeName",
                         "referencedDeclaration": 118,
-                        "src": "1695:8:0",
+                        "src": "1557:8:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_struct$_Campaign_$118_storage_ptr",
                           "typeString": "struct EthStarter.Campaign storage pointer"
@@ -5434,13 +5060,13 @@
                       "visibility": "internal"
                     }
                   ],
-                  "id": 179,
+                  "id": 164,
                   "initialValue": {
                     "argumentTypes": null,
                     "arguments": [
                       {
                         "argumentTypes": null,
-                        "id": 169,
+                        "id": 154,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -5448,15 +5074,15 @@
                         "nodeType": "UnaryOperation",
                         "operator": "++",
                         "prefix": false,
-                        "src": "1731:17:0",
+                        "src": "1593:17:0",
                         "subExpression": {
                           "argumentTypes": null,
-                          "id": 168,
+                          "id": 153,
                           "name": "campaignCounter",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
                           "referencedDeclaration": 121,
-                          "src": "1731:15:0",
+                          "src": "1593:15:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_uint256",
                             "typeString": "uint256"
@@ -5469,12 +5095,12 @@
                       },
                       {
                         "argumentTypes": null,
-                        "id": 170,
+                        "id": 155,
                         "name": "_goalAmmount",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 152,
-                        "src": "1750:12:0",
+                        "referencedDeclaration": 137,
+                        "src": "1612:12:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -5482,12 +5108,12 @@
                       },
                       {
                         "argumentTypes": null,
-                        "id": 171,
+                        "id": 156,
                         "name": "_endDate",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 160,
-                        "src": "1764:8:0",
+                        "referencedDeclaration": 145,
+                        "src": "1626:8:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -5497,18 +5123,18 @@
                         "argumentTypes": null,
                         "expression": {
                           "argumentTypes": null,
-                          "id": 172,
+                          "id": 157,
                           "name": "block",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 379,
-                          "src": "1774:5:0",
+                          "referencedDeclaration": 307,
+                          "src": "1636:5:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_block",
                             "typeString": "block"
                           }
                         },
-                        "id": 173,
+                        "id": 158,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -5516,7 +5142,7 @@
                         "memberName": "timestamp",
                         "nodeType": "MemberAccess",
                         "referencedDeclaration": null,
-                        "src": "1774:15:0",
+                        "src": "1636:15:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -5524,12 +5150,12 @@
                       },
                       {
                         "argumentTypes": null,
-                        "id": 174,
+                        "id": 159,
                         "name": "_isPublished",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 162,
-                        "src": "1791:12:0",
+                        "referencedDeclaration": 147,
+                        "src": "1653:12:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_bool",
                           "typeString": "bool"
@@ -5537,12 +5163,12 @@
                       },
                       {
                         "argumentTypes": null,
-                        "id": 175,
+                        "id": 160,
                         "name": "_title",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 154,
-                        "src": "1805:6:0",
+                        "referencedDeclaration": 139,
+                        "src": "1667:6:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_string_memory_ptr",
                           "typeString": "string memory"
@@ -5550,12 +5176,12 @@
                       },
                       {
                         "argumentTypes": null,
-                        "id": 176,
+                        "id": 161,
                         "name": "_website",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 156,
-                        "src": "1813:8:0",
+                        "referencedDeclaration": 141,
+                        "src": "1675:8:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_string_memory_ptr",
                           "typeString": "string memory"
@@ -5563,12 +5189,12 @@
                       },
                       {
                         "argumentTypes": null,
-                        "id": 177,
+                        "id": 162,
                         "name": "_description",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 158,
-                        "src": "1823:12:0",
+                        "referencedDeclaration": 143,
+                        "src": "1685:12:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_string_memory_ptr",
                           "typeString": "string memory"
@@ -5610,18 +5236,18 @@
                           "typeString": "string memory"
                         }
                       ],
-                      "id": 167,
+                      "id": 152,
                       "name": "Campaign",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
                       "referencedDeclaration": 118,
-                      "src": "1722:8:0",
+                      "src": "1584:8:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_type$_t_struct$_Campaign_$118_storage_ptr_$",
                         "typeString": "type(struct EthStarter.Campaign storage pointer)"
                       }
                     },
-                    "id": 178,
+                    "id": 163,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -5629,14 +5255,14 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "1722:114:0",
+                    "src": "1584:114:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_struct$_Campaign_$118_memory",
                       "typeString": "struct EthStarter.Campaign memory"
                     }
                   },
                   "nodeType": "VariableDeclarationStatement",
-                  "src": "1695:141:0"
+                  "src": "1557:141:0"
                 },
                 {
                   "expression": {
@@ -5644,12 +5270,12 @@
                     "arguments": [
                       {
                         "argumentTypes": null,
-                        "id": 185,
+                        "id": 170,
                         "name": "campaign",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 166,
-                        "src": "1883:8:0",
+                        "referencedDeclaration": 151,
+                        "src": "1745:8:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_struct$_Campaign_$118_memory_ptr",
                           "typeString": "struct EthStarter.Campaign memory"
@@ -5667,34 +5293,34 @@
                         "argumentTypes": null,
                         "baseExpression": {
                           "argumentTypes": null,
-                          "id": 180,
+                          "id": 165,
                           "name": "userCampaigns",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
                           "referencedDeclaration": 126,
-                          "src": "1852:13:0",
+                          "src": "1714:13:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_mapping$_t_address_$_t_array$_t_struct$_Campaign_$118_storage_$dyn_storage_$",
                             "typeString": "mapping(address => struct EthStarter.Campaign storage ref[] storage ref)"
                           }
                         },
-                        "id": 183,
+                        "id": 168,
                         "indexExpression": {
                           "argumentTypes": null,
                           "expression": {
                             "argumentTypes": null,
-                            "id": 181,
+                            "id": 166,
                             "name": "msg",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 387,
-                            "src": "1866:3:0",
+                            "referencedDeclaration": 315,
+                            "src": "1728:3:0",
                             "typeDescriptions": {
                               "typeIdentifier": "t_magic_message",
                               "typeString": "msg"
                             }
                           },
-                          "id": 182,
+                          "id": 167,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -5702,7 +5328,7 @@
                           "memberName": "sender",
                           "nodeType": "MemberAccess",
                           "referencedDeclaration": null,
-                          "src": "1866:10:0",
+                          "src": "1728:10:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_address",
                             "typeString": "address"
@@ -5713,13 +5339,13 @@
                         "isPure": false,
                         "lValueRequested": false,
                         "nodeType": "IndexAccess",
-                        "src": "1852:25:0",
+                        "src": "1714:25:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_array$_t_struct$_Campaign_$118_storage_$dyn_storage",
                           "typeString": "struct EthStarter.Campaign storage ref[] storage ref"
                         }
                       },
-                      "id": 184,
+                      "id": 169,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -5727,13 +5353,13 @@
                       "memberName": "push",
                       "nodeType": "MemberAccess",
                       "referencedDeclaration": null,
-                      "src": "1852:30:0",
+                      "src": "1714:30:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_arraypush_nonpayable$_t_struct$_Campaign_$118_storage_$returns$_t_uint256_$",
                         "typeString": "function (struct EthStarter.Campaign storage ref) returns (uint256)"
                       }
                     },
-                    "id": 186,
+                    "id": 171,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -5741,15 +5367,15 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "1852:40:0",
+                    "src": "1714:40:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     }
                   },
-                  "id": 187,
+                  "id": 172,
                   "nodeType": "ExpressionStatement",
-                  "src": "1852:40:0"
+                  "src": "1714:40:0"
                 },
                 {
                   "expression": {
@@ -5757,12 +5383,12 @@
                     "arguments": [
                       {
                         "argumentTypes": null,
-                        "id": 191,
+                        "id": 176,
                         "name": "campaign",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 166,
-                        "src": "1921:8:0",
+                        "referencedDeclaration": 151,
+                        "src": "1783:8:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_struct$_Campaign_$118_memory_ptr",
                           "typeString": "struct EthStarter.Campaign memory"
@@ -5778,18 +5404,18 @@
                       ],
                       "expression": {
                         "argumentTypes": null,
-                        "id": 188,
+                        "id": 173,
                         "name": "allCampaigns",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
                         "referencedDeclaration": 129,
-                        "src": "1903:12:0",
+                        "src": "1765:12:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_array$_t_struct$_Campaign_$118_storage_$dyn_storage",
                           "typeString": "struct EthStarter.Campaign storage ref[] storage ref"
                         }
                       },
-                      "id": 190,
+                      "id": 175,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -5797,13 +5423,13 @@
                       "memberName": "push",
                       "nodeType": "MemberAccess",
                       "referencedDeclaration": null,
-                      "src": "1903:17:0",
+                      "src": "1765:17:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_arraypush_nonpayable$_t_struct$_Campaign_$118_storage_$returns$_t_uint256_$",
                         "typeString": "function (struct EthStarter.Campaign storage ref) returns (uint256)"
                       }
                     },
-                    "id": 192,
+                    "id": 177,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -5811,15 +5437,15 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "1903:27:0",
+                    "src": "1765:27:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     }
                   },
-                  "id": 193,
+                  "id": 178,
                   "nodeType": "ExpressionStatement",
-                  "src": "1903:27:0"
+                  "src": "1765:27:0"
                 },
                 {
                   "expression": {
@@ -5829,18 +5455,18 @@
                         "argumentTypes": null,
                         "expression": {
                           "argumentTypes": null,
-                          "id": 195,
+                          "id": 180,
                           "name": "msg",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 387,
-                          "src": "1959:3:0",
+                          "referencedDeclaration": 315,
+                          "src": "1821:3:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_message",
                             "typeString": "msg"
                           }
                         },
-                        "id": 196,
+                        "id": 181,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -5848,7 +5474,7 @@
                         "memberName": "sender",
                         "nodeType": "MemberAccess",
                         "referencedDeclaration": null,
-                        "src": "1959:10:0",
+                        "src": "1821:10:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_address",
                           "typeString": "address"
@@ -5858,18 +5484,18 @@
                         "argumentTypes": null,
                         "expression": {
                           "argumentTypes": null,
-                          "id": 197,
+                          "id": 182,
                           "name": "campaign",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 166,
-                          "src": "1971:8:0",
+                          "referencedDeclaration": 151,
+                          "src": "1833:8:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_struct$_Campaign_$118_memory_ptr",
                             "typeString": "struct EthStarter.Campaign memory"
                           }
                         },
-                        "id": 198,
+                        "id": 183,
                         "isConstant": false,
                         "isLValue": true,
                         "isPure": false,
@@ -5877,7 +5503,7 @@
                         "memberName": "id",
                         "nodeType": "MemberAccess",
                         "referencedDeclaration": 103,
-                        "src": "1971:11:0",
+                        "src": "1833:11:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -5895,18 +5521,18 @@
                           "typeString": "uint256"
                         }
                       ],
-                      "id": 194,
+                      "id": 179,
                       "name": "onCampaignCreated",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
                       "referencedDeclaration": 135,
-                      "src": "1941:17:0",
+                      "src": "1803:17:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_event_nonpayable$_t_address_$_t_uint256_$returns$__$",
                         "typeString": "function (address,uint256)"
                       }
                     },
-                    "id": 199,
+                    "id": 184,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -5914,19 +5540,19 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "1941:42:0",
+                    "src": "1803:42:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$__$",
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 200,
+                  "id": 185,
                   "nodeType": "ExpressionStatement",
-                  "src": "1941:42:0"
+                  "src": "1803:42:0"
                 }
               ]
             },
-            "id": 202,
+            "id": 187,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -5934,16 +5560,16 @@
             "name": "createCampaign",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 163,
+              "id": 148,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 152,
+                  "id": 137,
                   "name": "_goalAmmount",
                   "nodeType": "VariableDeclaration",
-                  "scope": 202,
-                  "src": "1568:17:0",
+                  "scope": 187,
+                  "src": "1430:17:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -5951,10 +5577,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 151,
+                    "id": 136,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1568:4:0",
+                    "src": "1430:4:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -5965,11 +5591,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 154,
+                  "id": 139,
                   "name": "_title",
                   "nodeType": "VariableDeclaration",
-                  "scope": 202,
-                  "src": "1587:13:0",
+                  "scope": 187,
+                  "src": "1449:13:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -5977,10 +5603,10 @@
                     "typeString": "string memory"
                   },
                   "typeName": {
-                    "id": 153,
+                    "id": 138,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1587:6:0",
+                    "src": "1449:6:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_string_storage_ptr",
                       "typeString": "string storage pointer"
@@ -5991,11 +5617,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 156,
+                  "id": 141,
                   "name": "_website",
                   "nodeType": "VariableDeclaration",
-                  "scope": 202,
-                  "src": "1602:15:0",
+                  "scope": 187,
+                  "src": "1464:15:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -6003,10 +5629,10 @@
                     "typeString": "string memory"
                   },
                   "typeName": {
-                    "id": 155,
+                    "id": 140,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1602:6:0",
+                    "src": "1464:6:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_string_storage_ptr",
                       "typeString": "string storage pointer"
@@ -6017,11 +5643,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 158,
+                  "id": 143,
                   "name": "_description",
                   "nodeType": "VariableDeclaration",
-                  "scope": 202,
-                  "src": "1619:19:0",
+                  "scope": 187,
+                  "src": "1481:19:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -6029,10 +5655,10 @@
                     "typeString": "string memory"
                   },
                   "typeName": {
-                    "id": 157,
+                    "id": 142,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1619:6:0",
+                    "src": "1481:6:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_string_storage_ptr",
                       "typeString": "string storage pointer"
@@ -6043,11 +5669,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 160,
+                  "id": 145,
                   "name": "_endDate",
                   "nodeType": "VariableDeclaration",
-                  "scope": 202,
-                  "src": "1640:16:0",
+                  "scope": 187,
+                  "src": "1502:16:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -6055,10 +5681,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 159,
+                    "id": 144,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1640:7:0",
+                    "src": "1502:7:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -6069,11 +5695,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 162,
+                  "id": 147,
                   "name": "_isPublished",
                   "nodeType": "VariableDeclaration",
-                  "scope": 202,
-                  "src": "1658:17:0",
+                  "scope": 187,
+                  "src": "1520:17:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -6081,10 +5707,10 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 161,
+                    "id": 146,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1658:4:0",
+                    "src": "1520:4:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -6094,39 +5720,39 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1567:109:0"
+              "src": "1429:109:0"
             },
             "payable": false,
             "returnParameters": {
-              "id": 164,
+              "id": 149,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1684:0:0"
+              "src": "1546:0:0"
             },
-            "scope": 275,
-            "src": "1544:447:0",
+            "scope": 260,
+            "src": "1406:447:0",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           },
           {
             "body": {
-              "id": 261,
+              "id": 246,
               "nodeType": "Block",
-              "src": "2090:388:0",
+              "src": "1952:388:0",
               "statements": [
                 {
                   "assignments": [
-                    215
+                    200
                   ],
                   "declarations": [
                     {
                       "constant": false,
-                      "id": 215,
+                      "id": 200,
                       "name": "toReturn",
                       "nodeType": "VariableDeclaration",
-                      "scope": 262,
-                      "src": "2101:26:0",
+                      "scope": 247,
+                      "src": "1963:26:0",
                       "stateVariable": false,
                       "storageLocation": "memory",
                       "typeDescriptions": {
@@ -6136,20 +5762,20 @@
                       "typeName": {
                         "baseType": {
                           "contractScope": null,
-                          "id": 213,
+                          "id": 198,
                           "name": "Campaign",
                           "nodeType": "UserDefinedTypeName",
                           "referencedDeclaration": 118,
-                          "src": "2101:8:0",
+                          "src": "1963:8:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_struct$_Campaign_$118_storage_ptr",
                             "typeString": "struct EthStarter.Campaign storage pointer"
                           }
                         },
-                        "id": 214,
+                        "id": 199,
                         "length": null,
                         "nodeType": "ArrayTypeName",
-                        "src": "2101:10:0",
+                        "src": "1963:10:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_array$_t_struct$_Campaign_$118_storage_$dyn_storage_ptr",
                           "typeString": "struct EthStarter.Campaign storage ref[] storage pointer"
@@ -6159,18 +5785,18 @@
                       "visibility": "internal"
                     }
                   ],
-                  "id": 221,
+                  "id": 206,
                   "initialValue": {
                     "argumentTypes": null,
                     "arguments": [
                       {
                         "argumentTypes": null,
-                        "id": 219,
+                        "id": 204,
                         "name": "_limit",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 206,
-                        "src": "2145:6:0",
+                        "referencedDeclaration": 191,
+                        "src": "2007:6:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -6184,13 +5810,13 @@
                           "typeString": "uint256"
                         }
                       ],
-                      "id": 218,
+                      "id": 203,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": true,
                       "lValueRequested": false,
                       "nodeType": "NewExpression",
-                      "src": "2130:14:0",
+                      "src": "1992:14:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_objectcreation_pure$_t_uint256_$returns$_t_array$_t_struct$_Campaign_$118_memory_$dyn_memory_$",
                         "typeString": "function (uint256) pure returns (struct EthStarter.Campaign memory[] memory)"
@@ -6198,27 +5824,27 @@
                       "typeName": {
                         "baseType": {
                           "contractScope": null,
-                          "id": 216,
+                          "id": 201,
                           "name": "Campaign",
                           "nodeType": "UserDefinedTypeName",
                           "referencedDeclaration": 118,
-                          "src": "2134:8:0",
+                          "src": "1996:8:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_struct$_Campaign_$118_storage_ptr",
                             "typeString": "struct EthStarter.Campaign storage pointer"
                           }
                         },
-                        "id": 217,
+                        "id": 202,
                         "length": null,
                         "nodeType": "ArrayTypeName",
-                        "src": "2134:10:0",
+                        "src": "1996:10:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_array$_t_struct$_Campaign_$118_storage_$dyn_storage_ptr",
                           "typeString": "struct EthStarter.Campaign storage ref[] storage pointer"
                         }
                       }
                     },
-                    "id": 220,
+                    "id": 205,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -6226,14 +5852,14 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "2130:22:0",
+                    "src": "1992:22:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_array$_t_struct$_Campaign_$118_memory_$dyn_memory",
                       "typeString": "struct EthStarter.Campaign memory[] memory"
                     }
                   },
                   "nodeType": "VariableDeclarationStatement",
-                  "src": "2101:51:0"
+                  "src": "1963:51:0"
                 },
                 {
                   "condition": {
@@ -6242,19 +5868,19 @@
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     },
-                    "id": 225,
+                    "id": 210,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftExpression": {
                       "argumentTypes": null,
-                      "id": 222,
+                      "id": 207,
                       "name": "_startIndex",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 204,
-                      "src": "2166:11:0",
+                      "referencedDeclaration": 189,
+                      "src": "2028:11:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
@@ -6266,18 +5892,18 @@
                       "argumentTypes": null,
                       "expression": {
                         "argumentTypes": null,
-                        "id": 223,
+                        "id": 208,
                         "name": "allCampaigns",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
                         "referencedDeclaration": 129,
-                        "src": "2181:12:0",
+                        "src": "2043:12:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_array$_t_struct$_Campaign_$118_storage_$dyn_storage",
                           "typeString": "struct EthStarter.Campaign storage ref[] storage ref"
                         }
                       },
-                      "id": 224,
+                      "id": 209,
                       "isConstant": false,
                       "isLValue": true,
                       "isPure": false,
@@ -6285,54 +5911,54 @@
                       "memberName": "length",
                       "nodeType": "MemberAccess",
                       "referencedDeclaration": null,
-                      "src": "2181:19:0",
+                      "src": "2043:19:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
                       }
                     },
-                    "src": "2166:34:0",
+                    "src": "2028:34:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
                     }
                   },
                   "falseBody": null,
-                  "id": 228,
+                  "id": 213,
                   "nodeType": "IfStatement",
-                  "src": "2163:67:0",
+                  "src": "2025:67:0",
                   "trueBody": {
                     "expression": {
                       "argumentTypes": null,
-                      "id": 226,
+                      "id": 211,
                       "name": "toReturn",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 215,
-                      "src": "2222:8:0",
+                      "referencedDeclaration": 200,
+                      "src": "2084:8:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_array$_t_struct$_Campaign_$118_memory_$dyn_memory_ptr",
                         "typeString": "struct EthStarter.Campaign memory[] memory"
                       }
                     },
-                    "functionReturnParameters": 211,
-                    "id": 227,
+                    "functionReturnParameters": 196,
+                    "id": 212,
                     "nodeType": "Return",
-                    "src": "2215:15:0"
+                    "src": "2077:15:0"
                   }
                 },
                 {
                   "assignments": [
-                    230
+                    215
                   ],
                   "declarations": [
                     {
                       "constant": false,
-                      "id": 230,
+                      "id": 215,
                       "name": "i",
                       "nodeType": "VariableDeclaration",
-                      "scope": 262,
-                      "src": "2251:9:0",
+                      "scope": 247,
+                      "src": "2113:9:0",
                       "stateVariable": false,
                       "storageLocation": "default",
                       "typeDescriptions": {
@@ -6340,10 +5966,10 @@
                         "typeString": "uint256"
                       },
                       "typeName": {
-                        "id": 229,
+                        "id": 214,
                         "name": "uint256",
                         "nodeType": "ElementaryTypeName",
-                        "src": "2251:7:0",
+                        "src": "2113:7:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -6353,35 +5979,35 @@
                       "visibility": "internal"
                     }
                   ],
-                  "id": 232,
+                  "id": 217,
                   "initialValue": {
                     "argumentTypes": null,
-                    "id": 231,
+                    "id": 216,
                     "name": "_startIndex",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 204,
-                    "src": "2263:11:0",
+                    "referencedDeclaration": 189,
+                    "src": "2125:11:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     }
                   },
                   "nodeType": "VariableDeclarationStatement",
-                  "src": "2251:23:0"
+                  "src": "2113:23:0"
                 },
                 {
                   "assignments": [
-                    234
+                    219
                   ],
                   "declarations": [
                     {
                       "constant": false,
-                      "id": 234,
+                      "id": 219,
                       "name": "end",
                       "nodeType": "VariableDeclaration",
-                      "scope": 262,
-                      "src": "2285:11:0",
+                      "scope": 247,
+                      "src": "2147:11:0",
                       "stateVariable": false,
                       "storageLocation": "default",
                       "typeDescriptions": {
@@ -6389,10 +6015,10 @@
                         "typeString": "uint256"
                       },
                       "typeName": {
-                        "id": 233,
+                        "id": 218,
                         "name": "uint256",
                         "nodeType": "ElementaryTypeName",
-                        "src": "2285:7:0",
+                        "src": "2147:7:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -6402,26 +6028,26 @@
                       "visibility": "internal"
                     }
                   ],
-                  "id": 238,
+                  "id": 223,
                   "initialValue": {
                     "argumentTypes": null,
                     "commonType": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     },
-                    "id": 237,
+                    "id": 222,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftExpression": {
                       "argumentTypes": null,
-                      "id": 235,
+                      "id": 220,
                       "name": "_startIndex",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 204,
-                      "src": "2299:11:0",
+                      "referencedDeclaration": 189,
+                      "src": "2161:11:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
@@ -6431,31 +6057,31 @@
                     "operator": "+",
                     "rightExpression": {
                       "argumentTypes": null,
-                      "id": 236,
+                      "id": 221,
                       "name": "_limit",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 206,
-                      "src": "2313:6:0",
+                      "referencedDeclaration": 191,
+                      "src": "2175:6:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
                       }
                     },
-                    "src": "2299:20:0",
+                    "src": "2161:20:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     }
                   },
                   "nodeType": "VariableDeclarationStatement",
-                  "src": "2285:34:0"
+                  "src": "2147:34:0"
                 },
                 {
                   "body": {
                     "expression": {
                       "argumentTypes": null,
-                      "id": 256,
+                      "id": 241,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -6464,37 +6090,37 @@
                         "argumentTypes": null,
                         "baseExpression": {
                           "argumentTypes": null,
-                          "id": 247,
+                          "id": 232,
                           "name": "toReturn",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 215,
-                          "src": "2386:8:0",
+                          "referencedDeclaration": 200,
+                          "src": "2248:8:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_array$_t_struct$_Campaign_$118_memory_$dyn_memory_ptr",
                             "typeString": "struct EthStarter.Campaign memory[] memory"
                           }
                         },
-                        "id": 251,
+                        "id": 236,
                         "indexExpression": {
                           "argumentTypes": null,
                           "commonType": {
                             "typeIdentifier": "t_uint256",
                             "typeString": "uint256"
                           },
-                          "id": 250,
+                          "id": 235,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
                           "lValueRequested": false,
                           "leftExpression": {
                             "argumentTypes": null,
-                            "id": 248,
+                            "id": 233,
                             "name": "i",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 230,
-                            "src": "2395:1:0",
+                            "referencedDeclaration": 215,
+                            "src": "2257:1:0",
                             "typeDescriptions": {
                               "typeIdentifier": "t_uint256",
                               "typeString": "uint256"
@@ -6504,18 +6130,18 @@
                           "operator": "-",
                           "rightExpression": {
                             "argumentTypes": null,
-                            "id": 249,
+                            "id": 234,
                             "name": "_startIndex",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 204,
-                            "src": "2399:11:0",
+                            "referencedDeclaration": 189,
+                            "src": "2261:11:0",
                             "typeDescriptions": {
                               "typeIdentifier": "t_uint256",
                               "typeString": "uint256"
                             }
                           },
-                          "src": "2395:15:0",
+                          "src": "2257:15:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_uint256",
                             "typeString": "uint256"
@@ -6526,7 +6152,7 @@
                         "isPure": false,
                         "lValueRequested": true,
                         "nodeType": "IndexAccess",
-                        "src": "2386:25:0",
+                        "src": "2248:25:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_struct$_Campaign_$118_memory",
                           "typeString": "struct EthStarter.Campaign memory"
@@ -6538,21 +6164,21 @@
                         "argumentTypes": null,
                         "baseExpression": {
                           "argumentTypes": null,
-                          "id": 252,
+                          "id": 237,
                           "name": "allCampaigns",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
                           "referencedDeclaration": 129,
-                          "src": "2414:12:0",
+                          "src": "2276:12:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_array$_t_struct$_Campaign_$118_storage_$dyn_storage",
                             "typeString": "struct EthStarter.Campaign storage ref[] storage ref"
                           }
                         },
-                        "id": 255,
+                        "id": 240,
                         "indexExpression": {
                           "argumentTypes": null,
-                          "id": 254,
+                          "id": 239,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -6560,15 +6186,15 @@
                           "nodeType": "UnaryOperation",
                           "operator": "++",
                           "prefix": false,
-                          "src": "2427:3:0",
+                          "src": "2289:3:0",
                           "subExpression": {
                             "argumentTypes": null,
-                            "id": 253,
+                            "id": 238,
                             "name": "i",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 230,
-                            "src": "2427:1:0",
+                            "referencedDeclaration": 215,
+                            "src": "2289:1:0",
                             "typeDescriptions": {
                               "typeIdentifier": "t_uint256",
                               "typeString": "uint256"
@@ -6584,21 +6210,21 @@
                         "isPure": false,
                         "lValueRequested": false,
                         "nodeType": "IndexAccess",
-                        "src": "2414:17:0",
+                        "src": "2276:17:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_struct$_Campaign_$118_storage",
                           "typeString": "struct EthStarter.Campaign storage ref"
                         }
                       },
-                      "src": "2386:45:0",
+                      "src": "2248:45:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_struct$_Campaign_$118_memory",
                         "typeString": "struct EthStarter.Campaign memory"
                       }
                     },
-                    "id": 257,
+                    "id": 242,
                     "nodeType": "ExpressionStatement",
-                    "src": "2386:45:0"
+                    "src": "2248:45:0"
                   },
                   "condition": {
                     "argumentTypes": null,
@@ -6606,7 +6232,7 @@
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
                     },
-                    "id": 246,
+                    "id": 231,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -6617,19 +6243,19 @@
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
                       },
-                      "id": 241,
+                      "id": 226,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
                       "lValueRequested": false,
                       "leftExpression": {
                         "argumentTypes": null,
-                        "id": 239,
+                        "id": 224,
                         "name": "i",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 230,
-                        "src": "2337:1:0",
+                        "referencedDeclaration": 215,
+                        "src": "2199:1:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -6639,18 +6265,18 @@
                       "operator": "<",
                       "rightExpression": {
                         "argumentTypes": null,
-                        "id": 240,
+                        "id": 225,
                         "name": "end",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 234,
-                        "src": "2341:3:0",
+                        "referencedDeclaration": 219,
+                        "src": "2203:3:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
                         }
                       },
-                      "src": "2337:7:0",
+                      "src": "2199:7:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_bool",
                         "typeString": "bool"
@@ -6664,19 +6290,19 @@
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
                       },
-                      "id": 245,
+                      "id": 230,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
                       "lValueRequested": false,
                       "leftExpression": {
                         "argumentTypes": null,
-                        "id": 242,
+                        "id": 227,
                         "name": "i",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 230,
-                        "src": "2348:1:0",
+                        "referencedDeclaration": 215,
+                        "src": "2210:1:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -6688,18 +6314,18 @@
                         "argumentTypes": null,
                         "expression": {
                           "argumentTypes": null,
-                          "id": 243,
+                          "id": 228,
                           "name": "allCampaigns",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
                           "referencedDeclaration": 129,
-                          "src": "2352:12:0",
+                          "src": "2214:12:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_array$_t_struct$_Campaign_$118_storage_$dyn_storage",
                             "typeString": "struct EthStarter.Campaign storage ref[] storage ref"
                           }
                         },
-                        "id": 244,
+                        "id": 229,
                         "isConstant": false,
                         "isLValue": true,
                         "isPure": false,
@@ -6707,50 +6333,50 @@
                         "memberName": "length",
                         "nodeType": "MemberAccess",
                         "referencedDeclaration": null,
-                        "src": "2352:19:0",
+                        "src": "2214:19:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
                         }
                       },
-                      "src": "2348:23:0",
+                      "src": "2210:23:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_bool",
                         "typeString": "bool"
                       }
                     },
-                    "src": "2337:34:0",
+                    "src": "2199:34:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
                     }
                   },
-                  "id": 258,
+                  "id": 243,
                   "nodeType": "WhileStatement",
-                  "src": "2331:100:0"
+                  "src": "2193:100:0"
                 },
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 259,
+                    "id": 244,
                     "name": "toReturn",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 215,
-                    "src": "2459:8:0",
+                    "referencedDeclaration": 200,
+                    "src": "2321:8:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_array$_t_struct$_Campaign_$118_memory_$dyn_memory_ptr",
                       "typeString": "struct EthStarter.Campaign memory[] memory"
                     }
                   },
-                  "functionReturnParameters": 211,
-                  "id": 260,
+                  "functionReturnParameters": 196,
+                  "id": 245,
                   "nodeType": "Return",
-                  "src": "2452:15:0"
+                  "src": "2314:15:0"
                 }
               ]
             },
-            "id": 262,
+            "id": 247,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": true,
@@ -6758,16 +6384,16 @@
             "name": "getCampaigns",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 207,
+              "id": 192,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 204,
+                  "id": 189,
                   "name": "_startIndex",
                   "nodeType": "VariableDeclaration",
-                  "scope": 262,
-                  "src": "2021:19:0",
+                  "scope": 247,
+                  "src": "1883:19:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -6775,10 +6401,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 203,
+                    "id": 188,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "2021:7:0",
+                    "src": "1883:7:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -6789,11 +6415,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 206,
+                  "id": 191,
                   "name": "_limit",
                   "nodeType": "VariableDeclaration",
-                  "scope": 262,
-                  "src": "2042:14:0",
+                  "scope": 247,
+                  "src": "1904:14:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -6801,10 +6427,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 205,
+                    "id": 190,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "2042:7:0",
+                    "src": "1904:7:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -6814,20 +6440,20 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "2020:37:0"
+              "src": "1882:37:0"
             },
             "payable": false,
             "returnParameters": {
-              "id": 211,
+              "id": 196,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 210,
+                  "id": 195,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 262,
-                  "src": "2079:10:0",
+                  "scope": 247,
+                  "src": "1941:10:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -6837,20 +6463,20 @@
                   "typeName": {
                     "baseType": {
                       "contractScope": null,
-                      "id": 208,
+                      "id": 193,
                       "name": "Campaign",
                       "nodeType": "UserDefinedTypeName",
                       "referencedDeclaration": 118,
-                      "src": "2079:8:0",
+                      "src": "1941:8:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_struct$_Campaign_$118_storage_ptr",
                         "typeString": "struct EthStarter.Campaign storage pointer"
                       }
                     },
-                    "id": 209,
+                    "id": 194,
                     "length": null,
                     "nodeType": "ArrayTypeName",
-                    "src": "2079:10:0",
+                    "src": "1941:10:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_array$_t_struct$_Campaign_$118_storage_$dyn_storage_ptr",
                       "typeString": "struct EthStarter.Campaign storage ref[] storage pointer"
@@ -6860,32 +6486,32 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "2078:12:0"
+              "src": "1940:12:0"
             },
-            "scope": 275,
-            "src": "1999:479:0",
+            "scope": 260,
+            "src": "1861:479:0",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "public"
           },
           {
             "body": {
-              "id": 269,
+              "id": 254,
               "nodeType": "Block",
-              "src": "2538:45:0",
+              "src": "2400:45:0",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
                     "hexValue": "4d6572656e677565204d6572656e677565",
-                    "id": 267,
+                    "id": 252,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": true,
                     "kind": "string",
                     "lValueRequested": false,
                     "nodeType": "Literal",
-                    "src": "2556:19:0",
+                    "src": "2418:19:0",
                     "subdenomination": null,
                     "typeDescriptions": {
                       "typeIdentifier": "t_stringliteral_20e53b4382970a97a87a0787a5562362f68939e84c0c5ba0225a8f6313b959dd",
@@ -6893,14 +6519,14 @@
                     },
                     "value": "Merengue Merengue"
                   },
-                  "functionReturnParameters": 266,
-                  "id": 268,
+                  "functionReturnParameters": 251,
+                  "id": 253,
                   "nodeType": "Return",
-                  "src": "2549:26:0"
+                  "src": "2411:26:0"
                 }
               ]
             },
-            "id": 270,
+            "id": 255,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": true,
@@ -6908,23 +6534,23 @@
             "name": "getTestString",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 263,
+              "id": 248,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "2508:2:0"
+              "src": "2370:2:0"
             },
             "payable": false,
             "returnParameters": {
-              "id": 266,
+              "id": 251,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 265,
+                  "id": 250,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 270,
-                  "src": "2531:6:0",
+                  "scope": 255,
+                  "src": "2393:6:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -6932,10 +6558,10 @@
                     "typeString": "string memory"
                   },
                   "typeName": {
-                    "id": 264,
+                    "id": 249,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
-                    "src": "2531:6:0",
+                    "src": "2393:6:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_string_storage_ptr",
                       "typeString": "string storage pointer"
@@ -6945,22 +6571,22 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "2530:8:0"
+              "src": "2392:8:0"
             },
-            "scope": 275,
-            "src": "2486:97:0",
+            "scope": 260,
+            "src": "2348:97:0",
             "stateMutability": "pure",
             "superFunction": null,
             "visibility": "public"
           },
           {
             "body": {
-              "id": 273,
+              "id": 258,
               "nodeType": "Block",
-              "src": "2668:18:0",
+              "src": "2530:18:0",
               "statements": []
             },
-            "id": 274,
+            "id": 259,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -6968,30 +6594,30 @@
             "name": "",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 271,
+              "id": 256,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "2651:2:0"
+              "src": "2513:2:0"
             },
             "payable": true,
             "returnParameters": {
-              "id": 272,
+              "id": 257,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "2668:0:0"
+              "src": "2530:0:0"
             },
-            "scope": 275,
-            "src": "2643:43:0",
+            "scope": 260,
+            "src": "2505:43:0",
             "stateMutability": "payable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 276,
-        "src": "765:1935:0"
+        "scope": 261,
+        "src": "765:1793:0"
       }
     ],
-    "src": "0:2700:0"
+    "src": "0:2558:0"
   },
   "compiler": {
     "name": "solc",
@@ -6999,5 +6625,5 @@
   },
   "networks": {},
   "schemaVersion": "2.0.0",
-  "updatedAt": "2018-05-10T23:12:12.356Z"
+  "updatedAt": "2018-05-10T23:54:48.830Z"
 }

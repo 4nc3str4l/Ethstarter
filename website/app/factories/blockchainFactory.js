@@ -1,8 +1,8 @@
 var EthStarter = null;
 (function() {
+    
     var blockchainFactory = function($http, $log, appSettings){
         
-
         // Init Web3
         function initWeb3(){
             // Use the truffle provider for web3
@@ -45,6 +45,9 @@ var EthStarter = null;
             },
             getTestString: function(){
                 EthStarter.getTestString();
+            },
+            publishCampaign: function(_title, _website, _endDate, _contributionAmmount, _description){
+                alert("Call the contract!" + [_title, _website, _endDate, _contributionAmmount, _description]);
             }
         };
     }
