@@ -1,0 +1,37 @@
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="project-title">{{project.title}}</h1>
+        </div>
+        <div class="col-lg-8">
+            <p>Published in: {{project.start_date}}</p>
+            <p>{{project.description}}</p>
+            <p>Project Website: <a href="{{project.website}}">{{project.website}}</a></p>
+            
+        </div>
+        <div class="col-lg-4">
+            <h3>Raised</h3>
+            <p>{{project.raised}} ETH</p>
+            <h3>Goal</h3>
+            <p>{{project.goal}} ETH</p>
+            <h3>Backing Ends</h3>
+            <p>{{project.end_date}}</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="contribute">
+                <h3>Contribute: </h3>
+                <input type="text" placeholder="Name (not required)">
+                <input type="email" placeholder="Email (not required)">
+                <form id="contribute-form">
+                    <input type="number" min="0" id="contribute-ammount" name="ammount" value="1" step="0.0001" ng-model="contributionAmmount"> <span id="currency">ETH</span>
+                    <span>Help {{project.title}} with {{ contributionAmmount }} ether</span><br>
+                    <input type="submit" id="contribute-send" value="Contribute">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

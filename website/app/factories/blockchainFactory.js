@@ -1,6 +1,7 @@
-var MetaCoin = null;
-
 (function() {
+
+    var MetaCoin = null;
+    
     var blockchainFactory = function($http, $log, appSettings){
         
         // Init Web3

@@ -5,100 +5,123 @@
 
         var projects = [
             {
+                id: 1,
                 title : 'Project 1',
                 description: lorem,
                 goal: '10',
                 raised: '1.2',
                 start_date: '10-02-2018',
                 end_date: '10-3-2018',
+                website: 'https://www.google.com'
             },
             {
+                id: 2,
                 title : 'Project 2',
                 description: lorem,
                 goal: '10',
                 raised: '1.2',
                 start_date: '10-02-2018',
                 end_date: '10-3-2018',
-            },
+                website: 'https://www.google.com'            },
             {
+                id: 3,
                 title : 'Project 3',
                 description: lorem,
                 goal: '10',
                 raised: '1.2',
                 start_date: '10-02-2018',
                 end_date: '10-3-2018',
+                website: 'https://www.google.com'
             },
             {
+                id: 4,
                 title : 'Project 4',
                 description: lorem,
                 goal: '10',
                 raised: '1.2',
                 start_date: '10-02-2018',
                 end_date: '10-3-2018',
+                website: 'https://www.google.com'
             }, 
             {
+                id: 5,
                 title : 'Project 5',
                 description: lorem,
                 goal: '10',
                 raised: '1.2',
                 start_date: '10-02-2018',
                 end_date: '10-3-2018',
+                website: 'https://www.google.com'
             },
             {
+                id: 6,
                 title : 'Project 6',
                 description: lorem,
                 goal: '10',
                 raised: '1.2',
                 start_date: '10-02-2018',
                 end_date: '10-3-2018',
+                website: 'https://www.google.com'
             },
             {
+                id: 7,
                 title : 'Project 7',
                 description: lorem,
                 goal: '10',
                 raised: '1.2',
                 start_date: '10-02-2018',
                 end_date: '10-3-2018',
+                website: 'https://www.google.com'
             },
             {
+                id: 8,
                 title : 'Project 8',
                 description: lorem,
                 goal: '10',
                 raised: '1.2',
                 start_date: '10-02-2018',
                 end_date: '10-3-2018',
+                website: 'https://www.google.com'
             },
             {
+                id: 9,
                 title : 'Project 9',
                 description: lorem,
                 goal: '10',
                 raised: '1.2',
                 start_date: '10-02-2018',
                 end_date: '10-3-2018',
+                website: 'https://www.google.com'
             },
             {
+                id: 10,
                 title : 'Project 10',
                 description: lorem,
                 goal: '10',
                 raised: '1.2',
                 start_date: '10-02-2018',
                 end_date: '10-3-2018',
+                website: 'https://www.google.com'
             },
             {
+                id: 11,
                 title : 'Project 11',
                 description: lorem,
                 goal: '10',
                 raised: '1.2',
                 start_date: '10-02-2018',
                 end_date: '10-3-2018',
+                website: 'https://www.google.com'
             },
             {
+                id: 12,
                 title : 'Project 12',
                 description: lorem,
                 goal: '10',
                 raised: '1.2',
                 start_date: '10-02-2018',
                 end_date: '10-3-2018',
+                website: 'https://www.google.com'
             }
         ]
 
@@ -106,6 +129,15 @@
             getProjects : function(){
                 return projects;
             },
+            getProjectWithID: function(_id){
+                var p  = null;
+                for(var i = 0; i < projects.length; ++i){
+                    p = projects[i];
+                    if(p.id == _id)
+                        return p;
+                }
+                return null;
+            }
         };
     }
     

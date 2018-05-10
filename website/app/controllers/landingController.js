@@ -1,6 +1,6 @@
 (function() {
     
-    var LandingController = function ($scope, $log, Blockchain, appSettings, DataFactory) {
+    var LandingController = function ($scope, $log, Blockchain, appSettings, DataFactory, $window) {
         
         $scope.projects = [];
 
@@ -8,10 +8,14 @@
             $scope.projects = DataFactory.getProjects();
         }
 
+        $scope.projectDetails = function(id){
+            $window.location = "#project/" +id;
+        }
+
         init();
     };
     
-    LandingController.$inject = ['$scope', '$log', 'Blockchain', 'appSettings', 'DataFactory'];
+    LandingController.$inject = ['$scope', '$log', 'Blockchain', 'appSettings', 'DataFactory', '$window'];
 
     angular.module('EthStarter')
       .controller('LandingController', LandingController);

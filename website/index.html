@@ -1,61 +1,62 @@
 <!DOCTYPE html>
 <html ng-app="EthStarter">
+
     <head>
         <title>EthStarter</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
         <link rel="stylesheet" type="text/css" href="libs/bootstrap_v.4.1.1/bootstrap.min.css">
-        <link rel="stylesheet" type="text/css" href="css/index.css">
-        
+        <link rel="stylesheet" type="text/css" href="css/index.css">   
     </head>
+    
     <body>
-        
+        <!-- Navigation bar -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+                <a class="navbar-brand" href="#">EthStarter</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            
+                <div class="collapse navbar-collapse" id="navbarColor02">
+                    <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Projects</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">About</a>
+                    </li>
+                    </ul>
+                    <form class="form-inline">
+                        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
+                    </form>
+                </div>
+            </nav>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-            <a class="navbar-brand" href="#">EthStarter</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-        
-            <div class="collapse navbar-collapse" id="navbarColor02">
-                <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Projects</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">About</a>
-                </li>
-                </ul>
-                <form class="form-inline">
-                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
-                </form>
-            </div>
-        </nav>
+            <!-- View -->
+            <div ng-view></div>
 
-        <!-- View -->
-        <div ng-view></div>
+            <!-- AngularJS  -->
+            <script type="text/javascript" src="libs/angular_v.1.6.9/angular.min.js"></script>
+            <script type="text/javascript" src="libs/angular_v.1.6.9/angular-route.min.js"></script>
+            <script type="text/javascript" src="libs/angular_v.1.6.9/angular-animate.min.js"></script>
 
-        <!-- AngularJS  -->
-        <script type="text/javascript" src="libs/angular_v.1.6.9/angular.min.js"></script>
-        <script type="text/javascript" src="libs/angular_v.1.6.9/angular-route.min.js"></script>
-        <script type="text/javascript" src="libs/angular_v.1.6.9/angular-animate.min.js"></script>
+            <!-- Web3.js -->
+            <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js/dist/web3.min.js"></script>
 
-        <!-- Web3.js -->
-        <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js/dist/web3.min.js"></script>
-
-        <script type="text/javascript" src="app/app.js"></script>
-        <script type="text/javascript" src="app/values/values.js"></script>
-        
-        <!-- Services And Factories -->
-        <script type="text/javascript" src="app/factories/blockchainFactory.js"></script>
-        <script type="text/javascript" src="app/factories/dataFactory.js"></script>
-        
-        <!--- Controllers -->
-        <script type="text/javascript" src="app/controllers/landingController.js"></script>
-        
+            <script type="text/javascript" src="app/app.js"></script>
+            <script type="text/javascript" src="app/values/values.js"></script>
+            
+            <!-- Services And Factories -->
+            <script type="text/javascript" src="app/factories/blockchainFactory.js"></script>
+            <script type="text/javascript" src="app/factories/dataFactory.js"></script>
+            
+            <!--- Controllers -->
+            <script type="text/javascript" src="app/controllers/landingController.js"></script>
+            <script type="text/javascript" src="app/controllers/projectController.js"></script>
+            
     </body>
 </html>
