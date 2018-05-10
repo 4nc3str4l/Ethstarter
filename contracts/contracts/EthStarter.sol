@@ -57,10 +57,6 @@ contract EthStarter is mortal{
     // Create an event when someone is added
     event onCampaignCreated(address _creator, uint _campaignID);
 
-    function hasCampaigns(address _address) public view returns(bool) {
-        return userCampaigns[_address].length > 0;
-    }
-    
     function createCampaign(uint _goalAmmount, string _title, string _website, string _description, uint256 _endDate, bool _isPublished) public {
         Campaign memory campaign = Campaign(campaignCounter++, _goalAmmount, _endDate, block.timestamp, _isPublished, _title, _website, _description);     
         userCampaigns[msg.sender].push(campaign);
@@ -88,7 +84,5 @@ contract EthStarter is mortal{
     // Like that we can send ether to the contract
     function() payable public{
         
-    }
-
-       
+    }       
 }
