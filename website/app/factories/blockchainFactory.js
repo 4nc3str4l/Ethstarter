@@ -45,15 +45,25 @@ var EthStarter = null;
             publishCampaign: function(_title, _website, _endDate, _goalAmmount, _description){
                 var date = (new Date(_endDate)).getTime();
                 var unixTimestamp = date / 1000;
-                EthStarter.createCampaign.call(_goalAmmount, _title, _website, _description, unixTimestamp, true);
+                var goalAmmountWei = web3.toBigNumber(web3.toWei(_goalAmmount, "ether"));
+                EthStarter.createCampaign.sendTransaction(goalAmmountWei, _title, _website, _description, unixTimestamp, true,
+                    {
+                        from:web3.eth.accounts[0],
+                        gas:4000000},function (error, result){
+                            if(!error){
+                                console.log(result);
+                            } else{
+                                console.log(error);
+                            }
+                    });
             },
 
             getNumCampaigns: function(){
-                return EthStarter.getNumCampaigns.call().c[0];
+                return EthStarter.getNumCampaigns.call().toNumber();
             },
             
             getCampaignID: function(_index){
-                return EthStarter.getCampaignID.call(_index).c[0];
+                return EthStarter.getCampaignID.call(_index).toNumber();
             },
 
             getCampaignTitle: function(_index){
@@ -61,15 +71,15 @@ var EthStarter = null;
             },
             
             getCampaingGoalAmmount: function(_index){
-                return EthStarter.getCampaingGoalAmmount.call(_index).c[0];
+                return web3.fromWei(EthStarter.getCampaingGoalAmmount.call(_index), "ether");
             },
             
             getCampaignEndDate: function(_index){
-                return unixTimeStampToDate(EthStarter.getCampaignEndDate.call(_index).c[0]);
+                return unixTimeStampToDate(EthStarter.getCampaignEndDate.call(_index).toNumber());
             },
             
             getCampaignCreationDate: function(_index){
-                return unixTimeStampToDate(EthStarter.getCampaignCreationDate.call(_index).c[0]);
+                return unixTimeStampToDate(EthStarter.getCampaignCreationDate.call(_index).toNumber());
             },
             
             getCampaignIsPublished: function(_index){
@@ -85,7 +95,7 @@ var EthStarter = null;
             },
 
             getCampaignRaised: function(_index){
-                return EthStarter.getRaised.call(_index).c[0];
+                return web3.fromWei(EthStarter.getRaised.call(_index), "ether");
             },
 
             getCampaignByIndex: function(_index){
