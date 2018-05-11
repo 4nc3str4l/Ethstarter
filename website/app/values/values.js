@@ -1,58 +1,20 @@
 angular.module('EthStarter').constant('appSettings', {
     development: true,
     contractAddress: '0x8f0483125fcb9aaaefa9209d8e9d7b9c8b9fb90f',
-    contractABI: [
+    contractABI:[
       {
         "constant": true,
         "inputs": [
           {
-            "name": "_startIndex",
-            "type": "uint256"
-          },
-          {
-            "name": "_limit",
+            "name": "_index",
             "type": "uint256"
           }
         ],
-        "name": "getCampaigns",
+        "name": "getCampaignDescription",
         "outputs": [
           {
-            "components": [
-              {
-                "name": "id",
-                "type": "uint256"
-              },
-              {
-                "name": "goalAmmount",
-                "type": "uint256"
-              },
-              {
-                "name": "endDate",
-                "type": "uint256"
-              },
-              {
-                "name": "creationDate",
-                "type": "uint256"
-              },
-              {
-                "name": "isPublished",
-                "type": "bool"
-              },
-              {
-                "name": "title",
-                "type": "string"
-              },
-              {
-                "name": "website",
-                "type": "string"
-              },
-              {
-                "name": "description",
-                "type": "string"
-              }
-            ],
             "name": "",
-            "type": "tuple[]"
+            "type": "string"
           }
         ],
         "payable": false,
@@ -61,31 +23,17 @@ angular.module('EthStarter').constant('appSettings', {
       },
       {
         "constant": true,
-        "inputs": [],
-        "name": "getTestString",
-        "outputs": [
-          {
-            "name": "",
-            "type": "string"
-          }
-        ],
-        "payable": false,
-        "stateMutability": "pure",
-        "type": "function"
-      },
-      {
-        "constant": true,
         "inputs": [
           {
-            "name": "_address",
-            "type": "address"
+            "name": "_index",
+            "type": "uint256"
           }
         ],
-        "name": "hasCampaigns",
+        "name": "getCampaignCreationDate",
         "outputs": [
           {
             "name": "",
-            "type": "bool"
+            "type": "uint256"
           }
         ],
         "payable": false,
@@ -99,6 +47,58 @@ angular.module('EthStarter').constant('appSettings', {
         "outputs": [],
         "payable": false,
         "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "constant": true,
+        "inputs": [
+          {
+            "name": "_index",
+            "type": "uint256"
+          }
+        ],
+        "name": "getCampaignID",
+        "outputs": [
+          {
+            "name": "",
+            "type": "uint256"
+          }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "constant": true,
+        "inputs": [
+          {
+            "name": "_index",
+            "type": "uint256"
+          }
+        ],
+        "name": "getCampaingGoalAmmount",
+        "outputs": [
+          {
+            "name": "",
+            "type": "uint256"
+          }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "constant": true,
+        "inputs": [],
+        "name": "owner",
+        "outputs": [
+          {
+            "name": "",
+            "type": "address"
+          }
+        ],
+        "payable": false,
+        "stateMutability": "view",
         "type": "function"
       },
       {
@@ -136,9 +136,94 @@ angular.module('EthStarter').constant('appSettings', {
         "type": "function"
       },
       {
-        "payable": true,
-        "stateMutability": "payable",
-        "type": "fallback"
+        "constant": true,
+        "inputs": [],
+        "name": "getNumCampaigns",
+        "outputs": [
+          {
+            "name": "",
+            "type": "uint256"
+          }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "constant": true,
+        "inputs": [
+          {
+            "name": "_index",
+            "type": "uint256"
+          }
+        ],
+        "name": "getCampaignTitle",
+        "outputs": [
+          {
+            "name": "",
+            "type": "string"
+          }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "constant": true,
+        "inputs": [
+          {
+            "name": "_index",
+            "type": "uint256"
+          }
+        ],
+        "name": "getCampaignWebsite",
+        "outputs": [
+          {
+            "name": "",
+            "type": "string"
+          }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "constant": true,
+        "inputs": [
+          {
+            "name": "_index",
+            "type": "uint256"
+          }
+        ],
+        "name": "getCampaignIsPublished",
+        "outputs": [
+          {
+            "name": "",
+            "type": "bool"
+          }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "constant": true,
+        "inputs": [
+          {
+            "name": "_index",
+            "type": "uint256"
+          }
+        ],
+        "name": "getCampaignEndDate",
+        "outputs": [
+          {
+            "name": "",
+            "type": "uint256"
+          }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
       },
       {
         "anonymous": false,
@@ -156,6 +241,37 @@ angular.module('EthStarter').constant('appSettings', {
         ],
         "name": "onCampaignCreated",
         "type": "event"
+      },
+      {
+        "anonymous": false,
+        "inputs": [
+          {
+            "indexed": true,
+            "name": "previousOwner",
+            "type": "address"
+          },
+          {
+            "indexed": true,
+            "name": "newOwner",
+            "type": "address"
+          }
+        ],
+        "name": "OwnershipTransferred",
+        "type": "event"
+      },
+      {
+        "constant": false,
+        "inputs": [
+          {
+            "name": "newOwner",
+            "type": "address"
+          }
+        ],
+        "name": "transferOwnership",
+        "outputs": [],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
       }
     ],
   }

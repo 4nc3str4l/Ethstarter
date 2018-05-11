@@ -33,12 +33,6 @@ var EthStarter = null;
         initWeb3();
         initContract();
 
-        /*
-            NOTE: Send dates
-            let date = (new Date()).getTime();
-            let birthDateInUnixTimestamp = date/1000;
-        */
-
         return{
             getAddress : function(){
                 return web3.eth.coinbase;
@@ -46,8 +40,13 @@ var EthStarter = null;
             getTestString: function(){
                 EthStarter.getTestString();
             },
-            publishCampaign: function(_title, _website, _endDate, _contributionAmmount, _description){
-                alert("Call the contract!" + [_title, _website, _endDate, _contributionAmmount, _description]);
+            publishCampaign: function(_title, _website, _endDate, _goalAmmount, _description){
+                var date = (new Date(_endDate)).getTime();
+                var unixTimestamp = date / 1000;
+                EthStarter.createCampaign.call(_goalAmmount, _title, _website, _description, unixTimestamp, true);
+            },
+            getNumCampaigns: function(){
+                return EthStarter.getNumCampaigns.call().c[0];
             }
         };
     }

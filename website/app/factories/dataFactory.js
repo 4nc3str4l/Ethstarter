@@ -17,8 +17,8 @@
             {
                 id: 2,
                 title : 'Project 2',
-                description: lorem,
                 goal: '10',
+                description: lorem,
                 raised: '1.2',
                 start_date: '10-02-2018',
                 end_date: '10-3-2018',
