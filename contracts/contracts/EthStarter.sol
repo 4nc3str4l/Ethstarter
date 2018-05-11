@@ -1,9 +1,44 @@
 pragma solidity ^0.4.0;
-// To return structs
-pragma experimental ABIEncoderV2;
 
-import "./Mortal.sol";
+///////////////////////////////////////////////////////////////////////////////////
+//                                   OWNED                                       //
+///////////////////////////////////////////////////////////////////////////////////
+contract owned {
+    address public owner;
 
+    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
+
+    function Ownable() internal {
+        owner = msg.sender;
+    }
+
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function transferOwnership(address newOwner) public onlyOwner {
+        require(newOwner != address(0));
+        OwnershipTransferred(owner, newOwner);
+        owner = newOwner;
+    }
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////
+//                                 MORTAL                                        //
+///////////////////////////////////////////////////////////////////////////////////
+
+contract mortal is owned {
+    function kill() public {
+        if (msg.sender == owner)
+            selfdestruct(owner);
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////////
+//                                SAFE MATH                                      //
+///////////////////////////////////////////////////////////////////////////////////
 library SafeMath {
     function mul(uint256 a, uint256 b) internal pure returns (uint256) {
         if (a == 0) {
@@ -31,6 +66,9 @@ library SafeMath {
     }
 }
 
+///////////////////////////////////////////////////////////////////////////////////
+//                               ETH STARTER                                     //
+///////////////////////////////////////////////////////////////////////////////////
 contract EthStarter is mortal{
     
     // Campaign
@@ -48,41 +86,54 @@ contract EthStarter is mortal{
         string description;
     }
 
-    uint campaignCounter = 0;
-
-    // A regular map
     mapping(address => Campaign[]) userCampaigns;
+    
+    uint campaignCounter = 0;
     Campaign[] allCampaigns;
 
     // Create an event when someone is added
     event onCampaignCreated(address _creator, uint _campaignID);
-
+    
     function createCampaign(uint _goalAmmount, string _title, string _website, string _description, uint256 _endDate, bool _isPublished) public {
         Campaign memory campaign = Campaign(campaignCounter++, _goalAmmount, _endDate, block.timestamp, _isPublished, _title, _website, _description);     
         userCampaigns[msg.sender].push(campaign);
         allCampaigns.push(campaign);
         onCampaignCreated(msg.sender, campaign.id);
     }
-
-    function getCampaigns(uint256 _startIndex, uint256 _limit) public view returns (Campaign[]){
-        Campaign[] memory toReturn = new Campaign[](_limit);
-        if(_startIndex >= allCampaigns.length)
-            return toReturn;
-        
-        uint256 i = _startIndex;
-        uint256 end = _startIndex + _limit; 
-        while(i < end && i < allCampaigns.length)
-            toReturn[i - _startIndex] = allCampaigns[i++];
-        
-        return toReturn;   
+    
+    function getNumCampaigns() public view returns(uint){
+        return allCampaigns.length;
     }
-
-    function getTestString() public pure returns(string){
-        return "Merengue Merengue";
+    
+    function getCampaignTitle(uint _index) public view returns(string){
+        return allCampaigns[_index].title;
     }
-
-    // Like that we can send ether to the contract
-    function() payable public{
-        
-    }       
+    
+    function getCampaingGoalAmmount(uint _index) public view returns(uint256){
+        return allCampaigns[_index].goalAmmount;
+    }
+    
+    function getCampaignID(uint _index) public view returns(uint){
+        return allCampaigns[_index].id;
+    }
+    
+    function getCampaignEndDate(uint _index) public view returns(uint256){
+        return allCampaigns[_index].endDate;
+    }
+    
+    function getCampaignCreationDate(uint _index) public view returns(uint256){
+        return allCampaigns[_index].creationDate;
+    }
+    
+    function getCampaignIsPublished(uint _index) public view returns(bool){
+        return allCampaigns[_index].isPublished;
+    }
+    
+    function getCampaignWebsite(uint _index) public view returns(string){
+        return allCampaigns[_index].website;
+    }
+    
+    function getCampaignDescription(uint _index) public view returns(string){
+        return allCampaigns[_index].description;
+    }
 }
