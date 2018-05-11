@@ -3,15 +3,13 @@
     var LandingController = function ($scope, $log, Blockchain, appSettings, DataFactory, $window) {
         
         $scope.projects = [];
-        $scope.testString = "";
 
         function init(){
-            $scope.projects = DataFactory.getProjects();
-            $scope.testString = Blockchain.getTestString();
+            $scope.projects = Blockchain.getCampaigns();
         }
 
         $scope.projectDetails = function(id){
-            $window.location = "#project/" +id;
+            $window.location = "#project/" + id;
         }
 
         init();

@@ -37,16 +37,69 @@ var EthStarter = null;
             getAddress : function(){
                 return web3.eth.coinbase;
             },
-            getTestString: function(){
-                EthStarter.getTestString();
-            },
+            
             publishCampaign: function(_title, _website, _endDate, _goalAmmount, _description){
                 var date = (new Date(_endDate)).getTime();
                 var unixTimestamp = date / 1000;
                 EthStarter.createCampaign.call(_goalAmmount, _title, _website, _description, unixTimestamp, true);
             },
+
             getNumCampaigns: function(){
                 return EthStarter.getNumCampaigns.call().c[0];
+            },
+            
+            getCampaignID: function(_index){
+                return EthStarter.getCampaignID.call(_index).c[0];
+            },
+
+            getCampaignTitle: function(_index){
+                return EthStarter.getCampaignTitle.call(_index);
+            },
+            
+            getCampaingGoalAmmount: function(_index){
+                return EthStarter.getCampaingGoalAmmount.call(_index).c[0];
+            },
+            
+            getCampaignEndDate: function(_index){
+                return EthStarter.getCampaignEndDate.call(_index).c[0];
+            },
+            
+            getCampaignCreationDate: function(_index){
+                return EthStarter.getCampaignCreationDate.call(_index).c[0];
+            },
+            
+            getCampaignIsPublished: function(_index){
+                return EthStarter.getCampaignIsPublished.call(_index);
+            },
+            
+            getCampaignWebsite: function(_index){
+                return EthStarter.getCampaignWebsite.call(_index);
+            },
+            
+            getCampaignDescription: function(_index){
+                return EthStarter.getCampaignDescription.call(_index);
+            },
+
+            getCampaignByIndex: function(_index){
+                return{
+                    id : this.getCampaignID(_index),
+                    goalAmount: this.getCampaingGoalAmmount(_index),
+                    endDate: this.getCampaignEndDate(_index),
+                    creationDate: this.getCampaignCreationDate(_index),
+                    isPublished: this.getCampaignIsPublished(_index),
+                    title: this.getCampaignTitle(_index),
+                    website: this.getCampaignWebsite(_index),
+                    description: this.getCampaignDescription(_index),
+                    raised: 0.2 //TODO: Remove the hardcode
+                }
+            },
+            getCampaigns: function(){
+                var numProjects = EthStarter.getNumCampaigns();
+                var campaigns = [];
+                for(var i = 0; i < numProjects; ++i){
+                    campaigns.push(this.getCampaignByIndex(i));
+                }
+                return campaigns;
             }
         };
     }

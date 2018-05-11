@@ -5,7 +5,7 @@
             <h1 class="project-title">{{project.title}}</h1>
         </div>
         <div class="col-lg-8">
-            <p>Published in: {{project.start_date}}</p>
+            <p>Published in: {{project.creationDate}}</p>
             <p>{{project.description}}</p>
             <p>Project Website: <a href="{{project.website}}">{{project.website}}</a></p>
             
@@ -14,9 +14,9 @@
             <h3>Raised</h3>
             <p>{{project.raised}} ETH</p>
             <h3>Goal</h3>
-            <p>{{project.goal}} ETH</p>
+            <p>{{project.goalAmount}} ETH</p>
             <h3>Backing Ends</h3>
-            <p>{{project.end_date}}</p>
+            <p>{{project.endDate}}</p>
         </div>
     </div>
 

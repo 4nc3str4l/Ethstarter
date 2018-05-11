@@ -1,7 +1,7 @@
 angular.module('EthStarter').constant('appSettings', {
     development: true,
     contractAddress: '0x8f0483125fcb9aaaefa9209d8e9d7b9c8b9fb90f',
-    contractABI:[
+    contractABI: [
       {
         "constant": true,
         "inputs": [
