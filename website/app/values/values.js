@@ -1,7 +1,7 @@
 angular.module('EthStarter').constant('appSettings', {
     development: true,
-    contractAddress: '0x8f0483125fcb9aaaefa9209d8e9d7b9c8b9fb90f',
-    contractABI: [
+    contractAddress: '0x8cdaf0cd259887258bc13a92c0a6da92698644c0',
+    contractABI:  [
       {
         "constant": true,
         "inputs": [
@@ -30,6 +30,25 @@ angular.module('EthStarter').constant('appSettings', {
           }
         ],
         "name": "getCampaignCreationDate",
+        "outputs": [
+          {
+            "name": "",
+            "type": "uint256"
+          }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "constant": true,
+        "inputs": [
+          {
+            "name": "_index",
+            "type": "uint256"
+          }
+        ],
+        "name": "getRaised",
         "outputs": [
           {
             "name": "",
@@ -95,6 +114,25 @@ angular.module('EthStarter').constant('appSettings', {
           {
             "name": "",
             "type": "address"
+          }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "constant": true,
+        "inputs": [
+          {
+            "name": "_id",
+            "type": "uint256"
+          }
+        ],
+        "name": "getCampaignIndexByID",
+        "outputs": [
+          {
+            "name": "",
+            "type": "uint256"
           }
         ],
         "payable": false,

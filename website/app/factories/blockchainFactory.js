@@ -30,6 +30,10 @@ var EthStarter = null;
             EthStarter = contract.at(appSettings.contractAddress);
         }
 
+        function unixTimeStampToDate(_timestamp){
+            return new Date(_timestamp*1000);
+        }
+
         initWeb3();
         initContract();
 
@@ -61,11 +65,11 @@ var EthStarter = null;
             },
             
             getCampaignEndDate: function(_index){
-                return EthStarter.getCampaignEndDate.call(_index).c[0];
+                return unixTimeStampToDate(EthStarter.getCampaignEndDate.call(_index).c[0]);
             },
             
             getCampaignCreationDate: function(_index){
-                return EthStarter.getCampaignCreationDate.call(_index).c[0];
+                return unixTimeStampToDate(EthStarter.getCampaignCreationDate.call(_index).c[0]);
             },
             
             getCampaignIsPublished: function(_index){
@@ -80,8 +84,12 @@ var EthStarter = null;
                 return EthStarter.getCampaignDescription.call(_index);
             },
 
+            getCampaignRaised: function(_index){
+                return EthStarter.getRaised.call(_index).c[0];
+            },
+
             getCampaignByIndex: function(_index){
-                return{
+                return {
                     id : this.getCampaignID(_index),
                     goalAmount: this.getCampaingGoalAmmount(_index),
                     endDate: this.getCampaignEndDate(_index),
@@ -90,9 +98,10 @@ var EthStarter = null;
                     title: this.getCampaignTitle(_index),
                     website: this.getCampaignWebsite(_index),
                     description: this.getCampaignDescription(_index),
-                    raised: 0.2 //TODO: Remove the hardcode
+                    raised: this.getCampaignRaised(_index)
                 }
             },
+
             getCampaigns: function(){
                 var numProjects = EthStarter.getNumCampaigns();
                 var campaigns = [];
@@ -100,7 +109,12 @@ var EthStarter = null;
                     campaigns.push(this.getCampaignByIndex(i));
                 }
                 return campaigns;
-            }
+            },
+
+            getCampaignById: function(_id){
+                var index = EthStarter.getCampaignIndexByID.call(_id).c[0];
+                return this.getCampaignByIndex(index);
+            },
         };
     }
     

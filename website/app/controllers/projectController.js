@@ -3,7 +3,7 @@
     var ProjectController = function ($scope, $log, Blockchain, appSettings, DataFactory, $routeParams, $window) {
         
         $scope.project = null;
-        var projectIndex = -1;
+        var projectID = -1;
         $scope.contributionAmmount = 0.1;
         
         //TODO: Move this to a utils file
@@ -13,8 +13,8 @@
 
         function init(){
             if(isInteger($routeParams.id)){
-                projectIndex = $routeParams.id;
-                $scope.project = Blockchain.getCampaign(projectIndex);
+                projectID = $routeParams.id;
+                $scope.project = Blockchain.getCampaignById(projectID);
 
             }else{
                 $window.location.href = '/'

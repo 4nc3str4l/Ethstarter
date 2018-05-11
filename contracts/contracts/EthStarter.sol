@@ -84,18 +84,21 @@ contract EthStarter is mortal{
         string title;
         string website;
         string description;
+
+        uint256 raised;
     }
 
     mapping(address => Campaign[]) userCampaigns;
     
-    uint campaignCounter = 0;
+    uint constant CAMPAIGN_NOT_FOUND = 0;
+    uint campaignCounter = 1;
     Campaign[] allCampaigns;
 
     // Create an event when someone is added
     event onCampaignCreated(address _creator, uint _campaignID);
     
     function createCampaign(uint _goalAmmount, string _title, string _website, string _description, uint256 _endDate, bool _isPublished) public {
-        Campaign memory campaign = Campaign(campaignCounter++, _goalAmmount, _endDate, block.timestamp, _isPublished, _title, _website, _description);     
+        Campaign memory campaign = Campaign(campaignCounter++, _goalAmmount, _endDate, block.timestamp, _isPublished, _title, _website, _description, 0);     
         userCampaigns[msg.sender].push(campaign);
         allCampaigns.push(campaign);
         onCampaignCreated(msg.sender, campaign.id);
@@ -135,5 +138,21 @@ contract EthStarter is mortal{
     
     function getCampaignDescription(uint _index) public view returns(string){
         return allCampaigns[_index].description;
+    }
+
+    function getRaised(uint _index) public view returns(uint256){
+        return allCampaigns[_index].raised;
+    }
+
+    function getCampaignIndexByID(uint _id) public view returns(uint){
+        Campaign memory c;
+        uint numCampaigns = allCampaigns.length;
+        for(uint i = 0; i < numCampaigns; ++i){
+            c = allCampaigns[i];
+            if(c.id == _id){
+                return i;
+            }
+        }
+        revert();
     }
 }
