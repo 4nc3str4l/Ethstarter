@@ -42,20 +42,20 @@ var EthStarter = null;
                 return web3.eth.coinbase;
             },
             
-            publishCampaign: function(_title, _website, _endDate, _goalAmmount, _description){
+            publishCampaign: function(_title, _website, _endDate, _goalAmmount, _description, _callback){
                 var date = (new Date(_endDate)).getTime();
                 var unixTimestamp = date / 1000;
                 var goalAmmountWei = web3.toBigNumber(web3.toWei(_goalAmmount, "ether"));
                 EthStarter.createCampaign.sendTransaction(goalAmmountWei, _title, _website, _description, unixTimestamp, true,
                     {
                         from:web3.eth.accounts[0],
-                        gas:4000000},function (error, result){
-                            if(!error){
-                                console.log(result);
-                            } else{
-                                console.log(error);
-                            }
-                    });
+                        gas:4000000
+                    }, 
+                    (error, success)=>{
+                        _callback(error, success);
+                    }
+                    
+                );
             },
 
             getNumCampaigns: function(){

@@ -2425,8 +2425,8 @@
           }
         ],
         "contractDependencies": [
-          71,
-          55
+          55,
+          71
         ],
         "contractKind": "contract",
         "documentation": "////////////////////////////////////////////////////////////////////////////////\r",
@@ -7768,8 +7768,8 @@
           }
         ],
         "contractDependencies": [
-          71,
-          55
+          55,
+          71
         ],
         "contractKind": "contract",
         "documentation": "////////////////////////////////////////////////////////////////////////////////\r",
@@ -11007,7 +11007,14 @@
     "name": "solc",
     "version": "0.4.19+commit.c4cbbb05.Emscripten.clang"
   },
-  "networks": {},
+  "networks": {
+    "4447": {
+      "events": {},
+      "links": {},
+      "address": "0x345ca3e014aaf5dca488057592ee47305d9b3e10",
+      "transactionHash": "0xf0de11240edea458098c197f7aaa98e233482a13ac5143bedef0c425a2e51d6b"
+    }
+  },
   "schemaVersion": "2.0.0",
-  "updatedAt": "2018-05-11T22:56:36.766Z"
+  "updatedAt": "2018-05-13T15:13:20.910Z"
 }

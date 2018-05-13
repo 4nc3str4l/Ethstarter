@@ -1,14 +1,17 @@
 (function() {
     
     var ProjectSubmisionController = function ($scope, $log, Blockchain, appSettings, DataFactory, $routeParams, $window) {
+        
         $scope.title = "Project";
+        $scope.loading = false;
 
         $scope.submit = function(){
-            $scope.website;
-            $scope.endDate;
-            $scope.contributionAmmount;
-            $scope.description;
-            Blockchain.publishCampaign($scope.title, $scope.website, $scope.endDate, $scope.contributionAmmount, $scope.description);
+            this.loading = true;
+            Blockchain.publishCampaign($scope.title, $scope.website, $scope.endDate, $scope.contributionAmmount, $scope.description,
+                (error, result) => {
+                    $window.location = "/";
+                }
+            );
         }
     };
     
