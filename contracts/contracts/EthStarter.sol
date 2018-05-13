@@ -163,7 +163,9 @@ contract EthStarter is mortal{
 
     function donate(uint _campaignID) payable public{
         if(msg.value > 0){
-            Campaign storage c = allCampaigns[getCampaignIndexByID(_campaignID)];
+            // Note that if the id is not found getCampaignIndexByID will revert the trasaction.
+            uint index = getCampaignIndexByID(_campaignID);
+            Campaign storage c = allCampaigns[index];
             c.raised = c.raised.add(msg.value);
             onDonationReceived(c.title, msg.value);
         }
