@@ -24,12 +24,12 @@
         <div class="col-lg-8">
             <div class="contribute">
                 <h3>Contribute: </h3>
-                <input type="text" placeholder="Name (not required)">
-                <input type="email" placeholder="Email (not required)">
                 <form id="contribute-form">
+                    <input type="text" placeholder="Name (not required)" ng-model="name">
+                    <input type="email" placeholder="Email (not required)" ng-model="email">
                     <input type="number" min="0" id="contribute-ammount" name="ammount" value="1" step="0.0001" ng-model="contributionAmmount"> <span id="currency">ETH</span>
                     <span>Help {{project.title}} with {{ contributionAmmount }} ether</span><br>
-                    <input type="submit" id="contribute-send" value="Contribute">
+                    <input type="submit" id="contribute-send" value="Contribute" ng-click="donate()">
                 </form>
             </div>
         </div>

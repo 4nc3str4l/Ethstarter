@@ -57,6 +57,20 @@ var EthStarter = null;
                     
                 );
             },
+            donate: function(_campaignID, _ammount, _callback){
+                var ammountWei = web3.toBigNumber(web3.toWei(_ammount, "ether"));
+                EthStarter.donate.sendTransaction(_campaignID,
+                    {
+                        from:web3.eth.accounts[0],
+                        value: ammountWei,
+                        gas:4000000
+                    }, 
+                    (error, success)=>{
+                        _callback(error, success);
+                    }
+                    
+                );
+            },
 
             getNumCampaigns: function(){
                 return EthStarter.getNumCampaigns.call().toNumber();
@@ -108,7 +122,12 @@ var EthStarter = null;
                     title: this.getCampaignTitle(_index),
                     website: this.getCampaignWebsite(_index),
                     description: this.getCampaignDescription(_index),
-                    raised: this.getCampaignRaised(_index)
+                    raised: this.getCampaignRaised(_index),
+
+                    progress: function(){
+                        var progress =  this.raised / this.goalAmount;
+                        return (Math.min(1, progress) * 100).toFixed(2);;
+                    }
                 }
             },
 

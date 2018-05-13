@@ -71,6 +71,8 @@ library SafeMath {
 ///////////////////////////////////////////////////////////////////////////////////
 contract EthStarter is mortal{
     
+    using SafeMath for uint256;
+        
     // Campaign
     struct Campaign {
         // NOTE: Those will stay here
@@ -96,6 +98,7 @@ contract EthStarter is mortal{
 
     // Create an event when someone is added
     event onCampaignCreated(address _creator, uint _campaignID);
+    event onDonationReceived(string _campaignTitle, uint256 _ammount);
     
     function createCampaign(uint _goalAmmount, string _title, string _website, string _description, uint256 _endDate, bool _isPublished) public {
         Campaign memory campaign = Campaign(campaignCounter++, _goalAmmount, _endDate, block.timestamp, _isPublished, _title, _website, _description, 0);     
@@ -103,6 +106,8 @@ contract EthStarter is mortal{
         allCampaigns.push(campaign);
         onCampaignCreated(msg.sender, campaign.id);
     }
+
+
     
     function getNumCampaigns() public view returns(uint){
         return allCampaigns.length;
@@ -154,5 +159,13 @@ contract EthStarter is mortal{
             }
         }
         revert();
+    }
+
+    function donate(uint _campaignID) payable public{
+        if(msg.value > 0){
+            Campaign storage c = allCampaigns[getCampaignIndexByID(_campaignID)];
+            c.raised = c.raised.add(msg.value);
+            onDonationReceived(c.title, msg.value);
+        }
     }
 }
