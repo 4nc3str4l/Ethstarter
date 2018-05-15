@@ -1,6 +1,6 @@
 angular.module('EthStarter').constant('appSettings', {
     development: true,
-    contractAddress: '0x30753e4a8aad7f8597332e813735def5dd395028',
+    contractAddress: '0x345ca3e014aaf5dca488057592ee47305d9b3e10',
     contractABI:[
       {
         "constant": true,

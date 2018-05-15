@@ -11,7 +11,7 @@
     
     <body>
         <!-- Navigation bar -->
-        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary" ng-controller="NavController">
                 <a class="navbar-brand" href="#">EthStarter</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -19,17 +19,17 @@
             
                 <div class="collapse navbar-collapse" id="navbarColor02">
                     <ul class="navbar-nav mr-auto">
-                    <li class="nav-item active">
-                        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                    <li class="nav-item {{getClass('/')}}">
+                        <a class="nav-link" href="#">Home </a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item {{getClass('/projects')}}">
                         <a class="nav-link" href="#">Projects</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item {{getClass('/submit')}}">
                         <a class="nav-link" href="/#/submit">Submit New Project</a>
                     </li>
                     </ul>
-                    <form class="form-inline">
+                    <form class="form-inline" ng-if="isSearchVisible()">
                         <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
                         <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
                     </form>
@@ -64,6 +64,7 @@
             <script type="text/javascript" src="app/controllers/landingController.js"></script>
             <script type="text/javascript" src="app/controllers/projectController.js"></script>
             <script type="text/javascript" src="app/controllers/projectSubmisionController.js"></script>
+            <script type="text/javascript" src="app/controllers/navController.js"></script>
             
     </body>
 </html>
