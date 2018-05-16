@@ -8,7 +8,7 @@
         $scope.submit = function(){
             this.loading = true;
             Blockchain.publishCampaign($scope.title, $scope.website, $scope.endDate, $scope.contributionAmmount, $scope.description,
-                (error, result) => {
+                (receipt) => {
                     $window.location = "/";
                 }
             );

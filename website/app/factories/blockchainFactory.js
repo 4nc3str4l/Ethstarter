@@ -55,10 +55,18 @@ var EthStarter = null;
                         from:web3.eth.accounts[0],
                         gas:4000000
                     }, 
-                    (error, success)=>{
-                        _callback(error, success);
+                    (error, transactionHash)=>{
+                        var waitUntilMined = setInterval(()=>{
+                            web3.eth.getTransactionReceipt(transactionHash,
+                                (err, receipt) => {
+                                    if(receipt != null){
+                                        _callback(receipt);
+                                        clearInterval(waitUntilMined);
+                                    }
+                                }
+                            );
+                        }, 500);
                     }
-                    
                 );
             },
             donate: function(_campaignID, _ammount, _callback){
@@ -69,10 +77,18 @@ var EthStarter = null;
                         value: ammountWei,
                         gas:4000000
                     }, 
-                    (error, success)=>{
-                        _callback(error, success);
+                    (error, transactionHash)=>{
+                        var waitUntilMined = setInterval(()=>{
+                            web3.eth.getTransactionReceipt(transactionHash,
+                                (err, receipt) => {
+                                    if(receipt != null){
+                                        _callback(receipt);
+                                        clearInterval(waitUntilMined);
+                                    }
+                                }
+                            );
+                        }, 500);
                     }
-                    
                 );
             },
 
@@ -254,9 +270,12 @@ var EthStarter = null;
                 return null;
             },
 
-            getCampaignById: function(_id){
-                var index = EthStarter.getCampaignIndexByID.call(_id).c[0];
-                return this.getCampaignByIndex(index);
+            getCampaignById: function(_id, _callback){
+                EthStarter.getCampaignIndexByID(_id, 
+                    (err, data)=>{
+                        this.getCampaignByIndex(data.toNumber(), _callback);
+                    }
+                );
             },
         };
     }

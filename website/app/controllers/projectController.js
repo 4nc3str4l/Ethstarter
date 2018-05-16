@@ -16,7 +16,10 @@
         function init(){
             if(isInteger($routeParams.id)){
                 projectID = $routeParams.id;
-                $scope.project = Blockchain.getCampaignById(projectID);
+                Blockchain.getCampaignById(projectID, (_campaign)=>{
+                    $scope.project = _campaign;
+                    $scope.$apply();
+                });
                 
             }else{
                 $window.location.href = '/'
@@ -33,9 +36,11 @@
             $scope.loading = true;
             Blockchain.donate(projectID, $scope.contributionAmmount,
                 (error, result) => {
-                    $scope.loading = false;
-                    $scope.project = Blockchain.getCampaignById(projectID);
-                    $scope.$apply();
+                    Blockchain.getCampaignById(projectID, (_campaign)=>{
+                        $scope.project = _campaign;
+                        $scope.loading = false;
+                        $scope.$apply();
+                    });
                     alert("Donation Complete!");
                 }
             );
