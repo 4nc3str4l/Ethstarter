@@ -3,6 +3,9 @@ var EthStarter = null;
     
     var blockchainFactory = function($http, $log, appSettings){
         
+        var numCampaignsToGet = 0;
+        var allCampaigns = [];
+
         // Init Web3
         function initWeb3(){
             // Use the truffle provider for web3
@@ -31,11 +34,12 @@ var EthStarter = null;
         }
 
         function unixTimeStampToDate(_timestamp){
-            return new Date(_timestamp*1000);
+            return new Date(_timestamp * 1000);
         }
 
         initWeb3();
         initContract();
+    
 
         return{
             getAddress : function(){
@@ -72,72 +76,182 @@ var EthStarter = null;
                 );
             },
 
-            getNumCampaigns: function(){
-                return EthStarter.getNumCampaigns.call().toNumber();
+            getNumCampaigns: function(_callback){
+                EthStarter.getNumCampaigns(
+                    (err, res) => {
+                        _callback(res.toNumber());
+                    }
+                );
             },
             
-            getCampaignID: function(_index){
-                return EthStarter.getCampaignID.call(_index).toNumber();
+            getCampaignID: function(_index, _callback){
+                EthStarter.getCampaignID(_index,
+                    (err, res)=>{
+                        _callback(res.toNumber());
+                    }
+                );
             },
 
-            getCampaignTitle: function(_index){
-                return EthStarter.getCampaignTitle.call(_index);
+            getCampaignTitle: function(_index, _callback){
+                EthStarter.getCampaignTitle(_index,
+                    (err, res)=>{
+                        _callback(res);
+                    }
+                );
             },
             
-            getCampaingGoalAmmount: function(_index){
-                return web3.fromWei(EthStarter.getCampaingGoalAmmount.call(_index), "ether");
+            getCampaingGoalAmmount: function(_index, _callback){
+                EthStarter.getCampaingGoalAmmount(_index,
+                    (err, res)=>{
+                        _callback(web3.fromWei(res, "ether"));
+                    }
+                );
             },
             
-            getCampaignEndDate: function(_index){
-                return unixTimeStampToDate(EthStarter.getCampaignEndDate.call(_index).toNumber());
+            getCampaignEndDate: function(_index, _callback){
+                EthStarter.getCampaignEndDate(_index,
+                    (err, res)=>{
+                        _callback(unixTimeStampToDate(res.toNumber()));
+                    }
+                );
             },
             
-            getCampaignCreationDate: function(_index){
-                return unixTimeStampToDate(EthStarter.getCampaignCreationDate.call(_index).toNumber());
+            getCampaignCreationDate: function(_index, _callback){
+                EthStarter.getCampaignCreationDate(_index,
+                    (err, res)=>{
+                        _callback(unixTimeStampToDate(res.toNumber()));
+                    }
+                );
             },
             
-            getCampaignIsPublished: function(_index){
-                return EthStarter.getCampaignIsPublished.call(_index);
+            getCampaignIsPublished: function(_index, _callback){
+                EthStarter.getCampaignIsPublished(_index,
+                    (err, res)=>{
+                        _callback(res);
+                    }
+                );
             },
             
-            getCampaignWebsite: function(_index){
-                return EthStarter.getCampaignWebsite.call(_index);
+            getCampaignWebsite: function(_index, _callback){
+                EthStarter.getCampaignWebsite(_index,
+                    (err, res)=>{
+                        _callback(res);
+                    }
+                );
             },
             
-            getCampaignDescription: function(_index){
-                return EthStarter.getCampaignDescription.call(_index);
+            getCampaignDescription: function(_index, _callback){
+                EthStarter.getCampaignDescription(_index,
+                    (err, res)=>{
+                        _callback(res);
+                    }
+                );
             },
 
-            getCampaignRaised: function(_index){
-                return web3.fromWei(EthStarter.getRaised.call(_index), "ether");
+            getCampaignRaised: function(_index, _callback){
+                EthStarter.getRaised(_index,
+                    (err, res)=>{
+                        _callback(web3.fromWei(res, "ether"));
+                    }
+                );
             },
 
-            getCampaignByIndex: function(_index){
-                return {
-                    id : this.getCampaignID(_index),
-                    goalAmount: this.getCampaingGoalAmmount(_index),
-                    endDate: this.getCampaignEndDate(_index),
-                    creationDate: this.getCampaignCreationDate(_index),
-                    isPublished: this.getCampaignIsPublished(_index),
-                    title: this.getCampaignTitle(_index),
-                    website: this.getCampaignWebsite(_index),
-                    description: this.getCampaignDescription(_index),
-                    raised: this.getCampaignRaised(_index),
-
-                    progress: function(){
-                        var progress =  this.raised / this.goalAmount;
-                        return (Math.min(1, progress) * 100).toFixed(2);;
+            getCampaignByIndex: function(_index, _onCampaignDownloaded){
+                var campaign = {}
+                campaign.elementsAdded = 0;           
+                campaign.onElementDownloaded = function(){
+                    ++this.elementsAdded;
+                    if(this.elementsAdded == 9){
+                        this.progress = function(){
+                            var progress =  this.raised / this.goalAmount;
+                            return (Math.min(1, progress) * 100).toFixed(2);;
+                        }
+                        _onCampaignDownloaded(this);
                     }
                 }
+
+                this.getCampaignID(_index, 
+                    (data) =>{
+                        campaign.id = data;
+                        campaign.onElementDownloaded();
+                    }
+                );
+
+                this.getCampaingGoalAmmount(_index, 
+                    (data) =>{
+                        campaign.goalAmount = data;
+                        campaign.onElementDownloaded();
+                    }
+                );
+
+                this.getCampaignEndDate(_index, 
+                    (data) =>{
+                        campaign.endDate = data;
+                        campaign.onElementDownloaded();
+                    }
+                );
+
+                this.getCampaignCreationDate(_index, 
+                    (data) =>{
+                        campaign.creationDate = data;
+                        campaign.onElementDownloaded();
+                    }
+                );
+
+                this.getCampaignIsPublished(_index, 
+                    (data) =>{
+                        campaign.isPublished = data;
+                        campaign.onElementDownloaded();
+                    }
+                );
+
+                this.getCampaignTitle(_index, 
+                    (data) =>{
+                        campaign.title = data;
+                        campaign.onElementDownloaded();
+                    }
+                );
+
+                this.getCampaignWebsite(_index, 
+                    (data) =>{
+                        campaign.website = data;
+                        campaign.onElementDownloaded();
+                    }
+                );
+
+                this.getCampaignDescription(_index, 
+                    (data) =>{
+                        campaign.description = data;
+                        campaign.onElementDownloaded();
+                    }
+                );
+
+                this.getCampaignRaised(_index, 
+                    (data) =>{
+                        campaign.raised = data;
+                        campaign.onElementDownloaded();
+                    }
+                );
             },
 
-            getCampaigns: function(){
-                var numProjects = EthStarter.getNumCampaigns();
-                var campaigns = [];
-                for(var i = 0; i < numProjects; ++i){
-                    campaigns.push(this.getCampaignByIndex(i));
+            getCampaigns: function(_callback){
+                function onCampaingDownloaded(_campaign){
+                    allCampaigns.push(_campaign);
+                    if(allCampaigns.length == numCaimpaignsToGet){
+                        _callback(allCampaigns);
+                    }
                 }
-                return campaigns;
+                this.getNumCampaigns(
+                    (number)=>{
+                        numCaimpaignsToGet = number;
+                        allCampaigns = [];
+                        for(var i = 0; i < numCaimpaignsToGet; ++i){
+                            this.getCampaignByIndex(i, onCampaingDownloaded);
+                        }
+                    }
+                );
+
+                return null;
             },
 
             getCampaignById: function(_id){

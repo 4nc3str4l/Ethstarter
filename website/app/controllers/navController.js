@@ -2,15 +2,11 @@
     
     var NavController = function ($scope, $log, Blockchain, appSettings, DataFactory, $location) {
         
-        $scope.projectCandidates = [];
-
         function init(){
-            $scope.projectCandidates = Blockchain.getCampaigns();
         }
 
         // Only allow search to be visible on the main page
         $scope.isSearchVisible = function(){
-            $log.info($location.url());
             return $location.url() == "/";
         }
 
