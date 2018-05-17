@@ -1,173 +1,83 @@
 pragma solidity ^0.4.0;
 
-///////////////////////////////////////////////////////////////////////////////////
-//                                   OWNED                                       //
-///////////////////////////////////////////////////////////////////////////////////
-contract owned {
-    address public owner;
-
-    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
-
-    function Ownable() internal {
-        owner = msg.sender;
-    }
-
-    modifier onlyOwner() {
-        require(msg.sender == owner);
-        _;
-    }
-
-    function transferOwnership(address newOwner) public onlyOwner {
-        require(newOwner != address(0));
-        OwnershipTransferred(owner, newOwner);
-        owner = newOwner;
-    }
-}
+import "https://github.com/ethereum/solidity/std/owned.sol";
+import "https://github.com/ethereum/solidity/std/mortal.sol";
+import "https://github.com/OpenZeppelin/openzeppelin-solidity/contracts/math/SafeMath.sol";
 
 
-///////////////////////////////////////////////////////////////////////////////////
-//                                 MORTAL                                        //
-///////////////////////////////////////////////////////////////////////////////////
-
-contract mortal is owned {
-    function kill() public {
-        if (msg.sender == owner)
-            selfdestruct(owner);
-    }
-}
-
-///////////////////////////////////////////////////////////////////////////////////
-//                                SAFE MATH                                      //
-///////////////////////////////////////////////////////////////////////////////////
-library SafeMath {
-    function mul(uint256 a, uint256 b) internal pure returns (uint256) {
-        if (a == 0) {
-            return 0;
-        }
-        uint256 c = a * b;
-        assert(c / a == b);
-        return c;
-    }
-
-    function div(uint256 a, uint256 b) internal pure returns (uint256) {
-        uint256 c = a / b;
-        return c;
-    }
-
-    function sub(uint256 a, uint256 b) internal pure returns (uint256) {
-        assert(b <= a);
-        return a - b;
-    }
-
-    function add(uint256 a, uint256 b) internal pure returns (uint256) {
-        uint256 c = a + b;
-        assert(c >= a);
-        return c;
-    }
-}
-
-///////////////////////////////////////////////////////////////////////////////////
-//                               ETH STARTER                                     //
-///////////////////////////////////////////////////////////////////////////////////
-contract EthStarter is mortal{
-    
+contract EthStarter is owned, mortal {
+    // Using statements
+    using SafeMath for uint;
     using SafeMath for uint256;
-        
-    // Campaign
+    
+    // Events
+    event CampaignPublished(uint256 id, address owner, uint256 goal, uint256 date);
+    event Payment(uint256 id, address from, uint256 value);
+    
+    // Data
     struct Campaign {
-        // NOTE: Those will stay here
-        uint id;
-        uint256 goalAmmount;
-        uint256 endDate;
-        uint256 creationDate;
-
-        //TODO: Move to another storage system
-        bool isPublished;
-        string title;
-        string website;
-        string description;
-
-        uint256 raised;
-    }
-
-    mapping(address => Campaign[]) userCampaigns;
-    
-    uint constant CAMPAIGN_NOT_FOUND = 0;
-    uint campaignCounter = 1;
-    Campaign[] allCampaigns;
-
-    // Create an event when someone is added
-    event onCampaignCreated(address _creator, uint _campaignID);
-    event onDonationReceived(string _campaignTitle, uint256 _ammount);
-    
-    function createCampaign(uint _goalAmmount, string _title, string _website, string _description, uint256 _endDate, bool _isPublished) public {
-        Campaign memory campaign = Campaign(campaignCounter++, _goalAmmount, _endDate, block.timestamp, _isPublished, _title, _website, _description, 0);     
-        userCampaigns[msg.sender].push(campaign);
-        allCampaigns.push(campaign);
-        onCampaignCreated(msg.sender, campaign.id);
-    }
-
-
-    
-    function getNumCampaigns() public view returns(uint){
-        return allCampaigns.length;
+        address owner;
+        uint256 goal;
+        uint256 date;
+        mapping(address => uint256) balanceOf;
+        IReward reward;
     }
     
-    function getCampaignTitle(uint _index) public view returns(string){
-        return allCampaigns[_index].title;
+    struct Node {
+        Campaign campaign;
+        uint256 prev;
     }
     
-    function getCampaingGoalAmmount(uint _index) public view returns(uint256){
-        return allCampaigns[_index].goalAmmount;
-    }
+    mapping(uint256 => Node) campaigns;
+    uint256 public lastCampaignId;
     
-    function getCampaignID(uint _index) public view returns(uint){
-        return allCampaigns[_index].id;
-    }
-    
-    function getCampaignEndDate(uint _index) public view returns(uint256){
-        return allCampaigns[_index].endDate;
-    }
-    
-    function getCampaignCreationDate(uint _index) public view returns(uint256){
-        return allCampaigns[_index].creationDate;
-    }
-    
-    function getCampaignIsPublished(uint _index) public view returns(bool){
-        return allCampaigns[_index].isPublished;
-    }
-    
-    function getCampaignWebsite(uint _index) public view returns(string){
-        return allCampaigns[_index].website;
-    }
-    
-    function getCampaignDescription(uint _index) public view returns(string){
-        return allCampaigns[_index].description;
-    }
-
-    function getRaised(uint _index) public view returns(uint256){
-        return allCampaigns[_index].raised;
-    }
-
-    function getCampaignIndexByID(uint _id) public view returns(uint){
-        Campaign memory c;
-        uint numCampaigns = allCampaigns.length;
-        for(uint i = 0; i < numCampaigns; ++i){
-            c = allCampaigns[i];
-            if(c.id == _id){
-                return i;
-            }
+    // Functions
+    function payCampaign(uint256 id) public payable {
+        require(campaigns[id].campaign.date != 0);
+        require(msg.value > 0);
+        
+        Campaign storage c = campaigns[id].campaign;
+        uint256 oldBalance = c.balanceOf[msg.sender];
+        c.balanceOf[msg.sender] = c.balanceOf[msg.sender].add(msg.value);
+        
+        if (address(c.reward) != 0) {
+            c.reward.onPayment(msg.sender, msg.value, oldBalance);
         }
-        revert();
+        
+        emit Payment(id, msg.sender, msg.value);
     }
-
-    function donate(uint _campaignID) payable public{
-        if(msg.value > 0){
-            // Note that if the id is not found getCampaignIndexByID will revert the trasaction.
-            uint index = getCampaignIndexByID(_campaignID);
-            Campaign storage c = allCampaigns[index];
-            c.raised = c.raised.add(msg.value);
-            onDonationReceived(c.title, msg.value);
-        }
+    
+    function addCampaign(uint256 ipfsHash, uint256 goal, uint256 date) public {
+        require(campaigns[ipfsHash].campaign.date == 0);
+        require(date > 0);
+        require(goal > 0);
+        
+        Node storage node = campaigns[ipfsHash];
+        node.campaign.owner = msg.sender;
+        node.campaign.goal = goal;
+        node.campaign.date = date;
+        node.prev = lastCampaignId;
+        lastCampaignId = ipfsHash;
+        
+        emit CampaignPublished(ipfsHash, msg.sender, goal, date);
+    }
+    
+    function campaign(uint256 id) public view returns(address, uint256, uint256, uint256, uint256) {
+        Campaign storage c = campaigns[id].campaign;
+        return (c.owner, c.goal, c.date, c.balanceOf[msg.sender], campaigns[id].prev);
+    }
+    
+    function lastCampaign() public view returns(address, uint256, uint256, uint256, uint256) {
+        return campaign(lastCampaignId);
+    }
+    
+    function balanceOf(uint256 id, address user) public view returns(uint256) {
+        return campaigns[id].campaign.balanceOf[user];
     }
 }
+
+contract IReward {
+    function onPayment(address from, uint256 value, uint256 oldBalance) public view;
+    function onEnd(address backer, uint256 amount) public view;
+}
+
