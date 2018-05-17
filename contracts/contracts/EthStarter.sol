@@ -62,12 +62,12 @@ contract EthStarter is owned, mortal {
         emit CampaignPublished(ipfsHash, msg.sender, goal, date);
     }
     
-    function campaign(uint256 id) public view returns(address, uint256, uint256, uint256, uint256) {
+    function campaign(uint256 id) public view returns(uint256, address, uint256, uint256, uint256, uint256) {
         Campaign storage c = campaigns[id].campaign;
-        return (c.owner, c.goal, c.date, c.balanceOf[msg.sender], campaigns[id].prev);
+        return (id, c.owner, c.goal, c.date, c.balanceOf[msg.sender], campaigns[id].prev);
     }
     
-    function lastCampaign() public view returns(address, uint256, uint256, uint256, uint256) {
+    function lastCampaign() public view returns(uint256, address, uint256, uint256, uint256, uint256) {
         return campaign(lastCampaignId);
     }
     
