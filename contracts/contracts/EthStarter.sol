@@ -1,20 +1,22 @@
 pragma solidity ^0.4.0;
 
-import "https://github.com/ethereum/solidity/std/owned.sol";
-import "https://github.com/ethereum/solidity/std/mortal.sol";
+import "https://github.com/OpenZeppelin/openzeppelin-solidity/contracts/lifecycle/Destructible.sol";
+import "https://github.com/OpenZeppelin/openzeppelin-solidity/contracts/ownership/Ownable.sol";
+import "https://github.com/OpenZeppelin/openzeppelin-solidity/contracts/ownership/Whitelist.sol";
 import "https://github.com/OpenZeppelin/openzeppelin-solidity/contracts/math/SafeMath.sol";
 
 
-contract EthStarter is owned, mortal {
-    // Using statements
-    using SafeMath for uint;
-    using SafeMath for uint256;
-    
-    // Events
-    event CampaignPublished(uint256 id, address owner, uint256 goal, uint256 date);
-    event Payment(uint256 id, address from, uint256 value);
-    
-    // Data
+contract IDataStore is Whitelist {
+    function insert(uint256 id, address owner, uint256 goal, uint256 date) public;
+    function remove(uint256 id) public;
+    function get(uint256 id) public view returns(uint256, address, uint256, uint256, uint256, uint256, uint256);
+    function first() public view onlyOwner returns(uint256, address, uint256, uint256, uint256, uint256, uint256);
+    function last() public view returns(uint256, address, uint256, uint256, uint256, uint256, uint256);
+    function balanceOf(uint256 id, address user) public view returns(uint256);
+}
+
+contract DataStore is Whitelist, IDataStore {
+    // Basic campaign structure
     struct Campaign {
         address owner;
         uint256 goal;
@@ -23,61 +25,194 @@ contract EthStarter is owned, mortal {
         IReward reward;
     }
     
+    // Double linked list node
     struct Node {
         Campaign campaign;
         uint256 prev;
+        uint256 next;
     }
-    
-    mapping(uint256 => Node) campaigns;
-    uint256 public lastCampaignId;
-    
-    // Functions
-    function payCampaign(uint256 id) public payable {
-        require(campaigns[id].campaign.date != 0);
-        require(msg.value > 0);
-        
-        Campaign storage c = campaigns[id].campaign;
-        uint256 oldBalance = c.balanceOf[msg.sender];
-        c.balanceOf[msg.sender] = c.balanceOf[msg.sender].add(msg.value);
-        
-        if (address(c.reward) != 0) {
-            c.reward.onPayment(msg.sender, msg.value, oldBalance);
-        }
-        
-        emit Payment(id, msg.sender, msg.value);
+
+    // Data holder
+    struct Data {
+        mapping(uint256 => Node) map;
+        uint256 first;
+        uint256 last;
     }
-    
-    function addCampaign(uint256 ipfsHash, uint256 goal, uint256 date) public {
-        require(campaigns[ipfsHash].campaign.date == 0);
-        require(date > 0);
+
+    // Attributes
+    Data data;
+
+    function insert(uint256 id, address owner, uint256 goal, uint256 date) public onlyWhitelisted {
+        // Must not exist yet and have goal and date
+        require(data.map[id].campaign.date == 0);
         require(goal > 0);
+        require(date > 0);
         
-        Node storage node = campaigns[ipfsHash];
-        node.campaign.owner = msg.sender;
+        // Update the new node
+        Node storage node = data.map[id];
+        node.campaign.owner = owner;
         node.campaign.goal = goal;
         node.campaign.date = date;
-        node.prev = lastCampaignId;
-        lastCampaignId = ipfsHash;
-        
+        node.prev = data.last;
+
+        // Update previous node next
+        data.map[data.last].next = id;
+
+        // Update last ID
+        data.last = id;
+
+        // Update first?
+        if (data.first == 0) {
+            data.first = id;
+        }
+    }
+
+    function remove(uint256 id) public {
+        Node storage node = data.map[id];
+
+        data.map[node.prev].next = node.next;
+        data.map[node.next].prev = node.prev;
+
+        if (data.last == id) {
+            data.last = node.prev;
+        }
+
+        if (data.first == id) {
+            data.first = node.next;
+        }
+    }
+
+    function get(uint256 id) public view returns(uint256, address, uint256, uint256, uint256, uint256, uint256)  {
+        Node storage n = data.map[id];
+        Campaign storage c = n.campaign;
+        return (id, c.owner, c.goal, c.date, c.balanceOf[msg.sender], n.prev, n.next);
+    }
+    
+    function first() public view returns(uint256, address, uint256, uint256, uint256, uint256, uint256) {
+        return get(data.last);
+    }
+    
+    function last() public view returns(uint256, address, uint256, uint256, uint256, uint256, uint256) {
+        return get(data.last);
+    }
+
+    function balanceOf(uint256 id, address user) public view returns(uint256) {
+        return data.map[id].campaign.balanceOf[user];
+    }
+}
+
+
+contract EthStarter is Ownable, Destructible {
+    // Using statements
+    using SafeMath for uint;
+    using SafeMath for uint256;
+    
+    // Events
+    event CampaignPendingReview(uint256 id, address owner, uint256 goal, uint256 date);
+    event CampaignPublished(uint256 id, address owner, uint256 goal, uint256 date);
+    event Payment(uint256 id, address from, uint256 value);
+    
+    // Data
+    IDataStore public publicCampaigns;
+    IDataStore public pendingCampaigns;
+
+    constructor(address publicCampaignsAddr, address pendingCampaignsAddr) public {
+        if (publicCampaignsAddr == address(0)) {
+            publicCampaigns = new DataStore();
+            publicCampaignsAddr = address(publicCampaigns);
+        }
+
+        if (pendingCampaignsAddr == address(0)) {
+            pendingCampaigns = new DataStore();
+            pendingCampaignsAddr = address(pendingCampaigns);
+        }
+
+        // Immediately claim access to those contracts
+        switchPublicDataStore(publicCampaignsAddr);
+        switchPendingDataStore(pendingCampaignsAddr);
+    }
+
+    function switchPublicDataStore(address newAddress) public onlyOwner {
+        require(newAddress != address(0));
+        publicCampaigns = IDataStore(newAddress);
+        publicCampaigns.addAddressToWhitelist(owner);
+        publicCampaigns.addAddressToWhitelist(this);
+    }
+
+    function switchPendingDataStore(address newAddress) public onlyOwner {
+        require(newAddress != address(0));
+        pendingCampaigns = IDataStore(newAddress);
+        pendingCampaigns.addAddressToWhitelist(owner);
+        pendingCampaigns.addAddressToWhitelist(this);
+    }
+
+    // TODO: All this operations are interfaces
+    function addCampaign(uint256 ipfsHash, uint256 goal, uint256 date) public {
+        pendingCampaigns.insert(ipfsHash, msg.sender, goal, date);
+
+        emit CampaignPendingReview(ipfsHash, msg.sender, goal, date);
+    }
+    
+    function approve(uint256 ipfsHash) public {
+        var (, owner, goal, date,,,) = pendingCampaigns.get(ipfsHash);
+        assert(date > 0);
+
+        pendingCampaigns.remove(ipfsHash);
+        publicCampaigns.insert(ipfsHash, owner, goal, date);
+
         emit CampaignPublished(ipfsHash, msg.sender, goal, date);
     }
+
+    // TODO: Pay functionality in the new system
+    // function payCampaign(uint256 id) public payable {
+    //     require(publicCampaigns.campaigns[id].campaign.date != 0);
+    //     require(msg.value > 0);
+        
+    //     Campaign storage c = publicCampaigns.campaigns[id].campaign;
+    //     uint256 oldBalance = c.balanceOf[msg.sender];
+    //     c.balanceOf[msg.sender] = c.balanceOf[msg.sender].add(msg.value);
+        
+    //     if (address(c.reward) != 0) {
+    //         c.reward.onPayment(msg.sender, msg.value, oldBalance);
+    //     }
+        
+    //     emit Payment(id, msg.sender, msg.value);
+    // }
+
+
+    // DataStore views should be directly accessed, for example:
+    // IDataStore(publicCampaigns()).last()
+
+    // function get(uint256 id) public view returns(uint256, address, uint256, uint256, uint256, uint256) {
+    //     return publicCampaigns.get(id);
+    // }
     
-    function campaign(uint256 id) public view returns(uint256, address, uint256, uint256, uint256, uint256) {
-        Campaign storage c = campaigns[id].campaign;
-        return (id, c.owner, c.goal, c.date, c.balanceOf[msg.sender], campaigns[id].prev);
-    }
+    // function first() public view onlyOwner returns(uint256, address, uint256, uint256, uint256, uint256) {
+    //     return pendingCampaigns.first();
+    // }
     
-    function lastCampaign() public view returns(uint256, address, uint256, uint256, uint256, uint256) {
-        return campaign(lastCampaignId);
-    }
+    // function last() public view returns(uint256, address, uint256, uint256, uint256, uint256) {
+    //     return publicCampaigns.last();
+    // }
+
+    // function getPending(uint256 id) public view onlyOwner returns(uint256, address, uint256, uint256, uint256, uint256) {
+    //     return pendingCampaigns.get(id);
+    // }
     
-    function balanceOf(uint256 id, address user) public view returns(uint256) {
-        return campaigns[id].campaign.balanceOf[user];
-    }
+    // function firstPending() public view onlyOwner returns(uint256, address, uint256, uint256, uint256, uint256) {
+    //     return pendingCampaigns.first();
+    // }
+    
+    // function lastPending() public view onlyOwner returns(uint256, address, uint256, uint256, uint256, uint256) {
+    //     return pendingCampaigns.last();
+    // }
+    
+    // function balanceOf(uint256 id, address user) public view returns(uint256) {
+    //     return publicCampaigns.balanceOf(id, user);
+    // }
 }
 
 contract IReward {
     function onPayment(address from, uint256 value, uint256 oldBalance) public view;
     function onEnd(address backer, uint256 amount) public view;
 }
-
