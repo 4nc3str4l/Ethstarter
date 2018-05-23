@@ -9,20 +9,25 @@ import "https://github.com/OpenZeppelin/openzeppelin-solidity/contracts/math/Saf
 contract IDataStore is Whitelist {
     function insert(uint256 id, address owner, uint256 goal, uint256 date) public;
     function remove(uint256 id) public;
+    function pay(uint256 id, address who, uint256 amount) public;
     function get(uint256 id) public view returns(uint256, address, uint256, uint256, uint256, uint256, uint256);
-    function first() public view onlyOwner returns(uint256, address, uint256, uint256, uint256, uint256, uint256);
+    function first() public view returns(uint256, address, uint256, uint256, uint256, uint256, uint256);
     function last() public view returns(uint256, address, uint256, uint256, uint256, uint256, uint256);
     function balanceOf(uint256 id, address user) public view returns(uint256);
 }
 
 contract DataStore is Whitelist, IDataStore {
+    // Using statements
+    using SafeMath for uint;
+    using SafeMath for uint256;
+
     // Basic campaign structure
     struct Campaign {
         address owner;
         uint256 goal;
         uint256 date;
         mapping(address => uint256) balanceOf;
-        IReward reward;
+        address[] contributors;
     }
     
     // Double linked list node
@@ -43,13 +48,15 @@ contract DataStore is Whitelist, IDataStore {
     Data data;
 
     function insert(uint256 id, address owner, uint256 goal, uint256 date) public onlyWhitelisted {
+        // Fetch campaign
+        Node storage node = data.map[id];
+        
         // Must not exist yet and have goal and date
-        require(data.map[id].campaign.date == 0);
+        require(node.campaign.date == 0);
         require(goal > 0);
         require(date > 0);
         
         // Update the new node
-        Node storage node = data.map[id];
         node.campaign.owner = owner;
         node.campaign.goal = goal;
         node.campaign.date = date;
@@ -67,7 +74,7 @@ contract DataStore is Whitelist, IDataStore {
         }
     }
 
-    function remove(uint256 id) public {
+    function remove(uint256 id) public onlyWhitelisted {
         Node storage node = data.map[id];
 
         data.map[node.prev].next = node.next;
@@ -80,6 +87,21 @@ contract DataStore is Whitelist, IDataStore {
         if (data.first == id) {
             data.first = node.next;
         }
+    }
+
+    // No rewards nor events are handled here
+    function pay(uint256 id, address who, uint256 amount) public onlyWhitelisted {
+        Campaign storage c = data.map[id].campaign;
+        require(c.date > 0);
+        require(amount > 0);
+
+        // Keep track of individual accounts
+        if (c.balanceOf[who] == 0) {
+            c.contributors.push(who);
+        }
+
+        // Update balance
+        c.balanceOf[who] = c.balanceOf[msg.sender].add(amount);
     }
 
     function get(uint256 id) public view returns(uint256, address, uint256, uint256, uint256, uint256, uint256)  {
@@ -110,11 +132,14 @@ contract EthStarter is Ownable, Destructible {
     // Events
     event CampaignPendingReview(uint256 id, address owner, uint256 goal, uint256 date);
     event CampaignPublished(uint256 id, address owner, uint256 goal, uint256 date);
-    event Payment(uint256 id, address from, uint256 value);
+    event Payment(uint256 id, address from, uint256 value, uint256 total);
     
     // Data
     IDataStore public publicCampaigns;
     IDataStore public pendingCampaigns;
+
+    // Rewards for campaigns
+    mapping(uint256 => IReward) rewards;
 
     constructor(address publicCampaignsAddr, address pendingCampaignsAddr) public {
         if (publicCampaignsAddr == address(0)) {
@@ -164,20 +189,21 @@ contract EthStarter is Ownable, Destructible {
     }
 
     // TODO: Pay functionality in the new system
-    // function payCampaign(uint256 id) public payable {
-    //     require(publicCampaigns.campaigns[id].campaign.date != 0);
-    //     require(msg.value > 0);
+    function payCampaign(uint256 id) public payable {
+        // Get old balance first
+        uint256 oldBalance = publicCampaigns.balanceOf(id, msg.sender);
+
+        // If campaign is invalid or value is 0, this call throws
+        publicCampaigns.pay(id, msg.sender, msg.value);
         
-    //     Campaign storage c = publicCampaigns.campaigns[id].campaign;
-    //     uint256 oldBalance = c.balanceOf[msg.sender];
-    //     c.balanceOf[msg.sender] = c.balanceOf[msg.sender].add(msg.value);
+        if (address(rewards[id]) != 0) {
+            rewards[id].onPayment(msg.sender, msg.value, oldBalance);
+        }
         
-    //     if (address(c.reward) != 0) {
-    //         c.reward.onPayment(msg.sender, msg.value, oldBalance);
-    //     }
-        
-    //     emit Payment(id, msg.sender, msg.value);
-    // }
+        // New balance can be calculated now, its cheaper than calling
+        uint256 newBalance = oldBalance.add(msg.value);
+        emit Payment(id, msg.sender, msg.value, newBalance);
+    }
 
 
     // DataStore views should be directly accessed, for example:
