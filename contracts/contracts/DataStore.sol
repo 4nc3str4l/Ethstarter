@@ -89,7 +89,7 @@ contract DataStore is IDataStore {
         }
 
         // Update balance
-        c.balanceOf[who] = c.balanceOf[msg.sender].add(amount);
+        c.balanceOf[who] = c.balanceOf[who].add(amount);
     }
 
     function get(uint256 id) public view returns(uint256, address, uint256, uint256, uint256, uint256, uint256)  {
