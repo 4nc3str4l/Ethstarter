@@ -13,6 +13,9 @@ contract EthStarter is IEthStarter {
     mapping(uint256 => IReward) rewards;
 
     constructor(IDataStore _publicCampaigns, IDataStore _pendingCampaigns) public {
+        require(_publicCampaigns != address(0));
+        require(_pendingCampaigns != address(0));
+
         publicCampaigns = _publicCampaigns;
         pendingCampaigns = _pendingCampaigns;
     }
