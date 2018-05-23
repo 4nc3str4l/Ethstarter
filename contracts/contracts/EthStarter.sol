@@ -1,4 +1,4 @@
-pragma solidity ^0.4.0;
+pragma solidity ^0.4.24;
 
 import "https://github.com/OpenZeppelin/openzeppelin-solidity/contracts/lifecycle/Destructible.sol";
 import "https://github.com/OpenZeppelin/openzeppelin-solidity/contracts/ownership/Ownable.sol";
@@ -16,7 +16,7 @@ contract IDataStore is Whitelist {
     function balanceOf(uint256 id, address user) public view returns(uint256);
 }
 
-contract DataStore is Whitelist, IDataStore {
+contract DataStore is IDataStore {
     // Using statements
     using SafeMath for uint;
     using SafeMath for uint256;
@@ -124,11 +124,14 @@ contract DataStore is Whitelist, IDataStore {
 }
 
 
-contract EthStarter is Ownable, Destructible {
-    // Using statements
-    using SafeMath for uint;
-    using SafeMath for uint256;
-    
+contract IEthStarterFactory is Whitelist {
+    // MUST BE onlyWhitelisted TO PREVENT SPOOFING
+    function create(address publicCampaignsAddr, address pendingCampaignsAddr) public;
+    function instance() public view returns (IEthStarter);
+}
+
+
+contract IEthStarter is Whitelist, Destructible {
     // Events
     event CampaignPendingReview(uint256 id, address owner, uint256 goal, uint256 date);
     event CampaignPublished(uint256 id, address owner, uint256 goal, uint256 date);
@@ -138,37 +141,58 @@ contract EthStarter is Ownable, Destructible {
     IDataStore public publicCampaigns;
     IDataStore public pendingCampaigns;
 
+    // Functions
+    function migrate(IEthStarterFactory migrator) public;
+    function addCampaign(uint256 ipfsHash, uint256 goal, uint256 date) public;
+    function approve(uint256 ipfsHash) public;
+    function payCampaign(uint256 id) public payable;
+}
+
+
+contract EthStarter is IEthStarter {
+    // Using statements
+    using SafeMath for uint;
+    using SafeMath for uint256;
+
     // Rewards for campaigns
     mapping(uint256 => IReward) rewards;
 
     constructor(address publicCampaignsAddr, address pendingCampaignsAddr) public {
         if (publicCampaignsAddr == address(0)) {
             publicCampaigns = new DataStore();
-            publicCampaignsAddr = address(publicCampaigns);
+            publicCampaigns.addAddressToWhitelist(owner);
+            publicCampaigns.addAddressToWhitelist(this);
+        }
+        else {
+            publicCampaigns = IDataStore(publicCampaignsAddr);
         }
 
         if (pendingCampaignsAddr == address(0)) {
             pendingCampaigns = new DataStore();
-            pendingCampaignsAddr = address(pendingCampaigns);
+            pendingCampaigns.addAddressToWhitelist(owner);
+            pendingCampaigns.addAddressToWhitelist(this);
+        }
+        else {
+            pendingCampaigns = IDataStore(pendingCampaignsAddr);
         }
 
-        // Immediately claim access to those contracts
-        switchPublicDataStore(publicCampaignsAddr);
-        switchPendingDataStore(pendingCampaignsAddr);
+        addAddressToWhitelist(owner);
     }
 
-    function switchPublicDataStore(address newAddress) public onlyOwner {
-        require(newAddress != address(0));
-        publicCampaigns = IDataStore(newAddress);
-        publicCampaigns.addAddressToWhitelist(owner);
-        publicCampaigns.addAddressToWhitelist(this);
-    }
+    function migrate(IEthStarterFactory migrator) public onlyOwner {
+        // Create new contract
+        migrator.create(address(publicCampaigns), address(pendingCampaigns));
+        IEthStarter migrated = migrator.instance();
 
-    function switchPendingDataStore(address newAddress) public onlyOwner {
-        require(newAddress != address(0));
-        pendingCampaigns = IDataStore(newAddress);
-        pendingCampaigns.addAddressToWhitelist(owner);
-        pendingCampaigns.addAddressToWhitelist(this);
+        // Migrate data stores
+        publicCampaigns.addAddressToWhitelist(address(migrated));
+        publicCampaigns.transferOwnership(address(migrated));
+
+        pendingCampaigns.addAddressToWhitelist(address(migrated));
+        pendingCampaigns.transferOwnership(address(migrated));
+
+        // Transfer everything
+        destroyAndSend(migrated);
     }
 
     // TODO: All this operations are interfaces
@@ -178,7 +202,7 @@ contract EthStarter is Ownable, Destructible {
         emit CampaignPendingReview(ipfsHash, msg.sender, goal, date);
     }
     
-    function approve(uint256 ipfsHash) public {
+    function approve(uint256 ipfsHash) public onlyOwner {
         var (, owner, goal, date,,,) = pendingCampaigns.get(ipfsHash);
         assert(date > 0);
 
@@ -204,38 +228,23 @@ contract EthStarter is Ownable, Destructible {
         uint256 newBalance = oldBalance.add(msg.value);
         emit Payment(id, msg.sender, msg.value, newBalance);
     }
+}
 
+contract EthStarterFactory is IEthStarterFactory {
+    IEthStarter private _instance;
 
-    // DataStore views should be directly accessed, for example:
-    // IDataStore(publicCampaigns()).last()
+    constructor() {
+        addAddressToWihtelist(owner);
+    }
 
-    // function get(uint256 id) public view returns(uint256, address, uint256, uint256, uint256, uint256) {
-    //     return publicCampaigns.get(id);
-    // }
-    
-    // function first() public view onlyOwner returns(uint256, address, uint256, uint256, uint256, uint256) {
-    //     return pendingCampaigns.first();
-    // }
-    
-    // function last() public view returns(uint256, address, uint256, uint256, uint256, uint256) {
-    //     return publicCampaigns.last();
-    // }
+    function create(address publicCampaignsAddr, address pendingCampaignsAddr) public onlyWhitelisted {
+        _instance = new EthStarter(publicCampaignsAddr, pendingCampaignsAddr);
+        addAddressToWhitelist(address(_instance));
+    }
 
-    // function getPending(uint256 id) public view onlyOwner returns(uint256, address, uint256, uint256, uint256, uint256) {
-    //     return pendingCampaigns.get(id);
-    // }
-    
-    // function firstPending() public view onlyOwner returns(uint256, address, uint256, uint256, uint256, uint256) {
-    //     return pendingCampaigns.first();
-    // }
-    
-    // function lastPending() public view onlyOwner returns(uint256, address, uint256, uint256, uint256, uint256) {
-    //     return pendingCampaigns.last();
-    // }
-    
-    // function balanceOf(uint256 id, address user) public view returns(uint256) {
-    //     return publicCampaigns.balanceOf(id, user);
-    // }
+    function instance() public view returns (IEthStarter) {
+        return _instance;
+    }
 }
 
 contract IReward {
