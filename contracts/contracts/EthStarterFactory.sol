@@ -9,15 +9,14 @@ import "./EthStarter.sol";  // TODO: Can we refactor this to IEthStarter?
 contract EthStarterFactory is IEthStarterFactory {
     IEthStarter private _instance;
 
-    function create(IDataStore publicCampaigns, IDataStore pendingCampaigns) public onlyWhitelisted {
+    function create(IDataStore campaigns) public onlyWhitelisted {
         // Assert ownership of the DataStores
 
         // Initialize EthStarter
-        _instance = new EthStarter(publicCampaigns, pendingCampaigns);
+        _instance = new EthStarter(campaigns);
 
         // Link instance to stores (REQUIRES factory to be whitelisted on the stores)
-        publicCampaigns.allow(_instance);
-        pendingCampaigns.allow(_instance);
+        campaigns.allow(_instance);
 
         // Allow instance to call "this" from migrate
         allow(address(_instance));

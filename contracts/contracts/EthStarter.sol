@@ -8,21 +8,22 @@ contract EthStarter is IEthStarter {
     // Using statements
     using SafeMath for uint;
     using SafeMath for uint256;
+    
+    // Data
+    IDataStore public campaigns;
 
     // Rewards for campaigns
     mapping(uint256 => IReward) rewards;
 
-    constructor(IDataStore _publicCampaigns, IDataStore _pendingCampaigns) public {
-        require(_publicCampaigns != address(0));
-        require(_pendingCampaigns != address(0));
+    constructor(IDataStore _campaigns) public {
+        require(_campaigns != address(0));
 
-        publicCampaigns = _publicCampaigns;
-        pendingCampaigns = _pendingCampaigns;
+        campaigns = _campaigns;
     }
 
     function migrate(IEthStarterFactory migrator) public onlyWhitelisted {
         // Create new contract
-        migrator.create(publicCampaigns, pendingCampaigns);
+        migrator.create(campaigns);
         address migrated = address(migrator.instance());
 
         // Tell everyone
@@ -34,28 +35,27 @@ contract EthStarter is IEthStarter {
 
     // TODO: All this operations are interfaces
     function addCampaign(uint256 ipfsHash, uint256 goal, uint256 date) public {
-        pendingCampaigns.insert(ipfsHash, msg.sender, goal, date);
+        campaigns.insertPending(ipfsHash, msg.sender, goal, date);
 
         emit CampaignPendingReview(ipfsHash, msg.sender, goal, date);
     }
     
     function approve(uint256 ipfsHash) public onlyWhitelisted {
-        var (, owner, goal, date,,,) = pendingCampaigns.get(ipfsHash);
-        assert(date > 0);
+        var (, owner, goal, date,,,) = campaigns.get(ipfsHash);
+        require(date > 0);
 
-        pendingCampaigns.remove(ipfsHash);
-        publicCampaigns.insert(ipfsHash, owner, goal, date);
+        campaigns.approve(ipfsHash);
 
-        emit CampaignPublished(ipfsHash, msg.sender, goal, date);
+        emit CampaignPublished(ipfsHash, owner, goal, date);
     }
 
     // TODO: Pay functionality in the new system
     function payCampaign(uint256 id) public payable {
         // Get old balance first
-        uint256 oldBalance = publicCampaigns.balanceOf(id, msg.sender);
+        uint256 oldBalance = campaigns.balanceOf(id, msg.sender);
 
         // If campaign is invalid or value is 0, this call throws
-        publicCampaigns.pay(id, msg.sender, msg.value);
+        campaigns.pay(id, msg.sender, msg.value);
         
         if (address(rewards[id]) != 0) {
             rewards[id].onPayment(msg.sender, msg.value, oldBalance);

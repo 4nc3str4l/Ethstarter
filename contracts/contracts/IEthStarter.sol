@@ -12,10 +12,6 @@ contract IEthStarter is PrivilegedWhitelist, Destructible {
     event CampaignPendingReview(uint256 id, address owner, uint256 goal, uint256 date);
     event CampaignPublished(uint256 id, address owner, uint256 goal, uint256 date);
     event Payment(uint256 id, address from, uint256 value, uint256 total);
-    
-    // Data
-    IDataStore public publicCampaigns;
-    IDataStore public pendingCampaigns;
 
     // Functions
     function migrate(IEthStarterFactory migrator) public;

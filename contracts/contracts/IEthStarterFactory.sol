@@ -8,7 +8,7 @@ import "./IDataStore.sol";
 
 contract IEthStarterFactory is PrivilegedWhitelist, Ownable {
     // MUST BE onlyWhitelisted TO PREVENT SPOOFING
-    function create(IDataStore publicCampaigns, IDataStore pendingCampaigns) public;
+    function create(IDataStore campaigns) public;
 
     function instance() public view returns (IEthStarter);
 }

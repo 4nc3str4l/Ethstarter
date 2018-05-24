@@ -14,6 +14,7 @@ contract DataStore is IDataStore {
         address owner;
         uint256 goal;
         uint256 date;
+        bool isApproved;
         mapping(address => uint256) balanceOf;
         address[] contributors;
     }
@@ -24,57 +25,102 @@ contract DataStore is IDataStore {
         uint256 prev;
         uint256 next;
     }
+    
+    // Linked list pointer
+    struct Pointer {
+        uint256 first;
+        uint256 last;
+    }
 
     // Data holder
     struct Data {
         mapping(uint256 => Node) map;
-        uint256 first;
-        uint256 last;
+        Pointer approved;
+        Pointer pending;
     }
 
     // Attributes
     Data data;
 
-    function insert(uint256 id, address owner, uint256 goal, uint256 date) public onlyWhitelisted {
-        // Fetch campaign
-        Node storage node = data.map[id];
-        
-        // Must not exist yet and have goal and date
-        require(node.campaign.date == 0);
+    function insertPending(uint256 id, address owner, uint256 goal, uint256 date) public onlyWhitelisted {
+        insert(data.pending, id, owner, goal, date);
+    }
+
+    function insertApproved(uint256 id, address owner, uint256 goal, uint256 date) public onlyWhitelisted {
+        insert(data.approved, id, owner, goal, date);
+    }
+
+    function insert(Pointer storage pointer, uint256 id, address owner, uint256 goal, uint256 date) internal onlyWhitelisted {
+        // First sanity checks
+        require(id > 0);
         require(goal > 0);
         require(date > 0);
+
+        // Fetch campaign
+        Node storage node = data.map[id];
+        Campaign storage campaign = node.campaign;
+        
+        // Must not exist yet
+        require(campaign.date == 0);
         
         // Update the new node
-        node.campaign.owner = owner;
-        node.campaign.goal = goal;
-        node.campaign.date = date;
-        node.prev = data.last;
+        campaign.owner = owner;
+        campaign.goal = goal;
+        campaign.date = date;
+        node.prev = pointer.last;
 
         // Update previous node next
-        data.map[data.last].next = id;
+        linkInsert(pointer, id);
+    }
+
+    function linkInsert(Pointer storage pointer, uint256 id) internal onlyWhitelisted {
+        // Can't be 0, its already been checked
+        assert(id > 0);
+
+        // Update previous node next
+        data.map[pointer.last].next = id;
 
         // Update last ID
-        data.last = id;
+        pointer.last = id;
 
         // Update first?
-        if (data.first == 0) {
-            data.first = id;
+        if (pointer.first == 0) {
+            pointer.first = id;
         }
     }
 
-    function remove(uint256 id) public onlyWhitelisted {
+    function removePending(uint256 id) public onlyWhitelisted {
+        remove(data.pending, id);
+    }
+
+    function removeApproved(uint256 id) public onlyWhitelisted {
+        remove(data.approved, id);
+    }
+
+    function remove(Pointer storage pointer, uint256 id) internal onlyWhitelisted {
+        // Sanity check
+        require(id > 0);
+
         Node storage node = data.map[id];
 
         data.map[node.prev].next = node.next;
         data.map[node.next].prev = node.prev;
 
-        if (data.last == id) {
-            data.last = node.prev;
+        if (pointer.last == id) {
+            pointer.last = node.prev;
         }
 
-        if (data.first == id) {
-            data.first = node.next;
+        if (pointer.first == id) {
+            pointer.first = node.next;
         }
+    }
+
+    function approve(uint256 id) public onlyWhitelisted {
+        // Sanity check
+        require(id > 0);
+        
+        remove(data.pending, id);
+        linkInsert(data.approved, id);
     }
 
     // No rewards nor events are handled here
@@ -98,12 +144,20 @@ contract DataStore is IDataStore {
         return (id, c.owner, c.goal, c.date, c.balanceOf[msg.sender], n.prev, n.next);
     }
     
-    function first() public view returns(uint256, address, uint256, uint256, uint256, uint256, uint256) {
-        return get(data.last);
+    function first(bool pending) public view returns(uint256, address, uint256, uint256, uint256, uint256, uint256) {
+        if (pending) {
+            return get(data.pending.first);
+        }
+        
+        return get(data.approved.first);
     }
     
-    function last() public view returns(uint256, address, uint256, uint256, uint256, uint256, uint256) {
-        return get(data.last);
+    function last(bool pending) public view returns(uint256, address, uint256, uint256, uint256, uint256, uint256) {
+        if (pending) {
+            return get(data.pending.last);
+        }
+        
+        return get(data.approved.last);
     }
 
     function balanceOf(uint256 id, address user) public view returns(uint256) {
