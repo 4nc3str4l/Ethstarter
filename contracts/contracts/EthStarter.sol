@@ -41,7 +41,8 @@ contract EthStarter is IEthStarter {
     }
     
     function approve(uint256 ipfsHash) public onlyWhitelisted {
-        var (, owner, goal, date,,,) = campaigns.get(ipfsHash);
+        require(ipfsHash > 0);
+        (, address owner, uint256 goal, uint256 date,,,) = campaigns.get(ipfsHash);
         require(date > 0);
 
         campaigns.approve(ipfsHash);

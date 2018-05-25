@@ -14,7 +14,6 @@ contract DataStore is IDataStore {
         address owner;
         uint256 goal;
         uint256 date;
-        bool isApproved;
         mapping(address => uint256) balanceOf;
         address[] contributors;
     }
@@ -138,7 +137,7 @@ contract DataStore is IDataStore {
         c.balanceOf[who] = c.balanceOf[who].add(amount);
     }
 
-    function get(uint256 id) public view returns(uint256, address, uint256, uint256, uint256, uint256, uint256)  {
+    function get(uint256 id) public view returns(uint256, address, uint256, uint256, uint256, uint256, uint256) {
         Node storage n = data.map[id];
         Campaign storage c = n.campaign;
         return (id, c.owner, c.goal, c.date, c.balanceOf[msg.sender], n.prev, n.next);
@@ -146,6 +145,7 @@ contract DataStore is IDataStore {
     
     function first(bool pending) public view returns(uint256, address, uint256, uint256, uint256, uint256, uint256) {
         if (pending) {
+            require(hasAccess[msg.sender]);
             return get(data.pending.first);
         }
         
@@ -154,6 +154,7 @@ contract DataStore is IDataStore {
     
     function last(bool pending) public view returns(uint256, address, uint256, uint256, uint256, uint256, uint256) {
         if (pending) {
+            require(hasAccess[msg.sender]);
             return get(data.pending.last);
         }
         
@@ -162,5 +163,9 @@ contract DataStore is IDataStore {
 
     function balanceOf(uint256 id, address user) public view returns(uint256) {
         return data.map[id].campaign.balanceOf[user];
+    }
+
+    function contrinutors(uint256 id) public view returns(address[]) {
+        return data.map[id].campaign.contributors;
     }
 }

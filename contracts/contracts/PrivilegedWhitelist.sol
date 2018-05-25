@@ -5,25 +5,25 @@ contract PrivilegedWhitelist {
     event WhitelistedAddressAdded(address addr);
     event WhitelistedAddressRemoved(address addr);
 
-    mapping(address => bool) access;
+    mapping(address => bool) public hasAccess;
 
     constructor() public {
         // Owner is an special case
-        access[msg.sender] = true;
+        hasAccess[msg.sender] = true;
     }
 
     modifier onlyWhitelisted() {
-        require(access[msg.sender]);
+        require(hasAccess[msg.sender]);
         _;
     }
 
     function allow(address addr) onlyWhitelisted public {
-        access[addr] = true;
+        hasAccess[addr] = true;
         emit WhitelistedAddressAdded(addr);
     }
 
     function disallow(address addr) onlyWhitelisted public {
-        access[addr] = false;
+        hasAccess[addr] = false;
         emit WhitelistedAddressRemoved(addr);
     }
 }
