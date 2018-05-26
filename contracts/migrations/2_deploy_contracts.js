@@ -42,6 +42,20 @@ function createAndGetInstance(deployer, contract) {
   return deployer.deploy(contract).then(() => contract.deployed());
 }
 
+function transactAndMine(method, obj, ...args) {
+  return method.estimateGas(...args, obj).then(gas => {
+    obj['gas'] = gas + 22000;
+    
+    return method.sendTransaction(...args, obj).then(tx => {
+      return web3.eth.getTransactionReceiptMined(tx, 1000);
+    });
+  });
+}
+
+function defaultTransactAndMine(method, ...args) {
+  return transactAndMine(method, {from: web3.eth.accounts[0]}, ...args);
+}
+
 module.exports = function(deployer) {
   createAndGetInstance(deployer, BigBrother).then(_bigBrother => {
     createAndGetInstance(deployer, EthStarterFactory).then(_factory => {
@@ -50,25 +64,18 @@ module.exports = function(deployer) {
         {
           from: web3.eth.accounts[0],
           gas: 4000000
-        });
+        }
+      );
 
-        createAndGetInstance(deployer, DataStore).then(_dataStore => {
-          _dataStore.allow.sendTransaction(_factory.address,
-            {
-              from: web3.eth.accounts[0],
-              gas: 4000000
-            }).then(tx => {
-              web3.eth.getTransactionReceiptMined(tx, 1000).then(() => {
-                _factory.create.estimateGas(_dataStore.address, {from: web3.eth.accounts[0]}).then(gas => {
-                  // _factory.create.sendTransaction(_dataStore.address,
-                  //   {
-                  //     from: web3.eth.accounts[0],
-                  //     gas: gas
-                  //   });
-                });
-              });
+      createAndGetInstance(deployer, DataStore).then(_dataStore => {
+        defaultTransactAndMine(_dataStore.allow, _factory.address).then(() => {
+          defaultTransactAndMine(_factory.create, _dataStore.address).then(() => {
+            _factory.instance().then(_ethStarter => {
+              console.log("ETHSTARTER AT " + _ethStarter);
             });
+          });
         });
+      });
     });
   });
 };
