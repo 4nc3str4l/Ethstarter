@@ -1,6 +1,6 @@
 pragma solidity ^0.4.24;
 
-import "https://github.com/OpenZeppelin/openzeppelin-solidity/contracts/ownership/Ownable.sol";
+import "zeppelin/contracts/ownership/Ownable.sol";
 import "./IEthStarterFactory.sol";
 
 
