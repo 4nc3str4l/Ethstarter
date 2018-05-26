@@ -1,6 +1,6 @@
 pragma solidity ^0.4.24;
 
-import "https://github.com/OpenZeppelin/openzeppelin-solidity/contracts/lifecycle/Destructible.sol";
+import "./Destructible.sol";
 import "./PrivilegedWhitelist.sol";
 import "./IDataStore.sol";
 import "./IEthStarterFactory.sol";
