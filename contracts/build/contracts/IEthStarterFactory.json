@@ -150,10 +150,10 @@
   "deployedBytecode": "0x",
   "sourceMap": "",
   "deployedSourceMap": "",
-  "source": "pragma solidity ^0.4.24;\n\nimport \"zeppelin/contracts/ownership/Ownable.sol\";\nimport \"./PrivilegedWhitelist.sol\";\nimport \"./IEthStarter.sol\";\nimport \"./IDataStore.sol\";\n\n\ncontract IEthStarterFactory is PrivilegedWhitelist, Ownable {\n    // MUST BE onlyWhitelisted TO PREVENT SPOOFING\n    function create(IDataStore campaigns) public;\n\n    function instance() public view returns (IEthStarter);\n}\n",
-  "sourcePath": "/home/guillem/Github/Ethstarter/contracts/contracts/IEthStarterFactory.sol",
+  "source": "pragma solidity ^0.4.24;\r\n\r\nimport \"zeppelin/contracts/ownership/Ownable.sol\";\r\nimport \"./PrivilegedWhitelist.sol\";\r\nimport \"./IEthStarter.sol\";\r\nimport \"./IDataStore.sol\";\r\n\r\n\r\ncontract IEthStarterFactory is PrivilegedWhitelist, Ownable {\r\n    // MUST BE onlyWhitelisted TO PREVENT SPOOFING\r\n    function create(IDataStore campaigns) public;\r\n\r\n    function instance() public view returns (IEthStarter);\r\n}\r\n",
+  "sourcePath": "C:\\Users\\cmuri\\Desktop\\Ethstarter\\contracts\\contracts\\IEthStarterFactory.sol",
   "ast": {
-    "absolutePath": "/home/guillem/Github/Ethstarter/contracts/contracts/IEthStarterFactory.sol",
+    "absolutePath": "/C/Users/cmuri/Desktop/Ethstarter/contracts/contracts/IEthStarterFactory.sol",
     "exportedSymbols": {
       "IEthStarterFactory": [
         1084
@@ -180,40 +180,40 @@
         "nodeType": "ImportDirective",
         "scope": 1085,
         "sourceUnit": 1398,
-        "src": "26:50:6",
+        "src": "28:50:6",
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "absolutePath": "/home/guillem/Github/Ethstarter/contracts/contracts/PrivilegedWhitelist.sol",
+        "absolutePath": "/C/Users/cmuri/Desktop/Ethstarter/contracts/contracts/PrivilegedWhitelist.sol",
         "file": "./PrivilegedWhitelist.sol",
         "id": 1067,
         "nodeType": "ImportDirective",
         "scope": 1085,
         "sourceUnit": 1215,
-        "src": "77:35:6",
+        "src": "80:35:6",
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "absolutePath": "/home/guillem/Github/Ethstarter/contracts/contracts/IEthStarter.sol",
+        "absolutePath": "/C/Users/cmuri/Desktop/Ethstarter/contracts/contracts/IEthStarter.sol",
         "file": "./IEthStarter.sol",
         "id": 1068,
         "nodeType": "ImportDirective",
         "scope": 1085,
         "sourceUnit": 1064,
-        "src": "113:27:6",
+        "src": "117:27:6",
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "absolutePath": "/home/guillem/Github/Ethstarter/contracts/contracts/IDataStore.sol",
+        "absolutePath": "/C/Users/cmuri/Desktop/Ethstarter/contracts/contracts/IDataStore.sol",
         "file": "./IDataStore.sol",
         "id": 1069,
         "nodeType": "ImportDirective",
         "scope": 1085,
         "sourceUnit": 995,
-        "src": "141:26:6",
+        "src": "146:26:6",
         "symbolAliases": [],
         "unitAlias": ""
       },
@@ -227,7 +227,7 @@
               "name": "PrivilegedWhitelist",
               "nodeType": "UserDefinedTypeName",
               "referencedDeclaration": 1214,
-              "src": "201:19:6",
+              "src": "209:19:6",
               "typeDescriptions": {
                 "typeIdentifier": "t_contract$_PrivilegedWhitelist_$1214",
                 "typeString": "contract PrivilegedWhitelist"
@@ -235,7 +235,7 @@
             },
             "id": 1071,
             "nodeType": "InheritanceSpecifier",
-            "src": "201:19:6"
+            "src": "209:19:6"
           },
           {
             "arguments": null,
@@ -245,7 +245,7 @@
               "name": "Ownable",
               "nodeType": "UserDefinedTypeName",
               "referencedDeclaration": 1397,
-              "src": "222:7:6",
+              "src": "230:7:6",
               "typeDescriptions": {
                 "typeIdentifier": "t_contract$_Ownable_$1397",
                 "typeString": "contract Ownable"
@@ -253,7 +253,7 @@
             },
             "id": 1073,
             "nodeType": "InheritanceSpecifier",
-            "src": "222:7:6"
+            "src": "230:7:6"
           }
         ],
         "contractDependencies": [
@@ -292,7 +292,7 @@
                   "name": "campaigns",
                   "nodeType": "VariableDeclaration",
                   "scope": 1078,
-                  "src": "303:20:6",
+                  "src": "313:20:6",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -305,7 +305,7 @@
                     "name": "IDataStore",
                     "nodeType": "UserDefinedTypeName",
                     "referencedDeclaration": 994,
-                    "src": "303:10:6",
+                    "src": "313:10:6",
                     "typeDescriptions": {
                       "typeIdentifier": "t_contract$_IDataStore_$994",
                       "typeString": "contract IDataStore"
@@ -315,17 +315,17 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "302:22:6"
+              "src": "312:22:6"
             },
             "payable": false,
             "returnParameters": {
               "id": 1077,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "331:0:6"
+              "src": "341:0:6"
             },
             "scope": 1084,
-            "src": "287:45:6",
+            "src": "297:45:6",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
@@ -344,7 +344,7 @@
               "id": 1079,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "355:2:6"
+              "src": "367:2:6"
             },
             "payable": false,
             "returnParameters": {
@@ -357,7 +357,7 @@
                   "name": "",
                   "nodeType": "VariableDeclaration",
                   "scope": 1083,
-                  "src": "379:11:6",
+                  "src": "391:11:6",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -370,7 +370,7 @@
                     "name": "IEthStarter",
                     "nodeType": "UserDefinedTypeName",
                     "referencedDeclaration": 1063,
-                    "src": "379:11:6",
+                    "src": "391:11:6",
                     "typeDescriptions": {
                       "typeIdentifier": "t_contract$_IEthStarter_$1063",
                       "typeString": "contract IEthStarter"
@@ -380,23 +380,23 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "378:13:6"
+              "src": "390:13:6"
             },
             "scope": 1084,
-            "src": "338:54:6",
+            "src": "350:54:6",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "public"
           }
         ],
         "scope": 1085,
-        "src": "170:224:6"
+        "src": "178:229:6"
       }
     ],
-    "src": "0:395:6"
+    "src": "0:409:6"
   },
   "legacyAST": {
-    "absolutePath": "/home/guillem/Github/Ethstarter/contracts/contracts/IEthStarterFactory.sol",
+    "absolutePath": "/C/Users/cmuri/Desktop/Ethstarter/contracts/contracts/IEthStarterFactory.sol",
     "exportedSymbols": {
       "IEthStarterFactory": [
         1084
@@ -423,40 +423,40 @@
         "nodeType": "ImportDirective",
         "scope": 1085,
         "sourceUnit": 1398,
-        "src": "26:50:6",
+        "src": "28:50:6",
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "absolutePath": "/home/guillem/Github/Ethstarter/contracts/contracts/PrivilegedWhitelist.sol",
+        "absolutePath": "/C/Users/cmuri/Desktop/Ethstarter/contracts/contracts/PrivilegedWhitelist.sol",
         "file": "./PrivilegedWhitelist.sol",
         "id": 1067,
         "nodeType": "ImportDirective",
         "scope": 1085,
         "sourceUnit": 1215,
-        "src": "77:35:6",
+        "src": "80:35:6",
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "absolutePath": "/home/guillem/Github/Ethstarter/contracts/contracts/IEthStarter.sol",
+        "absolutePath": "/C/Users/cmuri/Desktop/Ethstarter/contracts/contracts/IEthStarter.sol",
         "file": "./IEthStarter.sol",
         "id": 1068,
         "nodeType": "ImportDirective",
         "scope": 1085,
         "sourceUnit": 1064,
-        "src": "113:27:6",
+        "src": "117:27:6",
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "absolutePath": "/home/guillem/Github/Ethstarter/contracts/contracts/IDataStore.sol",
+        "absolutePath": "/C/Users/cmuri/Desktop/Ethstarter/contracts/contracts/IDataStore.sol",
         "file": "./IDataStore.sol",
         "id": 1069,
         "nodeType": "ImportDirective",
         "scope": 1085,
         "sourceUnit": 995,
-        "src": "141:26:6",
+        "src": "146:26:6",
         "symbolAliases": [],
         "unitAlias": ""
       },
@@ -470,7 +470,7 @@
               "name": "PrivilegedWhitelist",
               "nodeType": "UserDefinedTypeName",
               "referencedDeclaration": 1214,
-              "src": "201:19:6",
+              "src": "209:19:6",
               "typeDescriptions": {
                 "typeIdentifier": "t_contract$_PrivilegedWhitelist_$1214",
                 "typeString": "contract PrivilegedWhitelist"
@@ -478,7 +478,7 @@
             },
             "id": 1071,
             "nodeType": "InheritanceSpecifier",
-            "src": "201:19:6"
+            "src": "209:19:6"
           },
           {
             "arguments": null,
@@ -488,7 +488,7 @@
               "name": "Ownable",
               "nodeType": "UserDefinedTypeName",
               "referencedDeclaration": 1397,
-              "src": "222:7:6",
+              "src": "230:7:6",
               "typeDescriptions": {
                 "typeIdentifier": "t_contract$_Ownable_$1397",
                 "typeString": "contract Ownable"
@@ -496,7 +496,7 @@
             },
             "id": 1073,
             "nodeType": "InheritanceSpecifier",
-            "src": "222:7:6"
+            "src": "230:7:6"
           }
         ],
         "contractDependencies": [
@@ -535,7 +535,7 @@
                   "name": "campaigns",
                   "nodeType": "VariableDeclaration",
                   "scope": 1078,
-                  "src": "303:20:6",
+                  "src": "313:20:6",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -548,7 +548,7 @@
                     "name": "IDataStore",
                     "nodeType": "UserDefinedTypeName",
                     "referencedDeclaration": 994,
-                    "src": "303:10:6",
+                    "src": "313:10:6",
                     "typeDescriptions": {
                       "typeIdentifier": "t_contract$_IDataStore_$994",
                       "typeString": "contract IDataStore"
@@ -558,17 +558,17 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "302:22:6"
+              "src": "312:22:6"
             },
             "payable": false,
             "returnParameters": {
               "id": 1077,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "331:0:6"
+              "src": "341:0:6"
             },
             "scope": 1084,
-            "src": "287:45:6",
+            "src": "297:45:6",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
@@ -587,7 +587,7 @@
               "id": 1079,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "355:2:6"
+              "src": "367:2:6"
             },
             "payable": false,
             "returnParameters": {
@@ -600,7 +600,7 @@
                   "name": "",
                   "nodeType": "VariableDeclaration",
                   "scope": 1083,
-                  "src": "379:11:6",
+                  "src": "391:11:6",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -613,7 +613,7 @@
                     "name": "IEthStarter",
                     "nodeType": "UserDefinedTypeName",
                     "referencedDeclaration": 1063,
-                    "src": "379:11:6",
+                    "src": "391:11:6",
                     "typeDescriptions": {
                       "typeIdentifier": "t_contract$_IEthStarter_$1063",
                       "typeString": "contract IEthStarter"
@@ -623,20 +623,20 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "378:13:6"
+              "src": "390:13:6"
             },
             "scope": 1084,
-            "src": "338:54:6",
+            "src": "350:54:6",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "public"
           }
         ],
         "scope": 1085,
-        "src": "170:224:6"
+        "src": "178:229:6"
       }
     ],
-    "src": "0:395:6"
+    "src": "0:409:6"
   },
   "compiler": {
     "name": "solc",
@@ -644,5 +644,5 @@
   },
   "networks": {},
   "schemaVersion": "2.0.0",
-  "updatedAt": "2018-05-26T22:35:14.163Z"
+  "updatedAt": "2018-05-26T23:18:19.940Z"
 }
