@@ -1,6 +1,5 @@
 pragma solidity ^0.4.23;
 
-
 contract PrivilegedWhitelist {
     event WhitelistedAddressAdded(address addr);
     event WhitelistedAddressRemoved(address addr);
