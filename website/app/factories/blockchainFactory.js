@@ -154,16 +154,9 @@
                 for (var byte of hash) {
                     str += byte.toString(16).padStart(2, "0");
                 }
-
-                console.log(str);
+                
                 return new web3.BigNumber(str);
             },
-
-            ipfsStringHashToID: function(hash){
-                var str = "0x";
-                console.log(str + hash);
-                return new web3.BigNumber(str + hash);
-            }
         };
     }
     
