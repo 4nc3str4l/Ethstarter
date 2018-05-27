@@ -5,13 +5,9 @@
         $scope.projects = [];
 
         function init(){
-            Blockchain.getCampaigns(
-                (_campaigns)=>{
-                    $scope.projects = _campaigns;
-                    console.log($scope.projects);
-                    $scope.$apply();
-                }
-            );
+            Blockchain.getCampaigns().then(campaignInfo =>{
+                console.log(campaignInfo);
+            });
         }
 
         $scope.projectDetails = function(id){

@@ -101,9 +101,45 @@
                     }
                 );
             },
+            
+            getCampaignById: function(_id){
+                return new Promise((resolve, reject) => {                
+                    DataStore.first(false,
+                        (err, res)=>{
+                            var response = {
+                                id: res[0].toNumber(),
+                                owner: res[1],
+                                gloal: web3.fromWei(res[2].toNumber(), "ether"),
+                                endDate: unixTimeStampToDate(res[3].toNumber()),
+                                balanceCaller: web3.fromWei(res[4].toNumber(), "ether"),
+                                previous: web3.toBigNumber(res[5].toNumber()),
+                                next: web3.toBigNumber(res[6])
+                            }
+                            resolve(response);
+                       });
+                  });
+            },
 
-            getCampaigns: function(_callback){
-                return [];
+            getCampaigns: function(){
+                var campaigns = [];
+                return new Promise((resolve, reject) =>{
+                    
+                    // Get the first Campaign
+                    DataStore.first(false,
+                        (err, res)=>{
+                            var campaign = {
+                                id: res[0].toNumber(),
+                                owner: res[1],
+                                gloal: web3.fromWei(res[2].toNumber(), "ether"),
+                                endDate: unixTimeStampToDate(res[3].toNumber()),
+                                balanceCaller: web3.fromWei(res[4].toNumber(), "ether"),
+                                previous: web3.toBigNumber(res[5].toNumber()),
+                                next: web3.toBigNumber(res[6])
+                            }
+                            
+
+                       });
+                });
             },
 
             getCampaignById: function(_id, _callback){
