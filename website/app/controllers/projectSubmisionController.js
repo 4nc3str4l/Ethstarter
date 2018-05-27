@@ -7,11 +7,19 @@
 
         $scope.submit = function(){
             this.loading = true;
-            Blockchain.publishCampaign($scope.title, $scope.website, $scope.endDate, $scope.contributionAmmount, $scope.description,
-                (receipt) => {
-                    $window.location = "/";
-                }
-            );
+
+            DataFactory.submitCampaign({
+                'title': $scope.title, 
+                'website': $scope.website, 
+                'description': $scope.description,
+                'image': ''
+            }).then(ipfsHash => {                
+                Blockchain.publishCampaign(ipfsHash, $scope.endDate, $scope.contributionAmmount,
+                    (receipt) => {
+                        $window.location = "    /";
+                    }
+                );
+            });
         }
     };
     

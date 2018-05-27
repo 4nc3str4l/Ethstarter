@@ -23,13 +23,11 @@
         });
 
         function validateCampaign(campaign) {
-            const expectedKeys = ['title', 'description', 'image'];
+            const expectedKeys = ['title', 'description', 'website', 'image'];
 
             // Check all keys are present
             for (var key of expectedKeys) {
                 if (!(key in campaign)) {
-                    console.log(key);
-                    console.log(campaign);
                     throw new Error('Invalig campaign: missing ' + key);
                 }
             }
@@ -53,9 +51,11 @@
                 // Dump to IPFS and retrieve hash
                 var buffer = ipfs.types.Buffer(JSON.stringify(campaign));
                 var file = await ipfs.files.add(buffer);
+                console.log(file[0].hash);
 
                 // Obtain a uint256 representation
                 const cid = new Cids(file[0].hash).toV1();
+                console.log(cid);
                 var hash = cid.multihash.slice(2);
                 var str = "0x";
                 
@@ -63,6 +63,7 @@
                     str += byte.toString(16).padStart(2, "0");
                 }
 
+                console.log(str);
                 return new web3.BigNumber(str);
             },
 

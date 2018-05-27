@@ -39,7 +39,7 @@
         function initContracts(){
             EthStarter = initContract(appSettings.abi.EthStarter, appSettings.addresses.EthStarterAddress);
             BigBrother = initContract(appSettings.abi.BigBrother, appSettings.addresses.BigBrotherAddress);
-            DataStore = initContract(appSettings.abi.DataStore, appSettings.addresses.DataStoreAddress);
+            window.DataStore = DataStore = initContract(appSettings.abi.DataStore, appSettings.addresses.DataStoreAddress);
         }
 
         function unixTimeStampToDate(_timestamp){
@@ -55,12 +55,12 @@
                 return web3.eth.coinbase;
             },
             
-            publishCampaign: function(_title, _website, _endDate, _goalAmmount, _description, _callback){
+            publishCampaign: function(_ipfsHash, _endDate, _goalAmmount, _callback){
                 var date = (new Date(_endDate)).getTime();
                 var unixTimestamp = date / 1000;
                 var goalAmmountWei = web3.toBigNumber(web3.toWei(_goalAmmount, "ether"));
-                console.log("TODO: REAL IPFS HASH HERE PLEASE!");
-                EthStarter.addCampaign.sendTransaction("HASH", goalAmmountWei, unixTimestamp,
+                
+                EthStarter.addCampaign.sendTransaction(_ipfsHash, goalAmmountWei, unixTimestamp,
                     {
                         from:web3.eth.accounts[0],
                         gas:4000000
