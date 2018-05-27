@@ -1,0 +1,26 @@
+"use strict";
+
+(function () {
+    // Used to display an image once it has been set in a form
+    angular.module('EthStarter').directive("fileread", [
+        function () {
+            return {
+                scope: {
+                    fileread: "="
+                },
+                link: function (scope, element, attributes) {
+                    element.bind("change", function (changeEvent) {
+                        var reader = new FileReader();
+                        reader.onload = function (loadEvent) {
+                            scope.$apply(function () {
+                                scope.fileread = loadEvent.target.result;
+                            });
+                        }
+                        reader.readAsDataURL(changeEvent.target.files[0]);
+                    });
+                }
+            }
+        }
+    ]);
+
+}());

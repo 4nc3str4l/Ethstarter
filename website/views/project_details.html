@@ -8,13 +8,13 @@
             <p>Published in: {{project.creationDate | date}}</p>
             <p>{{project.description}}</p>
             <p>Project Website: <a href="{{project.website}}">{{project.website}}</a></p>
-            
+            <img src="{{project.image}}" alt="{{project.image}}">
         </div>
         <div class="col-lg-4">
             <h3>Raised</h3>
             <p>{{project.raised}} ETH</p>
             <h3>Goal</h3>
-            <p>{{project.goalAmount}} ETH</p>
+            <p>{{project.goal}} ETH</p>
             <h3>Backing Ends</h3>
             <p>{{project.endDate | date}}</p>
         </div>
