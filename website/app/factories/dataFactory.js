@@ -2,10 +2,12 @@
     var DataFactory = function(Blockchain, appSettings){
         var ipfs = new Ipfs({
             repo: "ipfs/shared",
-            config: {
-                Bootstrap: [
-                    '/ip4/127.0.0.1/tcp/4004/ws/ipfs/QmRaQcxv3CzkYkZQuMRm6Pa6tSdhU34HKL4JeK8gL7uCin'
-                ],
+            config: { // overload the default config
+                Addresses: {
+                    Swarm: [
+                        '/dns4/ws-star.discovery.libp2p.io/tcp/443/wss/p2p-websocket-star'
+                    ]
+                },
                 EXPERIMENTAL: { 
                     dht: true,
                     relay: { 
@@ -13,22 +15,12 @@
                         hop: { enabled: true } 
                     }
                 }
-            },
-            EXPERIMENTAL: { 
-                dht: true,
-                relay: { 
-                    enabled: true, 
-                    hop: { enabled: true } 
-                }
-            }
+              }
         });
 
         // Promise to check if IPFS is ready
         var ipfsReady = new Promise((resolve, _) => {
             ipfs.once('ready', async function() {
-                // Connect to Relay node
-                await ipfs.swarm.connect("/ip4/127.0.0.1/tcp/4004/ws/ipfs/QmRaQcxv3CzkYkZQuMRm6Pa6tSdhU34HKL4JeK8gL7uCin");
-
                 // Done!
                 resolve(ipfs);
             });
