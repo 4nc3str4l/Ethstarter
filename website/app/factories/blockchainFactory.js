@@ -32,18 +32,34 @@
         }
 
         function initContract(_abi, _address){
-            var contract = web3.eth.contract(_abi);
-            return contract.at(_address);
+            return new web3.eth.Contract(_abi, _address);
         }
 
         function initContracts(){
-            EthStarter = initContract(appSettings.abi.EthStarter, appSettings.addresses.EthStarterAddress);
+            window.EthStarter = EthStarter = initContract(appSettings.abi.EthStarter, appSettings.addresses.EthStarterAddress);
             BigBrother = initContract(appSettings.abi.BigBrother, appSettings.addresses.BigBrotherAddress);
             window.DataStore = DataStore = initContract(appSettings.abi.DataStore, appSettings.addresses.DataStoreAddress);
         }
 
         function unixTimeStampToDate(_timestamp){
             return new Date(_timestamp * 1000);
+        }
+
+        function transact(method, obj) {
+            return web3.eth.getAccounts().then(accounts => {
+                obj.from = accounts[0];
+
+                return method.estimateGas(obj).then(gas => {
+                    obj.gas = gas + 22000;        
+                    return method.send(obj);
+                });
+            });
+        }
+
+        function defaultTransact(method) {
+            return transact(method, {
+                gasPrice: web3.utils.toWei("1", "gwei"),
+            });
         }
 
         initWeb3();
@@ -55,88 +71,59 @@
                 return web3.eth.coinbase;
             },
             
-            publishCampaign: function(_ipfsHash, _endDate, _goalAmmount, _callback){
+            publishCampaign: function(_ipfsHash, _endDate, _goalAmount, _callback){
                 var date = (new Date(_endDate)).getTime();
                 var unixTimestamp = date / 1000;
-                var goalAmmountWei = web3.toBigNumber(web3.toWei(_goalAmmount, "ether"));
+                var goalAmountWei = web3.utils.toWei(_goalAmount.toString(), "ether");
                 
-                EthStarter.addCampaign.sendTransaction(_ipfsHash, goalAmmountWei, unixTimestamp,
-                    {
-                        from:web3.eth.accounts[0],
-                        gas:4000000
-                    }, 
-                    (error, transactionHash)=>{
-                        var waitUntilMined = setInterval(()=>{
-                            web3.eth.getTransactionReceipt(transactionHash,
-                                (err, receipt) => {
-                                    if(receipt != null){
-                                        _callback(receipt);
-                                        clearInterval(waitUntilMined);
-                                    }
-                                }
-                            );
-                        }, 500);
-                    }
-                );
+                defaultTransact(EthStarter.methods.addCampaign(_ipfsHash, goalAmountWei, unixTimestamp)).then(receipt => {
+                    _callback(receipt);
+                });
             },
-            donate: function(_campaignID, _ammount, _callback){
-                var ammountWei = web3.toBigNumber(web3.toWei(_ammount, "ether"));
-                EthStarter.payCampaign.sendTransaction(_campaignID,
-                    {
-                        from:web3.eth.accounts[0],
-                        value: ammountWei,
-                        gas:4000000
-                    }, 
-                    (error, transactionHash)=>{
-                        var waitUntilMined = setInterval(()=>{
-                            web3.eth.getTransactionReceipt(transactionHash,
-                                (err, receipt) => {
-                                    if(receipt != null){
-                                        _callback(receipt);
-                                        clearInterval(waitUntilMined);
-                                    }
-                                }
-                            );
-                        }, 500);
-                    }
-                );
+
+            donate: function(_campaignID, _amount, _callback){
+                var amountWei = web3.utils.toWei(_amount.toString(), "ether");
+                transact(EthStarter.methods.payCampaign(_campaignID), {
+                    gasPrice: web3.utils.toWei("1", "gwei"),
+                    value: amountWei
+                }).then(receipt => {
+                    _callback(receipt);
+                });
             },
             
             getCampaignById: function(_id){
                 return new Promise((resolve, reject) => {                
-                    DataStore.get(_id,
-                        (err, res)=>{
-                            var response = {
-                                id: res[0],
-                                owner: res[1],
-                                goal: web3.fromWei(res[2], "ether"),
-                                endDate: unixTimeStampToDate(res[3].toNumber()),
-                                balanceCaller: web3.fromWei(res[4], "ether"),
-                                previous: res[5],
-                                next: res[6]
-                            }
+                    DataStore.methods.get(_id).call().then(res => {
+                        var response = {
+                            id: new web3.utils.BN(res[0]),
+                            owner: res[1],
+                            goal: web3.utils.fromWei(res[2], "ether"),
+                            endDate: unixTimeStampToDate(parseInt(res[3])),
+                            balanceCaller: web3.utils.fromWei(res[4], "ether"),
+                            previous: new web3.utils.BN(res[5]),
+                            next: new web3.utils.BN(res[6])
+                        }
 
-                            resolve(response);
-                       });
-                  });
+                        resolve(response);
+                    });
+                });
             },
 
             getLastCampaign: function(){
                 return new Promise((resolve, reject) =>{                    
                     // Get the last Campaign
-                    DataStore.last(false,
-                        (err, res)=>{
-                            var campaign = {
-                                id: res[0],
-                                owner: res[1],
-                                goal: web3.fromWei(res[2], "ether"),
-                                endDate: unixTimeStampToDate(res[3].toNumber()),
-                                balanceCaller: web3.fromWei(res[4], "ether"),
-                                previous: res[5],
-                                next: res[6]
-                            }
+                    DataStore.methods.last(false).call().then(res => {
+                        var campaign = {
+                            id: new web3.utils.BN(res[0]),
+                            owner: res[1],
+                            goal: web3.utils.fromWei(res[2], "ether"),
+                            endDate: unixTimeStampToDate(parseInt(res[3])),
+                            balanceCaller: web3.utils.fromWei(res[4], "ether"),
+                            previous: new web3.utils.BN(res[5]),
+                            next: new web3.utils.BN(res[6])
+                        }
                             
-                            resolve(campaign);
+                        resolve(campaign);
                     });
                 });
             }

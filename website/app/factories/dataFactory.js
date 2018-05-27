@@ -3,7 +3,7 @@
 
         var downloadedData = {};
 
-        var ipfs = new Ipfs({
+        var ipfs = window.ipfs = new Ipfs({
             repo: "ipfs/shared",
             config: { // overload the default config
                 Addresses: {
@@ -18,12 +18,14 @@
                         hop: { enabled: true } 
                     }
                 }
-              }
+            }
         });
 
         // Promise to check if IPFS is ready
         var ipfsReady = new Promise((resolve, _) => {
             ipfs.once('ready', async function() {
+                await ipfs.swarm.connect("/ip4/127.0.0.1/tcp/4004/ws/ipfs/QmRaQcxv3CzkYkZQuMRm6Pa6tSdhU34HKL4JeK8gL7uCin");
+
                 // Done!
                 resolve(ipfs);
             });
@@ -107,7 +109,7 @@
                     str += byte.toString(16).padStart(2, "0");
                 }
 
-                return new web3.BigNumber(str);
+                return new web3.utils.BN(str);
             },
 
             getCampaignByIpfsHash: async function(ipfsHash) {
@@ -127,6 +129,7 @@
                         }
                     }
                 }
+
                 // Make sure IPFS is connected and relayed
                 await ipfsReady;
 
@@ -136,7 +139,7 @@
                 var file = await ipfs.files.get(ipfsHash);
                 var content = file[0].content.toString('utf-8');
 
-                console.log(file);
+                console.log("Got from " + ipfsHash);
 
                 // Parse JSON and validate
                 var campaign = JSON.parse(content);
