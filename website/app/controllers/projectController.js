@@ -7,23 +7,12 @@
         $scope.contributionAmmount = 0.1;
         $scope.loading = false;
 
-        
-        //TODO: Move this to a utils file
-        function isInteger(str){
-            return /^\+?(0|[1-9]\d*)$/.test(str);
-        }
-        
         function init(){
-            if(isInteger($routeParams.id)){
-                projectID = $routeParams.id;
-                Blockchain.getCampaignById(projectID, (_campaign)=>{
-                    $scope.project = _campaign;
-                    $scope.$apply();
-                });
-                
-            }else{
-                $window.location.href = '/'
-            }
+            projectID = $routeParams.id;
+            Blockchain.getCampaignById(projectID, (_campaign)=>{
+                $scope.project = _campaign;
+                $scope.$apply();
+            });
         }
         
         if($scope.contributionAmmount <= 0){
