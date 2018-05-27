@@ -81,7 +81,7 @@
             },
             donate: function(_campaignID, _ammount, _callback){
                 var ammountWei = web3.toBigNumber(web3.toWei(_ammount, "ether"));
-                EthStarter.payCampaign.sendTransaction(_campaignID,
+                EthStarter.payCampaign.sendTransaction(this.ipfsHashToID(_campaignID),
                     {
                         from:web3.eth.accounts[0],
                         value: ammountWei,
@@ -112,8 +112,9 @@
                                 goal: web3.fromWei(res[2], "ether"),
                                 endDate: unixTimeStampToDate(res[3].toNumber()),
                                 balanceCaller: web3.fromWei(res[4], "ether"),
-                                previous: res[5],
-                                next: res[6]
+                                raised: web3.fromWei(res[5], "ether"),
+                                previous: res[6],
+                                next: res[7]
                             }
 
                             resolve(response);
@@ -132,13 +133,36 @@
                                 goal: web3.fromWei(res[2], "ether"),
                                 endDate: unixTimeStampToDate(res[3].toNumber()),
                                 balanceCaller: web3.fromWei(res[4], "ether"),
-                                previous: res[5],
-                                next: res[6]
+                                raised: web3.fromWei(res[5], "ether"),
+                                previous: res[6],
+                                next: res[7]
                             }
                             
                             resolve(campaign);
                     });
                 });
+            },
+
+            ipfsHashToID: function(hash){
+
+                // Obtain a uint256 representation
+                const cid = new Cids(hash).toV1();
+                hash = cid.multihash.slice(2);
+
+                var str = "0x";
+                
+                for (var byte of hash) {
+                    str += byte.toString(16).padStart(2, "0");
+                }
+
+                console.log(str);
+                return new web3.BigNumber(str);
+            },
+
+            ipfsStringHashToID: function(hash){
+                var str = "0x";
+                console.log(str + hash);
+                return new web3.BigNumber(str + hash);
             }
         };
     }
