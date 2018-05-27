@@ -5,8 +5,8 @@
         $scope.projects = [];
 
         function init(){
-            Blockchain.getCampaigns().then(campaignInfo =>{
-                console.log(campaignInfo);
+            Datafactory.getCampaigns(campaignInfo => {
+                $scope.projects.push(campaignInfo);
             });
         }
 
