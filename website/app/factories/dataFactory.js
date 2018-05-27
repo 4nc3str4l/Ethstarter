@@ -40,7 +40,7 @@
             }
         }
 
-        async function iterateCampaigns(self, campaign, showCampaign) {
+        async function iterateCampaigns(self, campaign, order, showCampaign) {
             var ipfsHash = self.getIpfsHashFromId(campaign.id);
             self.getCampaignByIpfsHash(ipfsHash)
                 .then(information => {
@@ -48,6 +48,10 @@
                     for (key in information) {
                         campaign[key] = information[key];
                     }
+
+                    // Some more info
+                    campaign.id = ipfsHash;
+                    campaign.order = order;
                     
                     // Progress function
                     campaign.progress = function() {
@@ -68,8 +72,8 @@
             }
 
             // Get previous and iterate
-            campaign = await Blockchain.getCampaignById(campaign.previous);
-            iterateCampaigns(self, campaign, showCampaign);
+            var prevCampaign = await Blockchain.getCampaignById(campaign.previous);
+            iterateCampaigns(self, prevCampaign, order + 1, showCampaign);
         }
 
         return {
@@ -100,9 +104,13 @@
                 // Make sure IPFS is connected and relayed
                 await ipfsReady;
 
+                console.log(ipfsHash);
+
                 // Fetch file from ipfs
                 var file = await ipfs.files.get(ipfsHash);
                 var content = file[0].content.toString('utf-8');
+
+                console.log(file);
 
                 // Parse JSON and validate
                 var campaign = JSON.parse(content);
@@ -130,7 +138,7 @@
                 var self = this;
                 Blockchain.getLastCampaign().then(campaign => {
                     if (campaign.id.toString(16) != "0") {
-                        iterateCampaigns(self, campaign, showCampaign);
+                        iterateCampaigns(self, campaign, 0, showCampaign);
                     }
                 });
             }
