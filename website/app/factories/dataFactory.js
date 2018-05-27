@@ -2,8 +2,20 @@
     var DataFactory = function(Blockchain){
         var ipfs = new Ipfs({
             repo: "ipfs/shared",
-            start: true, 
+            config: {
+                Bootstrap: [
+                    '/ip4/127.0.0.1/tcp/4004/ws/ipfs/QmRaQcxv3CzkYkZQuMRm6Pa6tSdhU34HKL4JeK8gL7uCin'
+                ],
+                EXPERIMENTAL: { 
+                    dht: true,
+                    relay: { 
+                        enabled: true, 
+                        hop: { enabled: true } 
+                    }
+                }
+            },
             EXPERIMENTAL: { 
+                dht: true,
                 relay: { 
                     enabled: true, 
                     hop: { enabled: true } 
@@ -15,7 +27,7 @@
         var ipfsReady = new Promise((resolve, _) => {
             ipfs.once('ready', async function() {
                 // Connect to Relay node
-                await ipfs.swarm.connect("/ip4/79.157.247.178/tcp/4004/ws/ipfs/QmRaQcxv3CzkYkZQuMRm6Pa6tSdhU34HKL4JeK8gL7uCin");
+                await ipfs.swarm.connect("/ip4/127.0.0.1/tcp/4004/ws/ipfs/QmRaQcxv3CzkYkZQuMRm6Pa6tSdhU34HKL4JeK8gL7uCin");
 
                 // Done!
                 resolve(ipfs);
