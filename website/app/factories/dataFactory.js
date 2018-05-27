@@ -11,6 +11,9 @@
                         '/dns4/ws-star.discovery.libp2p.io/tcp/443/wss/p2p-websocket-star'
                     ]
                 },
+                Bootstrap: [
+                    "/ip4/127.0.0.1/tcp/4004/ws/ipfs/QmRaQcxv3CzkYkZQuMRm6Pa6tSdhU34HKL4JeK8gL7uCin"
+                ],
                 EXPERIMENTAL: { 
                     dht: true,
                     relay: { 
@@ -100,16 +103,19 @@
                 var buffer = ipfs.types.Buffer(JSON.stringify(campaign));
                 var file = await ipfs.files.add(buffer);
 
+                // Debug
+                console.log("IPFS Hash " + file[0].hash);
+
                 // Obtain a uint256 representation
                 const cid = new Cids(file[0].hash).toV1();
                 var hash = cid.multihash.slice(2);
-                var str = "0x";
+                var str = "";
                 
                 for (var byte of hash) {
                     str += byte.toString(16).padStart(2, "0");
                 }
 
-                return new web3.utils.BN(str);
+                return new web3.utils.BN(str, 16);
             },
 
             getCampaignByIpfsHash: async function(ipfsHash) {

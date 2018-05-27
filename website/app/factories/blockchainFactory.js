@@ -94,6 +94,7 @@
             getCampaignById: function(_id){
                 return new Promise((resolve, reject) => {                
                     DataStore.methods.get(_id).call().then(res => {
+                        window.res = res;
                         var response = {
                             id: new web3.utils.BN(res[0]),
                             owner: res[1],
