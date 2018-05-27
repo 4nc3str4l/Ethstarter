@@ -35,8 +35,10 @@ module.exports = function(deployer) {
 
               utils.addABIToCopy("BigBrother");
               utils.addABIToCopy("EthStarter");
+              utils.addABIToCopy("DataStore");
               utils.addAddressToCopy("BigBrotherAddress", _bigBrother.address);
               utils.addAddressToCopy("EthStarterAddress", _ethStarter);
+              utils.addAddressToCopy("DataStoreAddress", _dataStore.address);
               
               utils.writeChangesIntoFile();
             });
