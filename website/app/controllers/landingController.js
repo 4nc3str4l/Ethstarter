@@ -7,6 +7,7 @@
         function init(){
             Datafactory.getCampaigns(campaignInfo => {
                 $scope.projects.push(campaignInfo);
+                $scope.$apply();
             });
         }
 
