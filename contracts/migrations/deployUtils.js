@@ -56,7 +56,8 @@ class DeployUtils {
 
     defaultTransactAndMine(method, ...args) {
         return this.transactAndMine(method, {
-            from: this.web3.eth.accounts[0]
+            from: this.web3.eth.accounts[0],
+            gasPrice: this.web3.toWei(1, "gwei"),
         }, ...args);
     }
 

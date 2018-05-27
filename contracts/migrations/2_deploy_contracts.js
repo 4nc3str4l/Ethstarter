@@ -17,30 +17,33 @@ var utils = new DeployUtils(web3);
 web3.eth.getTransactionReceiptMined = utils.getTransactionReceiptMined;
 
 module.exports = function(deployer) {
-  utils.createAndGetInstance(deployer, BigBrother).then(_bigBrother => {
-    utils.createAndGetInstance(deployer, EthStarterFactory).then(_factory => {
-      
-      _bigBrother.update.sendTransaction(_factory.address,
-        {
-          from: web3.eth.accounts[0],
-          gas: 4000000
-        }
-      );
+  return new Promise((resolve, reject) => {
+    utils.createAndGetInstance(deployer, BigBrother).then(_bigBrother => {
+      utils.createAndGetInstance(deployer, EthStarterFactory).then(_factory => {
+        
+        _bigBrother.update.sendTransaction(_factory.address,
+          {
+            from: web3.eth.accounts[0],
+            gas: 4000000
+          }
+        );
 
-      utils.createAndGetInstance(deployer, DataStore).then(_dataStore => {
-        utils.defaultTransactAndMine(_dataStore.allow, _factory.address).then(() => {
-          utils.defaultTransactAndMine(_factory.create, _dataStore.address).then(() => {
-            _factory.instance().then(_ethStarter => {
-              console.log("ETHSTARTER AT " + _ethStarter);
+        utils.createAndGetInstance(deployer, DataStore).then(_dataStore => {
+          utils.defaultTransactAndMine(_dataStore.allow, _factory.address).then(() => {
+            utils.defaultTransactAndMine(_factory.create, _dataStore.address).then(() => {
+              _factory.instance().then(_ethStarter => {
+                console.log("ETHSTARTER AT " + _ethStarter);
 
-              utils.addABIToCopy("BigBrother");
-              utils.addABIToCopy("EthStarter");
-              utils.addABIToCopy("DataStore");
-              utils.addAddressToCopy("BigBrotherAddress", _bigBrother.address);
-              utils.addAddressToCopy("EthStarterAddress", _ethStarter);
-              utils.addAddressToCopy("DataStoreAddress", _dataStore.address);
-              
-              utils.writeChangesIntoFile();
+                utils.addABIToCopy("BigBrother");
+                utils.addABIToCopy("EthStarter");
+                utils.addABIToCopy("DataStore");
+                utils.addAddressToCopy("BigBrotherAddress", _bigBrother.address);
+                utils.addAddressToCopy("EthStarterAddress", _ethStarter);
+                utils.addAddressToCopy("DataStoreAddress", _dataStore.address);
+                
+                utils.writeChangesIntoFile();
+                resolve(true);
+              });
             });
           });
         });
