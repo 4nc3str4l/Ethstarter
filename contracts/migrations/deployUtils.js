@@ -1,11 +1,17 @@
 'use strict'
 
-const fs = require("fs")
+const fs = require("fs");
+const VALUES_PATH = "../website/app/values/values.js";
 
 class DeployUtils {
 
     constructor(web3) {
         this.web3 = web3;
+        this.dataToCopy = {
+            development: true,
+            addresses: {},
+            abi: {}
+        };
     }
 
     getTransactionReceiptMined(txHash, interval) {
@@ -52,6 +58,30 @@ class DeployUtils {
         return this.transactAndMine(method, {
             from: this.web3.eth.accounts[0]
         }, ...args);
+    }
+
+    addABIToCopy(contractName) {
+        var data = fs.readFileSync('./build/contracts/' + contractName + ".json", "utf8");
+        var file = JSON.parse(data);
+        this.dataToCopy.abi[contractName] = file.abi;
+    }
+
+    addAddressToCopy(name, address) {
+        this.dataToCopy.addresses[name] = address;
+    }
+
+    writeChangesIntoFile() {
+        var fileHeader = "angular.module('EthStarter').constant('appSettings',"
+        var dataToWrite = JSON.stringify(this.dataToCopy, null, 4);
+        var fileEnd = "\n);";
+        var fs = require('fs');
+
+        fs.writeFile(VALUES_PATH, fileHeader + dataToWrite + fileEnd, function (err) {
+            if (err) {
+                return console.log(err);
+            }
+            console.log("FrontEnd values updated!");
+        });
     }
 }
 

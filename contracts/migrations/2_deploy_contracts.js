@@ -32,6 +32,13 @@ module.exports = function(deployer) {
           utils.defaultTransactAndMine(_factory.create, _dataStore.address).then(() => {
             _factory.instance().then(_ethStarter => {
               console.log("ETHSTARTER AT " + _ethStarter);
+
+              utils.addABIToCopy("BigBrother");
+              utils.addABIToCopy("EthStarter");
+              utils.addAddressToCopy("BigBrotherAddress", _bigBrother.address);
+              utils.addAddressToCopy("EthStarterAddress", _ethStarter);
+              
+              utils.writeChangesIntoFile();
             });
           });
         });
