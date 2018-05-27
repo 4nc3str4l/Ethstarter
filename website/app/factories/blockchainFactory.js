@@ -59,6 +59,7 @@
                 var date = (new Date(_endDate)).getTime();
                 var unixTimestamp = date / 1000;
                 var goalAmmountWei = web3.toBigNumber(web3.toWei(_goalAmmount, "ether"));
+                console.log("TODO: REAL IPFS HASH HERE PLEASE!");
                 EthStarter.addCampaign.sendTransaction("HASH", goalAmmountWei, unixTimestamp,
                     {
                         from:web3.eth.accounts[0],
