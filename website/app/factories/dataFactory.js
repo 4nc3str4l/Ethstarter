@@ -161,8 +161,7 @@
 
             inspectCampaign: function(ipfsID){
                 return downloadedData[ipfsID];
-            }
-
+            },
         };
 
         return promise;
