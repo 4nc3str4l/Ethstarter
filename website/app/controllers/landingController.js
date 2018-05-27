@@ -5,7 +5,7 @@
         $scope.projects = [];
 
         function init(){
-            Datafactory.getCampaigns(campaignInfo => {
+            DataFactory.getCampaigns(campaignInfo => {
                 $scope.projects.push(campaignInfo);
                 $scope.$apply();
             });
