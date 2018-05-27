@@ -6,6 +6,7 @@
 
         function init(){
             DataFactory.getCampaigns(campaignInfo => {
+                console.log(campaignInfo);
                 $scope.projects.push(campaignInfo);
                 $scope.$apply();
             });
