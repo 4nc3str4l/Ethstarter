@@ -9,10 +9,7 @@
 
         function init(){
             projectID = $routeParams.id;
-            Blockchain.getCampaignById(projectID, (_campaign)=>{
-                $scope.project = _campaign;
-                $scope.$apply();
-            });
+            $scope.project = DataFactory.inspectCampaign(projectID);
         }
         
         if($scope.contributionAmmount <= 0){
