@@ -1,6 +1,6 @@
 (function() {
     
-    var ProjectSubmisionController = function ($scope, Blockchain, DataFactory,$location) {
+    var ProjectSubmisionController = function ($scope, Blockchain, DataFactory, $location) {
         
         $scope.title = "Project";
         $scope.loading = false;
