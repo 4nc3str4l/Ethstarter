@@ -1,6 +1,6 @@
 (function() {
     
-    var ProjectSubmisionController = function ($scope, $log, Blockchain, appSettings, DataFactory, $routeParams, $window) {
+    var ProjectSubmisionController = function ($scope, Blockchain, DataFactory,$location) {
         
         $scope.title = "Project";
         $scope.loading = false;
@@ -16,14 +16,14 @@
             }).then(ipfsHash => {                
                 Blockchain.publishCampaign(ipfsHash, $scope.endDate, $scope.contributionAmmount,
                     (receipt) => {
-                        $window.location = "    /";
+                        $location.path("/");
                     }
                 );
             });
         }
     };
     
-    ProjectSubmisionController.$inject = ['$scope', '$log', 'Blockchain', 'appSettings', 'DataFactory', '$routeParams', '$window'];
+    ProjectSubmisionController.$inject = ['$scope', 'Blockchain', 'DataFactory', '$location'];
 
     angular.module('EthStarter')
       .controller('ProjectSubmisionController', ProjectSubmisionController);
