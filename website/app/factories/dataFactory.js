@@ -1,5 +1,8 @@
 (function() {
     var DataFactory = function(Blockchain, appSettings){
+
+        var downloadedData = {};
+
         var ipfs = new Ipfs({
             repo: "ipfs/shared",
             config: { // overload the default config
@@ -64,6 +67,8 @@
                         return this.raised * 100.0 / this.goal;
                     }
 
+                    downloadedData[campaign.id] = campaign;
+
                     // Callback
                     showCampaign(campaign);
                 })
@@ -108,8 +113,15 @@
             getCampaignByIpfsHash: async function(ipfsHash) {
                 if(!appSettings.useIPFS){
                     return{
-                        title: ipfsHash,
-                        description: "Description",
+                        
+                        title: "Title",
+                        description: "I want ETH for make my dreams become true!!!",
+                        creationDate: new Date(),
+                        website: "www.lostsocket.net",
+                        raised: 10,
+                        goalAmount: 5,
+                        endDate: new Date(),
+
                         progress : function(){
                             return 50;
                         }
@@ -155,7 +167,12 @@
                         iterateCampaigns(self, campaign, 0, showCampaign);
                     }
                 });
+            },
+
+            inspectCampaign: function(ipfsID){
+                return downloadedData[ipfsID];
             }
+
         };
 
         return promise;
