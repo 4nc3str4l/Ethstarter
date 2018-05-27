@@ -1,147 +1,61 @@
 (function() {
-    var DataFactory = function($http, $log){
-        
-        var lorem = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-
-        var projects = [
-            {
-                id: 1,
-                title : 'Project 1',
-                description: lorem,
-                goal: '10',
-                raised: '1.2',
-                start_date: '10-02-2018',
-                end_date: '10-3-2018',
-                website: 'https://www.google.com'
-            },
-            {
-                id: 2,
-                title : 'Project 2',
-                goal: '10',
-                description: lorem,
-                raised: '1.2',
-                start_date: '10-02-2018',
-                end_date: '10-3-2018',
-                website: 'https://www.google.com'            },
-            {
-                id: 3,
-                title : 'Project 3',
-                description: lorem,
-                goal: '10',
-                raised: '1.2',
-                start_date: '10-02-2018',
-                end_date: '10-3-2018',
-                website: 'https://www.google.com'
-            },
-            {
-                id: 4,
-                title : 'Project 4',
-                description: lorem,
-                goal: '10',
-                raised: '1.2',
-                start_date: '10-02-2018',
-                end_date: '10-3-2018',
-                website: 'https://www.google.com'
-            }, 
-            {
-                id: 5,
-                title : 'Project 5',
-                description: lorem,
-                goal: '10',
-                raised: '1.2',
-                start_date: '10-02-2018',
-                end_date: '10-3-2018',
-                website: 'https://www.google.com'
-            },
-            {
-                id: 6,
-                title : 'Project 6',
-                description: lorem,
-                goal: '10',
-                raised: '1.2',
-                start_date: '10-02-2018',
-                end_date: '10-3-2018',
-                website: 'https://www.google.com'
-            },
-            {
-                id: 7,
-                title : 'Project 7',
-                description: lorem,
-                goal: '10',
-                raised: '1.2',
-                start_date: '10-02-2018',
-                end_date: '10-3-2018',
-                website: 'https://www.google.com'
-            },
-            {
-                id: 8,
-                title : 'Project 8',
-                description: lorem,
-                goal: '10',
-                raised: '1.2',
-                start_date: '10-02-2018',
-                end_date: '10-3-2018',
-                website: 'https://www.google.com'
-            },
-            {
-                id: 9,
-                title : 'Project 9',
-                description: lorem,
-                goal: '10',
-                raised: '1.2',
-                start_date: '10-02-2018',
-                end_date: '10-3-2018',
-                website: 'https://www.google.com'
-            },
-            {
-                id: 10,
-                title : 'Project 10',
-                description: lorem,
-                goal: '10',
-                raised: '1.2',
-                start_date: '10-02-2018',
-                end_date: '10-3-2018',
-                website: 'https://www.google.com'
-            },
-            {
-                id: 11,
-                title : 'Project 11',
-                description: lorem,
-                goal: '10',
-                raised: '1.2',
-                start_date: '10-02-2018',
-                end_date: '10-3-2018',
-                website: 'https://www.google.com'
-            },
-            {
-                id: 12,
-                title : 'Project 12',
-                description: lorem,
-                goal: '10',
-                raised: '1.2',
-                start_date: '10-02-2018',
-                end_date: '10-3-2018',
-                website: 'https://www.google.com'
-            }
-        ]
-
-        return{
-            getProjects : function(){
-                return projects;
-            },
-            getProjectWithID: function(_id){
-                var p  = null;
-                for(var i = 0; i < projects.length; ++i){
-                    p = projects[i];
-                    if(p.id == _id)
-                        return p;
+    var DataFactory = function(){
+        var ipfs = new Ipfs({
+            repo: "ipfs/shared",
+            start: true, 
+            EXPERIMENTAL: { 
+                relay: { 
+                    enabled: true, 
+                    hop: { enabled: true } 
                 }
-                return null;
+            }
+        });
+
+        // Promise to check if IPFS is ready
+        var ipfsReady = new Promise((resolve, _) => {
+            ipfs.once('ready', async function() {
+                // Connect to Relay node
+                await ipfs.swarm.connect("/ip4/127.0.0.1/tcp/4004/ws/ipfs/QmRaQcxv3CzkYkZQuMRm6Pa6tSdhU34HKL4JeK8gL7uCin");
+
+                // Done!
+                resolve(ipfs);
+            });
+        });        
+
+        return {
+            getCampaignById: async function(ipfsHash) {
+                // Make sure IPFS is connected and relayed
+                await ipfsReady;
+
+                // Fetch file from ipfs
+                var file = await ipfs.files.get(ipfsHash);
+                var content = file[0].content.toString('utf-8');
+                
+                // Parse JSON
+                var data = JSON.parse(content);
+                const expectedKeys = ['title', 'description', 'image'];
+
+                // Check all keys are present
+                for (var key of expectedKeys) {
+                    if (!(key in data)) {
+                        throw new Error('Invalig campaign: missing ' + key);
+                    }
+                }
+
+                // Check there are no more keys than required
+                for (key in data) {
+                    if (!(key in expectedKeys)) {
+                        throw new Error('Invalig campaign: unexpected ' + key);
+                    }
+                }
+
+                // Done!
+                return data;
             }
         };
-    }
-    
-    DataFactory.$inject = ['$http', '$log'];
-    angular.module('EthStarter').factory('DataFactory', DataFactory);
 
+        return promise;
+    }
+
+    return angular.module('EthStarter').factory('DataFactory', DataFactory);
 }());
