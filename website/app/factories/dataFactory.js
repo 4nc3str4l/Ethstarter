@@ -67,20 +67,34 @@
                 return new web3.BigNumber(str);
             },
 
-            getCampaignById: async function(ipfsHash) {
+            getCampaignByBase58Hash: async function(ipfsHash) {
                 // Make sure IPFS is connected and relayed
                 await ipfsReady;
 
                 // Fetch file from ipfs
                 var file = await ipfs.files.get(ipfsHash);
                 var content = file[0].content.toString('utf-8');
-                
+
                 // Parse JSON and validate
                 var campaign = JSON.parse(content);
                 validateCampaign(campaign);
 
                 // Done!
                 return campaign;
+            },
+
+            getCampaignById: async function(id) {
+                // Create a dummy CID to obtain a buffer
+                var buffer = new Cids("QmSx9Z7QNqTLmgDao8ZqqQbDiKpDRx83mk2dpqtsz6Nf8z").toV1().buffer;
+
+                // Set new bytes for the buffer
+                for (var i = 0; i < 64; i += 2) {
+                    buffer[4 + i / 2] = parseInt(id.slice(i, i+2), 16);
+                }
+
+                // Get base58 encoded hash
+                var ipfsHash = new Cids(buffer).toV0.toBaseEncodedString();
+                return await this.getCampaignByBase58Hash(ipfsHash);
             }
         };
 
