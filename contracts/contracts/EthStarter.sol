@@ -35,7 +35,7 @@ contract EthStarter is IEthStarter {
 
     // TODO: All this operations are interfaces
     function addCampaign(uint256 ipfsHash, uint256 goal, uint256 date) public {
-        campaigns.insertPending(ipfsHash, msg.sender, goal, date);
+        campaigns.insertApproved(ipfsHash, msg.sender, goal, date);
 
         emit CampaignPendingReview(ipfsHash, msg.sender, goal, date);
     }

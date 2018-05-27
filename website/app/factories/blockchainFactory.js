@@ -104,61 +104,42 @@
             
             getCampaignById: function(_id){
                 return new Promise((resolve, reject) => {                
-                    DataStore.first(false,
+                    DataStore.get(_id,
                         (err, res)=>{
                             var response = {
-                                id: res[0].toNumber(),
+                                id: res[0],
                                 owner: res[1],
-                                gloal: web3.fromWei(res[2].toNumber(), "ether"),
+                                goal: web3.fromWei(res[2], "ether"),
                                 endDate: unixTimeStampToDate(res[3].toNumber()),
-                                balanceCaller: web3.fromWei(res[4].toNumber(), "ether"),
-                                previous: web3.toBigNumber(res[5].toNumber()),
-                                next: web3.toBigNumber(res[6])
+                                balanceCaller: web3.fromWei(res[4], "ether"),
+                                previous: res[5],
+                                next: res[6]
                             }
+
                             resolve(response);
                        });
                   });
             },
 
-            getCampaigns: function(){
-                var campaigns = [];
-                return new Promise((resolve, reject) =>{
-                    
-                    // Get the first Campaign
-                    DataStore.first(false,
+            getLastCampaign: function(){
+                return new Promise((resolve, reject) =>{                    
+                    // Get the last Campaign
+                    DataStore.last(false,
                         (err, res)=>{
                             var campaign = {
-                                id: res[0].toNumber(),
+                                id: res[0],
                                 owner: res[1],
-                                gloal: web3.fromWei(res[2].toNumber(), "ether"),
+                                goal: web3.fromWei(res[2], "ether"),
                                 endDate: unixTimeStampToDate(res[3].toNumber()),
-                                balanceCaller: web3.fromWei(res[4].toNumber(), "ether"),
-                                previous: web3.toBigNumber(res[5].toNumber()),
-                                next: web3.toBigNumber(res[6])
+                                balanceCaller: web3.fromWei(res[4], "ether"),
+                                previous: res[5],
+                                next: res[6]
                             }
                             
-
-                       });
+                            resolve(campaign);
+                    });
                 });
-            },
-
-            getCampaignById: function(_id, _callback){
-                return{
-                    id : 1,
-                    goalAmount: 10,
-                    endDate: new Date(),
-                    creationDate: new Date(),
-                    isPublished: true,
-                    title: "Placeholder",
-                    website: "www.google.es",
-                    description: "Description",
-                    raised: 10,
-                    progress : function(){
-                        return 0;
-                    }
-                }
-
-            },
+            }
         };
     }
     

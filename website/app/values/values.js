@@ -1,9 +1,9 @@
 angular.module('EthStarter').constant('appSettings',{
     "development": true,
     "addresses": {
-        "BigBrotherAddress": "0x345ca3e014aaf5dca488057592ee47305d9b3e10",
-        "EthStarterAddress": "0x5677db552d5fd9911a5560cb0bd40be90a70eff2",
-        "DataStoreAddress": "0x2c2b9c9a4a25e24b174f26114e8926a9f2128fe4"
+        "BigBrotherAddress": "0x8273e4b8ed6c78e252a9fca5563adfcc75c91b2a",
+        "EthStarterAddress": "0xa5a6b65ff520e99d81729fa27b68058026bd1293",
+        "DataStoreAddress": "0x8e4c131b37383e431b9cd0635d3cf9f3f628edae"
     },
     "abi": {
         "BigBrother": [

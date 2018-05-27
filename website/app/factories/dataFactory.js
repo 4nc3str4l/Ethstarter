@@ -1,5 +1,5 @@
 (function() {
-    var DataFactory = function(){
+    var DataFactory = function(Blockchain){
         var ipfs = new Ipfs({
             repo: "ipfs/shared",
             start: true, 
@@ -40,6 +40,35 @@
             }
         }
 
+        async function iterateCampaigns(self, campaign, showCampaign) {
+            var ipfsHash = self.getIpfsHashFromId(campaign.id);
+            self.getCampaignByIpfsHash(ipfsHash).then(information => {
+            
+                // Update with new info
+                for (key in information) {
+                    campaign[key] = information[key];
+                }
+                
+                // Progress function
+                campaign.progress = function() {
+                    return 50.0;
+                    return this.raised * 100.0 / this.goal;
+                }
+
+                // Callback
+                showCampaign(campaign);
+            });
+
+            // Is there any previous?
+            if (campaign.previous.toString() == "0") {
+                return;
+            }
+
+            // Get previous and iterate
+            campaign = await getCampaignById(campaign.previous);
+            iterateCampaigns(campaign, showCampaign);
+        }
+
         return {
             submitCampaign: async function(campaign) {
                 // Make sure IPFS is connected and relayed
@@ -67,7 +96,7 @@
                 return new web3.BigNumber(str);
             },
 
-            getCampaignByBase58Hash: async function(ipfsHash) {
+            getCampaignByIpfsHash: async function(ipfsHash) {
                 // Make sure IPFS is connected and relayed
                 await ipfsReady;
 
@@ -83,9 +112,10 @@
                 return campaign;
             },
 
-            getCampaignById: async function(id) {
+            getIpfsHashFromId: function(id) {
                 // Create a dummy CID to obtain a buffer
                 var buffer = new Cids("QmSx9Z7QNqTLmgDao8ZqqQbDiKpDRx83mk2dpqtsz6Nf8z").toV1().buffer;
+                id = id.toString(16);
 
                 // Set new bytes for the buffer
                 for (var i = 0; i < 64; i += 2) {
@@ -93,13 +123,22 @@
                 }
 
                 // Get base58 encoded hash
-                var ipfsHash = new Cids(buffer).toV0.toBaseEncodedString();
-                return await this.getCampaignByBase58Hash(ipfsHash);
+                return new Cids(buffer).toV0().toBaseEncodedString();
+            },
+
+            getCampaigns: function(showCampaign) {
+                var self = this;
+                Blockchain.getLastCampaign().then(campaign => {
+                    if (campaign.id.toString() != "0") {
+                        iterateCampaigns(self, campaign, showCampaign);
+                    }
+                });
             }
         };
 
         return promise;
     }
 
+    DataFactory.$inject = ['Blockchain'];    
     return angular.module('EthStarter').factory('DataFactory', DataFactory);
 }());
