@@ -27,7 +27,10 @@
         // Promise to check if IPFS is ready
         var ipfsReady = new Promise((resolve, _) => {
             ipfs.once('ready', async function() {
-                await ipfs.swarm.connect("/ip4/127.0.0.1/tcp/4004/ws/ipfs/QmRaQcxv3CzkYkZQuMRm6Pa6tSdhU34HKL4JeK8gL7uCin");
+                try {
+                    await ipfs.swarm.connect("/ip4/127.0.0.1/tcp/4004/ws/ipfs/QmRaQcxv3CzkYkZQuMRm6Pa6tSdhU34HKL4JeK8gL7uCin");
+                }
+                catch (e) {}
 
                 // Done!
                 resolve(ipfs);
