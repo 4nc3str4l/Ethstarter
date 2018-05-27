@@ -1,6 +1,6 @@
 (function() {
     
-    var NavController = function ($scope, $log, Blockchain, appSettings, DataFactory, $location) {
+    var NavController = function ($scope, Blockchain, appSettings, DataFactory, $location) {
         
         function init(){
         }
@@ -17,7 +17,7 @@
         init();
     };
     
-    NavController.$inject = ['$scope', '$log', 'Blockchain', 'appSettings', 'DataFactory', '$location'];
+    NavController.$inject = ['$scope', 'Blockchain', 'appSettings', 'DataFactory', '$location'];
 
     angular.module('EthStarter')
       .controller('NavController', NavController);
