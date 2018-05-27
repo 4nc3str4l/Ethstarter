@@ -9,6 +9,7 @@ class DeployUtils {
         this.web3 = web3;
         this.dataToCopy = {
             development: true,
+            useIPFS: true,
             addresses: {},
             abi: {}
         };

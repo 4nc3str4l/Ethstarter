@@ -1,5 +1,5 @@
 (function() {
-    var DataFactory = function(Blockchain){
+    var DataFactory = function(Blockchain, appSettings){
         var ipfs = new Ipfs({
             repo: "ipfs/shared",
             config: {
@@ -54,6 +54,7 @@
 
         async function iterateCampaigns(self, campaign, order, showCampaign) {
             var ipfsHash = self.getIpfsHashFromId(campaign.id);
+
             self.getCampaignByIpfsHash(ipfsHash)
                 .then(information => {
                     // Update with new info
@@ -113,6 +114,15 @@
             },
 
             getCampaignByIpfsHash: async function(ipfsHash) {
+                if(!appSettings.useIPFS){
+                    return{
+                        title: ipfsHash,
+                        description: "Description",
+                        progress : function(){
+                            return 50;
+                        }
+                    }
+                }
                 // Make sure IPFS is connected and relayed
                 await ipfsReady;
 
@@ -159,6 +169,6 @@
         return promise;
     }
 
-    DataFactory.$inject = ['Blockchain'];    
+    DataFactory.$inject = ['Blockchain', 'appSettings'];    
     return angular.module('EthStarter').factory('DataFactory', DataFactory);
 }());
