@@ -40,14 +40,18 @@ contract DataStore is IDataStore {
     }
 
     // Attributes
-    Data data;
+    Data internal data;
+    uint public numApprovedCampaigns;
+    uint public numPendingCampaigns;
 
     function insertPending(uint256 id, address owner, uint256 goal, uint256 date) public onlyWhitelisted {
         insert(data.pending, id, owner, goal, date);
+        numPendingCampaigns = numPendingCampaigns.add(1);
     }
 
     function insertApproved(uint256 id, address owner, uint256 goal, uint256 date) public onlyWhitelisted {
         insert(data.approved, id, owner, goal, date);
+        numApprovedCampaigns = numApprovedCampaigns.add(1);
     }
 
     function insert(Pointer storage pointer, uint256 id, address owner, uint256 goal, uint256 date) internal onlyWhitelisted {
@@ -91,10 +95,12 @@ contract DataStore is IDataStore {
 
     function removePending(uint256 id) public onlyWhitelisted {
         remove(data.pending, id);
+        numPendingCampaigns = numPendingCampaigns.sub(1);
     }
 
     function removeApproved(uint256 id) public onlyWhitelisted {
         remove(data.approved, id);
+        numApprovedCampaigns = numApprovedCampaigns.sub(1);
     }
 
     function remove(Pointer storage pointer, uint256 id) internal onlyWhitelisted {
@@ -119,8 +125,13 @@ contract DataStore is IDataStore {
         // Sanity check
         require(id > 0);
         
+        // Relink appropiately
         remove(data.pending, id);
         linkInsert(data.approved, id);
+
+        // Update counts
+        numPendingCampaigns = numPendingCampaigns.sub(1);
+        numApprovedCampaigns = numApprovedCampaigns.add(1);
     }
 
     // No rewards nor events are handled here
@@ -167,7 +178,7 @@ contract DataStore is IDataStore {
         return data.map[id].campaign.balanceOf[user];
     }
 
-    function contrinutors(uint256 id) public view returns(address[]) {
+    function contributors(uint256 id) public view returns(address[]) {
         return data.map[id].campaign.contributors;
     }
 }

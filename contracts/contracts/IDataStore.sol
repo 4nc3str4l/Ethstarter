@@ -17,4 +17,5 @@ contract IDataStore is PrivilegedWhitelist {
     function first(bool pending) public view returns(uint256, address, uint256, uint256, uint256, uint256, uint256, uint256);
     function last(bool pending) public view returns(uint256, address, uint256, uint256, uint256, uint256, uint256, uint256);
     function balanceOf(uint256 id, address user) public view returns(uint256);
+    function contributors(uint256 id) public view returns(address[]);
 }
