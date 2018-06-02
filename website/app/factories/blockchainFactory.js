@@ -71,14 +71,12 @@
                 return web3.eth.coinbase;
             },
             
-            publishCampaign: function(_ipfsHash, _endDate, _goalAmount, _callback){
+            publishCampaign: async function(_ipfsHash, _endDate, _goalAmount){
                 var date = (new Date(_endDate)).getTime();
                 var unixTimestamp = date / 1000;
                 var goalAmountWei = web3.utils.toWei(_goalAmount.toString(), "ether");
                 
-                defaultTransact(EthStarter.methods.addCampaign(_ipfsHash, goalAmountWei, unixTimestamp)).then(receipt => {
-                    _callback(receipt);
-                });
+                return defaultTransact(EthStarter.methods.addCampaign(_ipfsHash, goalAmountWei, unixTimestamp));
             },
 
             donate: function(_campaignID, _amount, _callback){
