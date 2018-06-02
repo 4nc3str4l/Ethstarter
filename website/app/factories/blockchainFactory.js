@@ -21,7 +21,7 @@
                     
                     // If the coinbase is not detected ask the user to unlock metamask
                     if(web3.eth.coinbase === null){
-                        // alert("Unlock Metamask!");
+                        alert("Unlock Metamask!");
                     }
                     
                     // Tell the user that metamask is required

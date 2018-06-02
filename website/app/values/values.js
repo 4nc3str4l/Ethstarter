@@ -1,10 +1,10 @@
 angular.module('EthStarter').constant('appSettings',{
-    "development": true,
+    "development": false,
     "useIPFS": true,
     "addresses": {
-        "BigBrotherAddress": "0x345ca3e014aaf5dca488057592ee47305d9b3e10",
-        "EthStarterAddress": "0x5677db552d5fd9911a5560cb0bd40be90a70eff2",
-        "DataStoreAddress": "0x2c2b9c9a4a25e24b174f26114e8926a9f2128fe4"
+        "BigBrotherAddress": "0xaa8f752981b76a8f1b94ce532a3e78a0efd96f10",
+        "EthStarterAddress": "0xfd8e5c739c3f005980b741b6491917ac2d4ef6b8",
+        "DataStoreAddress": "0xb7bd0b08ed1d726d6e3739aa48b4eed3629b6220"
     },
     "abi": {
         "BigBrother": [

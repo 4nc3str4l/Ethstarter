@@ -2,7 +2,9 @@
     var DataFactory = function(Blockchain, appSettings){
 
         var downloadedData = {};
-        const IPFS_ENDPOINT = '/ip4/91.121.65.63/tcp/4004/ws/ipfs/QmWR3f7BxGAjaTB8Tg1NHqpsksJ3SLUpHAJeaoPVWwxonM';
+        const IPFS_ENDPOINTS = [
+            '/ip4/91.121.65.63/tcp/4004/ws/ipfs/QmWR3f7BxGAjaTB8Tg1NHqpsksJ3SLUpHAJeaoPVWwxonM'
+        ]
 
         var ipfs = window.ipfs = new Ipfs({
             repo: "ipfs/shared",
@@ -12,9 +14,7 @@
                         '/dns4/ws-star.discovery.libp2p.io/tcp/443/wss/p2p-websocket-star'
                     ]
                 },
-                Bootstrap: [
-                    IPFS_ENDPOINT
-                ],
+                Bootstrap: IPFS_ENDPOINTS,
                 EXPERIMENTAL: { 
                     dht: true,
                     relay: { 
@@ -28,10 +28,12 @@
         // Promise to check if IPFS is ready
         var ipfsReady = new Promise((resolve, _) => {
             ipfs.once('ready', async function() {
-                try {
-                    await ipfs.swarm.connect(IPFS_ENDPOINT);
+                for (endpoint of IPFS_ENDPOINTS) {
+                    try {
+                        await ipfs.swarm.connect(endpoint);
+                    }
+                    catch (e) {}
                 }
-                catch (e) {}
 
                 // Done!
                 resolve(ipfs);
@@ -83,7 +85,7 @@
                     showCampaign(campaign);
                 })
                 .catch(e => {
-                    console.log("Unexpected campaign received 2: " + ipfsHash);
+                    console.log("Unexpected campaign received: " + ipfsHash);
                 });
 
             // Is there any previous?
@@ -130,13 +132,12 @@
                 }
 
                 // Make sure IPFS is connected and relayed
+                // TODO: Once available in IPFS, time this out
                 await ipfsReady;
 
                 // Fetch file from ipfs
                 var file = await ipfs.files.get(ipfsHash);
                 var content = file[0].content.toString('utf-8');
-
-                console.log("Got from " + ipfsHash);
 
                 // Parse JSON and validate
                 var campaign = JSON.parse(content);
