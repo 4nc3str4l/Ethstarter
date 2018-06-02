@@ -2,6 +2,7 @@
     var DataFactory = function(Blockchain, appSettings){
 
         var downloadedData = {};
+        const IPFS_ENDPOINT = '/ip4/91.121.65.63/tcp/4004/ws/ipfs/QmWR3f7BxGAjaTB8Tg1NHqpsksJ3SLUpHAJeaoPVWwxonM';
 
         var ipfs = window.ipfs = new Ipfs({
             repo: "ipfs/shared",
@@ -12,7 +13,7 @@
                     ]
                 },
                 Bootstrap: [
-                    "/ip4/127.0.0.1/tcp/4004/ws/ipfs/QmRaQcxv3CzkYkZQuMRm6Pa6tSdhU34HKL4JeK8gL7uCin"
+                    IPFS_ENDPOINT
                 ],
                 EXPERIMENTAL: { 
                     dht: true,
@@ -28,7 +29,7 @@
         var ipfsReady = new Promise((resolve, _) => {
             ipfs.once('ready', async function() {
                 try {
-                    await ipfs.swarm.connect("/ip4/127.0.0.1/tcp/4004/ws/ipfs/QmRaQcxv3CzkYkZQuMRm6Pa6tSdhU34HKL4JeK8gL7uCin");
+                    await ipfs.swarm.connect(IPFS_ENDPOINT);
                 }
                 catch (e) {}
 
