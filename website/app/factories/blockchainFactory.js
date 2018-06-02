@@ -127,7 +127,22 @@
                         resolve(campaign);
                     });
                 });
-            }
+            },
+
+            ipfsHashToID: function(hash){
+
+                // Obtain a uint256 representation
+                const cid = new Cids(hash).toV1();
+                hash = cid.multihash.slice(2);
+
+                var str = "";
+                
+                for (var byte of hash) {
+                    str += byte.toString(16).padStart(2, "0");
+                }
+                
+                return new web3.utils.BN(str, 16);
+            },
         };
     }
     

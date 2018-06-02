@@ -16,6 +16,7 @@ contract DataStore is IDataStore {
         uint256 date;
         mapping(address => uint256) balanceOf;
         address[] contributors;
+        uint256 raised;
     }
     
     // Double linked list node
@@ -135,15 +136,16 @@ contract DataStore is IDataStore {
 
         // Update balance
         c.balanceOf[who] = c.balanceOf[who].add(amount);
+        c.raised = c.raised.add(amount);
     }
 
-    function get(uint256 id) public view returns(uint256, address, uint256, uint256, uint256, uint256, uint256) {
+    function get(uint256 id) public view returns(uint256, address, uint256, uint256, uint256, uint256, uint256, uint256) {
         Node storage n = data.map[id];
         Campaign storage c = n.campaign;
-        return (id, c.owner, c.goal, c.date, c.balanceOf[msg.sender], n.prev, n.next);
+        return (id, c.owner, c.goal, c.date, c.balanceOf[msg.sender], c.raised, n.prev, n.next);
     }
     
-    function first(bool pending) public view returns(uint256, address, uint256, uint256, uint256, uint256, uint256) {
+    function first(bool pending) public view returns(uint256, address, uint256, uint256, uint256, uint256, uint256, uint256) {
         if (pending) {
             require(hasAccess[msg.sender]);
             return get(data.pending.first);
@@ -152,7 +154,7 @@ contract DataStore is IDataStore {
         return get(data.approved.first);
     }
     
-    function last(bool pending) public view returns(uint256, address, uint256, uint256, uint256, uint256, uint256) {
+    function last(bool pending) public view returns(uint256, address, uint256, uint256, uint256, uint256, uint256, uint256) {
         if (pending) {
             require(hasAccess[msg.sender]);
             return get(data.pending.last);

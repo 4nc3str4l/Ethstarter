@@ -61,6 +61,7 @@
 
             self.getCampaignByIpfsHash(ipfsHash)
                 .then(information => {
+                    
                     // Update with new info
                     for (key in information) {
                         campaign[key] = information[key];
@@ -107,19 +108,7 @@
                 var buffer = ipfs.types.Buffer(JSON.stringify(campaign));
                 var file = await ipfs.files.add(buffer);
 
-                // Debug
-                console.log("IPFS Hash " + file[0].hash);
-
-                // Obtain a uint256 representation
-                const cid = new Cids(file[0].hash).toV1();
-                var hash = cid.multihash.slice(2);
-                var str = "";
-                
-                for (var byte of hash) {
-                    str += byte.toString(16).padStart(2, "0");
-                }
-
-                return new web3.utils.BN(str, 16);
+                return Blockchain.ipfsHashToID(file[0].hash);
             },
 
             getCampaignByIpfsHash: async function(ipfsHash) {
@@ -143,8 +132,6 @@
                 // Make sure IPFS is connected and relayed
                 await ipfsReady;
 
-                console.log(ipfsHash);
-
                 // Fetch file from ipfs
                 var file = await ipfs.files.get(ipfsHash);
                 var content = file[0].content.toString('utf-8');
@@ -166,7 +153,7 @@
 
                 // Set new bytes for the buffer
                 for (var i = 0; i < 64; i += 2) {
-                    buffer[4 + i / 2] = parseInt(id.slice(i, i+2), 16);
+                    buffer[4 + i / 2] = parseInt(id.slice(i, i + 2), 16);
                 }
 
                 // Get base58 encoded hash
@@ -184,8 +171,7 @@
 
             inspectCampaign: function(ipfsID){
                 return downloadedData[ipfsID];
-            }
-
+            },
         };
 
         return promise;

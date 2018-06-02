@@ -12,7 +12,7 @@
                 'title': $scope.title, 
                 'website': $scope.website, 
                 'description': $scope.description,
-                'image': ''
+                'image': $scope.image
             }).then(ipfsHash => {                
                 Blockchain.publishCampaign(ipfsHash, $scope.endDate, $scope.contributionAmmount,
                     (receipt) => {

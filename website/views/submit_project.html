@@ -9,6 +9,10 @@
                         <label for="title">Project's Title</label>
                         <input type="text" placeholder="Project's Title" name="title" ng-model="title">
                         
+                        <img src="{{image}}" alt="Project's Image">
+                        
+                        <input type="file" name="image" fileread="image" id="image-file" accept="image/x-png,image/gif,image/jpeg" novalidate>
+
                         <label for="title">Website</label>
                         <input type="text" placeholder="Project's Wesite" name="website" ng-model="website">
                         

@@ -10,6 +10,7 @@
         function init(){
             projectID = $routeParams.id;
             $scope.project = DataFactory.inspectCampaign(projectID);
+            window.proj = $scope.project;
         }
         
         if($scope.contributionAmmount <= 0){
