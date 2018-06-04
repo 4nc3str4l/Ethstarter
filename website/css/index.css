@@ -8,7 +8,7 @@ html, body, #view-div {
 */  
 
 #landing-image{
-    min-height: 70%;
+    min-height: 75%;
     background-color: black;
     position: relative;
     background: url("../res/landing-image.jpg");
@@ -39,6 +39,16 @@ html, body, #view-div {
     padding: 10px;
     color: white;
     background-color: rgba(0, 123, 255, 0.4);
+    text-decoration: none;
+    margin-right: 40px;
+}
+
+.full-screen-separation{
+    background-color:#007BFF;
+    width: 100%;
+    text-align: center;
+    color:white;
+    padding: 10px;
 }
 
 /*
