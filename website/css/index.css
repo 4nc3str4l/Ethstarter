@@ -8,12 +8,12 @@ html, body, #view-div {
 */  
 
 #landing-image{
-    min-height: 60%;
+    min-height: 70%;
     background-color: black;
     position: relative;
     background: url("../res/landing-image.jpg");
     background-size:     cover;
-    background-position: center center;
+    background-position: left top;
     background-repeat:   no-repeat;
 }
 
@@ -30,7 +30,7 @@ html, body, #view-div {
 }
 
 #landing-buttons{
-    margin-top: 10%;
+    margin-top: 15%;
 }
 
 #landing-buttons a{ 
