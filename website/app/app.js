@@ -9,6 +9,10 @@
                 controller: 'LandingController',
                 templateUrl: 'views/landing.html'
             })
+            .when('/projects', {
+                controller: 'ProjectsController',
+                templateUrl: 'views/projects.html'
+            })
             .when('/project/:id', {
                 controller: 'ProjectController',
                 templateUrl: 'views/project_details.html'
