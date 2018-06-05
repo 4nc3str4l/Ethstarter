@@ -1,6 +1,7 @@
 html, body, #view-div {
     height: calc(100% - 18px);
     margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 /*
@@ -34,7 +35,7 @@ html, body, #view-div {
 }
 
 #landing-buttons a{ 
-    border: solid 1px #007BFF;
+    border: solid 1px #16467E;
     border-radius: 10px;
     padding: 10px;
     color: white;
@@ -44,12 +45,41 @@ html, body, #view-div {
 }
 
 .full-screen-separation{
-    background-color:#007BFF;
+    background-color:#16467E;
     width: 100%;
     text-align: center;
     color:white;
     padding: 10px;
     margin-bottom: 20px;
+
+}
+
+.full-screen-separation h2{
+    margin-bottom: 0px;
+    font-size: 1.5rem;
+}
+
+.how-point{
+    padding: 25px 0px;
+    border-bottom: solid 1px #16467E;
+    box-shadow: 0 4px 2px -2px #16467E;
+}
+
+.how-explanation{
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.how-explanation h4{
+    color: #16467E;
+    font-size: 2rem;
+}
+
+.how-explanation p{
+    color: gray;
+    line-height: 25px;
+    font-weight: 100;
 }
 
 /*
@@ -68,7 +98,7 @@ html, body, #view-div {
 .project-preview h3{
     margin-bottom: 10px;
     text-align: center;
-    background: #007BFF;
+    background: #16467E;
     padding: 5px;
     color: white;
 }
@@ -84,7 +114,7 @@ html, body, #view-div {
     bottom: 5px;
     right: 5px;
     font-size: 8px;
-    background: #007BFF;
+    background: #16467E;
     color: white;
     padding: 5px;
 }
@@ -106,8 +136,8 @@ html, body, #view-div {
 .contribute input,
 .project-creation input,
 .project-creation textarea{
-    border: solid 1px  #007BFF;
-    color:  #007BFF;
+    border: solid 1px  #16467E;
+    color:  #16467E;
 }
 
 .contribute input{
@@ -116,8 +146,8 @@ html, body, #view-div {
 
 #contribute-send,
 #publish-project{
-    color:  #007BFF;
-    border: solid 1px  #007BFF;
+    color:  #16467E;
+    border: solid 1px  #16467E;
     cursor: pointer;
     padding: 10px;
     width: 150px;
@@ -127,18 +157,18 @@ html, body, #view-div {
 
 #contribute-send:hover, 
 #publish-project:hover{
-    background:  #007BFF;
+    background:  #16467E;
     color: white;
-    border: solid 1px  #007BFF;
+    border: solid 1px  #16467E;
     cursor: pointer;
 }
 
 
 #currency{
-    border: solid 1px #007BFF;
+    border: solid 1px #16467E;
     padding: 2px;
     margin-left: -38px;
-    color: #007BFF;
+    color: #16467E;
     font-weight: lighter;
 }
 
@@ -178,5 +208,9 @@ html, body, #view-div {
     position: relative;
     top: 50%;
     transform: translateY(-50%);
-    color:  #007BFF;
+    color:  #16467E;
+}
+
+.bg-primary{
+    background-color: #16467E !important;
 }
