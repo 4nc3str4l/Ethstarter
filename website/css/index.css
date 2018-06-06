@@ -52,10 +52,17 @@ html, body, #view-div {
     margin-top: 50px;
     border-radius: 16px;
     box-shadow: 2px 2px 3px 0px #ccc;
-    background-color: #ddddff;
+    background-color: #eeeeff;
     text-align: center;
-    padding: 10px;
     margin-bottom: 50px;
+    padding-bottom: 10px;
+}
+
+.about-rect-header{
+    color: white;
+    background-color: #16467E;
+    border-radius: 16px 16px 0px 0px;
+    padding: 10px;
 }
 
 .full-screen-separation{
