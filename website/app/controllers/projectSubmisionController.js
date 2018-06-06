@@ -15,7 +15,7 @@
                 'image': $scope.image
             }).then(ipfsHash => {                
                 Blockchain.publishCampaign(ipfsHash, $scope.endDate, $scope.contributionAmmount).then(() => {
-                    $window.location.href = '/';
+                    $location.path('/');
                 });
             });
         }
