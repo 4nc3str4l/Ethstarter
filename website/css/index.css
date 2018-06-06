@@ -44,6 +44,20 @@ html, body, #view-div {
     margin-right: 40px;
 }
 
+.big-text{
+    font-size: 1.6rem;  
+}
+
+.about-rectangle{
+    margin-top: 50px;
+    border-radius: 16px;
+    box-shadow: 2px 2px 3px 0px #ccc;
+    background-color: #ddddff;
+    text-align: center;
+    padding: 10px;
+    margin-bottom: 50px;
+}
+
 .full-screen-separation{
     background-color:#16467E;
     width: 100%;
@@ -53,6 +67,7 @@ html, body, #view-div {
     margin-bottom: 20px;
 
 }
+
 
 .full-screen-separation h2{
     margin-bottom: 0px;
@@ -214,3 +229,8 @@ html, body, #view-div {
 .bg-primary{
     background-color: #16467E !important;
 }
+
+.center-content{
+    text-align: center;
+}
+
