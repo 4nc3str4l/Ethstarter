@@ -1,6 +1,6 @@
 (function() {
     
-    var app = angular.module('EthStarter', ['ngRoute']);
+    var app = angular.module('EthStarter', ['ngRoute', 'ngAnimate']);
     
     app.config(function($routeProvider, $locationProvider) {
         $locationProvider.hashPrefix('');

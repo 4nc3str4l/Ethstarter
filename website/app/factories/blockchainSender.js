@@ -9,19 +9,26 @@
         var EthStarter;
         var DataStore;
 
+        let isInitialized = false;
+
+        var senderWeb3;
+
         // Init Web3
         function initWeb3(){
-            // Use the truffle provider for web3
+            // Use the truffle provider for senderWeb3
             if(appSettings.development){
-                web3 = new Web3(new web3.providers.HttpProvider("http://localhost:9545"));
+                senderWeb3 = new senderWeb3(new senderWeb3.providers.HttpProvider("http://localhost:9545"));
+                isInitialized = true;
             }else{
                 // Use the current provider (Metamask)
-                if (typeof web3 !== 'undefined') {
-                    web3 = new Web3(web3.currentProvider);
+                if (typeof senderWeb3 !== 'undefined') {
+                    senderWeb3 = new Web3(senderWeb3.currentProvider);
                     
                     // If the coinbase is not detected ask the user to unlock metamask
-                    if(web3.eth.coinbase === null){
+                    if(senderWeb3.eth.coinbase === null){
                         alert("Unlock Metamask!");
+                    }else{
+                        isInitialized = true;
                     }
                     
                     // Tell the user that metamask is required
@@ -33,7 +40,7 @@
 
         //TODO: Move this functions to a utils module
         function initContract(_abi, _address){
-            return new web3.eth.Contract(_abi, _address);
+            return new senderWeb3.eth.Contract(_abi, _address);
         }
 
         function initContracts(){
@@ -47,7 +54,7 @@
         }
 
         function transact(method, obj) {
-            return web3.eth.getAccounts().then(accounts => {
+            return senderWeb3.eth.getAccounts().then(accounts => {
                 obj.from = accounts[0];
 
                 return method.estimateGas(obj).then(gas => {
@@ -59,30 +66,46 @@
 
         function defaultTransact(method) {
             return transact(method, {
-                gasPrice: web3.utils.toWei("1", "gwei"),
+                gasPrice: senderWeb3.utils.toWei("1", "gwei"),
             });
         }
 
-        initWeb3();
-        initContracts();
+        function init(){
+            initWeb3();
+            if(isInitialized){
+                initContracts();
+            }
+            return isInitialized;
+        }
+
     
         return{
             getAddress : function(){
-                return web3.eth.coinbase;
+                return senderWeb3.eth.coinbase;
             },
             
             publishCampaign: async function(_ipfsHash, _endDate, _goalAmount){
+                
+                if(!init()){
+                    return;
+                }
+
                 var date = (new Date(_endDate)).getTime();
                 var unixTimestamp = date / 1000;
-                var goalAmountWei = web3.utils.toWei(_goalAmount.toString(), "ether");
+                var goalAmountWei = senderWeb3.utils.toWei(_goalAmount.toString(), "ether");
                 
                 return defaultTransact(EthStarter.methods.addCampaign(_ipfsHash, goalAmountWei, unixTimestamp));
             },
 
             donate: function(_campaignID, _amount, _callback){
-                var amountWei = web3.utils.toWei(_amount.toString(), "ether");
+                               
+                if(!init()){
+                    return;
+                }
+
+                var amountWei = senderWeb3.utils.toWei(_amount.toString(), "ether");
                 transact(EthStarter.methods.payCampaign(_campaignID), {
-                    gasPrice: web3.utils.toWei("1", "gwei"),
+                    gasPrice: senderWeb3.utils.toWei("1", "gwei"),
                     value: amountWei
                 }).then(receipt => {
                     _callback(receipt);
@@ -101,7 +124,7 @@
                     str += byte.toString(16).padStart(2, "0");
                 }
                 
-                return new web3.utils.BN(str, 16);
+                return new senderWeb3.utils.BN(str, 16);
             },
         };
     }

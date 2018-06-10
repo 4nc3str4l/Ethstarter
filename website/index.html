@@ -6,69 +6,70 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
         <link rel="stylesheet" type="text/css" href="libs/bootstrap_v.4.1.1/bootstrap.min.css">
-        <link rel="stylesheet" type="text/css" href="css/index.css">   
+        <link rel="stylesheet" type="text/css" href="css/index.css">
+        <link rel="stylesheet" type="text/css" href="css/animations.css">   
     </head>
     
     <body>
         <!-- Navigation bar -->
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary" style="background: #16467E;" ng-controller="NavController">
-                <a class="navbar-brand" href="#">EthStarter</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-            
-                <div class="collapse navbar-collapse" id="navbarColor02">
-                    <ul class="navbar-nav mr-auto">
-                    <li class="nav-item {{getClass('/')}}">
-                        <a class="nav-link" href="#">Home </a>
-                    </li>
-                    <li class="nav-item {{getClass('/projects')}}">
-                        <a class="nav-link" href="/#/projects">Projects</a>
-                    </li>
-                    <li class="nav-item {{getClass('/submit')}}">
-                        <a class="nav-link" href="/#/submit">Submit New Project</a>
-                    </li>
-                    </ul>
-                    <form class="form-inline" ng-if="isSearchVisible()">
-                        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                        <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
-                    </form>
-                </div>
-            </nav>
+            <a class="navbar-brand" href="#">EthStarter</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        
+            <div class="collapse navbar-collapse" id="navbarColor02">
+                <ul class="navbar-nav mr-auto">
+                <li class="nav-item {{getClass('/')}}">
+                    <a class="nav-link" href="#">Home </a>
+                </li>
+                <li class="nav-item {{getClass('/projects')}}">
+                    <a class="nav-link" href="/#/projects">Projects</a>
+                </li>
+                <li class="nav-item {{getClass('/submit')}}">
+                    <a class="nav-link" href="/#/submit">Submit New Project</a>
+                </li>
+                </ul>
+                <form class="form-inline" ng-if="isSearchVisible()">
+                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
+                </form>
+            </div>
+        </nav>
 
-            <!-- View -->
-            <div ng-view id="view-div"></div>
+        <!-- View -->
+        <div ng-view id="view-div" class="fade-in-animation"></div>
 
-            <!-- AngularJS  -->
-            <script type="text/javascript" src="libs/angular_v.1.6.9/angular.min.js"></script>
-            <script type="text/javascript" src="libs/angular_v.1.6.9/angular-route.min.js"></script>
-            <script type="text/javascript" src="libs/angular_v.1.6.9/angular-animate.min.js"></script>
+        <!-- AngularJS  -->
+        <script type="text/javascript" src="libs/angular_v.1.6.9/angular.min.js"></script>
+        <script type="text/javascript" src="libs/angular_v.1.6.9/angular-route.min.js"></script>
+        <script type="text/javascript" src="libs/angular_v.1.6.9/angular-animate.min.js"></script>
 
-            <!-- IPFS -->
-            <script src="https://cdn.jsdelivr.net/npm/ipfs@0.29.2/dist/index.min.js"></script>
-            <script src="https://unpkg.com/cids/dist/index.min.js"></script>
+        <!-- IPFS -->
+        <script src="https://cdn.jsdelivr.net/npm/ipfs@0.29.2/dist/index.min.js"></script>
+        <script src="https://unpkg.com/cids/dist/index.min.js"></script>
 
-            <!-- Web3.js -->
-            <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.0.0-beta.34/dist/web3.min.js"></script>
+        <!-- Web3.js -->
+        <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.0.0-beta.34/dist/web3.min.js"></script>
 
-            <script type="text/javascript" src="app/app.js"></script>
-            <script type="text/javascript" src="app/values/values.js"></script>
-            
-            <!-- Services And Factories -->
-            <script type="text/javascript" src="app/factories/blockchainListener.js"></script>
-            <script type="text/javascript" src="app/factories/blockchainSender.js"></script>
-            <script type="text/javascript" src="app/factories/dataFactory.js"></script>
-            
-            <!-- Directives -->
-            <script type="text/javascript" src="app/directives/loadingDirective.js"></script>
-            <script type="text/javascript" src="app/directives/fileRead.js"></script>
-            
-            <!--- Controllers -->
-            <script type="text/javascript" src="app/controllers/landingController.js"></script>
-            <script type="text/javascript" src="app/controllers/projectsController.js"></script>
-            <script type="text/javascript" src="app/controllers/projectController.js"></script>
-            <script type="text/javascript" src="app/controllers/projectSubmisionController.js"></script>
-            <script type="text/javascript" src="app/controllers/navController.js"></script>
+        <script type="text/javascript" src="app/app.js"></script>
+        <script type="text/javascript" src="app/values/values.js"></script>
+        
+        <!-- Services And Factories -->
+        <script type="text/javascript" src="app/factories/blockchainListener.js"></script>
+        <script type="text/javascript" src="app/factories/blockchainSender.js"></script>
+        <script type="text/javascript" src="app/factories/dataFactory.js"></script>
+        
+        <!-- Directives -->
+        <script type="text/javascript" src="app/directives/loadingDirective.js"></script>
+        <script type="text/javascript" src="app/directives/fileRead.js"></script>
+        
+        <!--- Controllers -->
+        <script type="text/javascript" src="app/controllers/landingController.js"></script>
+        <script type="text/javascript" src="app/controllers/projectsController.js"></script>
+        <script type="text/javascript" src="app/controllers/projectController.js"></script>
+        <script type="text/javascript" src="app/controllers/projectSubmisionController.js"></script>
+        <script type="text/javascript" src="app/controllers/navController.js"></script>
             
     </body>
 </html>

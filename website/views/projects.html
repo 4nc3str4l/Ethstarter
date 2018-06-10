@@ -8,11 +8,17 @@
 </div>
 
 <!-- Projects Grid-->
-<div class="container">    
+<div class="container">
     <div class="row">
-        <div class="col-lg-3" ng-repeat="project in projects | orderBy:'+order' track by $index" ng-click="projectDetails(project.id)">
+        <div class="col-md-12">
+            <input type="text" placeholder="Search..." id="search-projects" ng-model="projectsFilter">
+        </div>
+    </div>    
+    <div class="row">
+        <div class="col-lg-3 repeat-animation" ng-repeat="project in projects | filter:projectsFilter | orderBy:'+order' track by $index" ng-click="projectDetails(project.id)">
             <div class="project-preview">
-                <h3>{{project.title}}</h3>
+                <div class="image-preview" style="background-image: url('{{project.image}}')"></div>
+                <h4>{{project.title}}</h4>
                 
                 <p class="preview-description">{{ project.description | limitTo: 100}}</p>
                 
