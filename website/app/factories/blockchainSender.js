@@ -65,7 +65,6 @@
 
         initWeb3();
         initContracts();
-        subscribeToEvents();
     
         return{
             getAddress : function(){
