@@ -9,7 +9,7 @@ html, body, #view-div {
 */
 
 .title-image {
-    height: 20%;
+    min-height: 25%;
     position: relative;
     background: url("../res/landing-image.jpg");
     background-size: cover;
@@ -179,6 +179,17 @@ html, body, #view-div {
     padding: 5px;
 }
 
+.preview-goal{
+    position: absolute;
+    bottom: 0px;
+    left: 10px;
+}
+
+.preview-goal img{
+    margin-top: -5px;
+    margin-left: -5px;
+}
+
 #search-projects {
     width: 100%;
 }
@@ -270,4 +281,8 @@ html, body, #view-div {
     top: 50%;
     transform: translateY(-50%);
     color: #16467E;
+}
+
+#project-image{
+    width: 100%;
 }

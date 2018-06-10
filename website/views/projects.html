@@ -25,7 +25,7 @@
                 <div class="progress">
                     <div class="progress-bar" role="progressbar" style="width: {{project.progress()}}%;" aria-valuenow="25%" aria-valuemin="0" aria-valuemax="100">{{project.progress()}}%</div>
                 </div>
-
+                <span class="preview-goal">{{project.goal}} <img src="../res/ethereum-logo.png" height="20"></span>
                 <span class="preview-end">End Date: {{project.endDate | date}}</span>
             </div>
         </div>
