@@ -66,7 +66,8 @@ html, body, #view-div {
 }
 
 #landing-buttons {
-    margin-top: 15%;
+    margin: 10% 0;
+
 }
 
 #landing-buttons a {
@@ -74,7 +75,7 @@ html, body, #view-div {
     border-radius: 10px;
     padding: 10px;
     color: white;
-    background-color: rgba(0, 123, 255, 0.4);
+    background-color: rgba(0, 123, 255, 0.6);
     text-decoration: none;
     margin-right: 40px;
 }
