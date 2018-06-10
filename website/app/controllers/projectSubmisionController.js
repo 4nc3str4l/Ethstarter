@@ -1,6 +1,6 @@
 (function() {
     
-    var ProjectSubmisionController = function ($window, $scope, Blockchain, DataFactory, $location) {
+    var ProjectSubmisionController = function ($window, $scope, BlockchainSender, DataFactory, $location) {
         
         $scope.title = "Project";
         $scope.loading = false;
@@ -21,7 +21,7 @@
         }
     };
     
-    ProjectSubmisionController.$inject = ['$window', '$scope', 'Blockchain', 'DataFactory', '$location'];
+    ProjectSubmisionController.$inject = ['$window', '$scope', 'BlockchainSender', 'DataFactory', '$location'];
 
     angular.module('EthStarter')
       .controller('ProjectSubmisionController', ProjectSubmisionController);

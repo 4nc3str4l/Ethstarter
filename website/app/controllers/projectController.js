@@ -1,6 +1,6 @@
 (function() {
     
-    var ProjectController = function ($scope, $log, Blockchain, appSettings, DataFactory, $routeParams, $window) {
+    var ProjectController = function ($scope, $log, BlockchainSender, BlockchainListener, appSettings, DataFactory, $routeParams, $window) {
         
         $scope.project = null;
         var projectID = -1;
@@ -21,9 +21,9 @@
         //$scope.name $scope.email (Not used for now)
         $scope.donate = function(){
             $scope.loading = true;
-            Blockchain.donate(projectID, $scope.contributionAmmount,
+            BlockchainSender.donate(projectID, $scope.contributionAmmount,
                 (error, result) => {
-                    Blockchain.getCampaignById(projectID, (_campaign)=>{
+                    BlockchainListener.getCampaignById(projectID, (_campaign)=>{
                         $scope.project = _campaign;
                         $scope.loading = false;
                         $scope.$apply();
@@ -36,7 +36,7 @@
         init();
     };
     
-    ProjectController.$inject = ['$scope', '$log', 'Blockchain', 'appSettings', 'DataFactory', '$routeParams', '$window'];
+    ProjectController.$inject = ['$scope', '$log', 'BlockchainSender', 'BlockchainListener', 'appSettings', 'DataFactory', '$routeParams', '$window'];
 
     angular.module('EthStarter')
       .controller('ProjectController', ProjectController);
