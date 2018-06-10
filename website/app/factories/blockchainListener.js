@@ -1,6 +1,6 @@
 (function() {
     
-    var blockchainFactory = function($http, $log, appSettings){
+    var blockchainListener = function($http, $log, appSettings){
         
         var numCampaignsToGet = 0;
         var allCampaigns = [];
@@ -11,26 +11,14 @@
 
         // Init Web3
         function initWeb3(){
-            // Use the truffle provider for web3
-            if(appSettings.development){
-                web3 = new Web3(new web3.providers.HttpProvider("http://localhost:9545"));
-            }else{
-                // Use the current provider (Metamask)
-                if (typeof web3 !== 'undefined') {
-                    web3 = new Web3(web3.currentProvider);
-                    
-                    // If the coinbase is not detected ask the user to unlock metamask
-                    if(web3.eth.coinbase === null){
-                        alert("Unlock Metamask!");
-                    }
-                    
-                    // Tell the user that metamask is required
-                }else{
-                    alert("No Metamask Detected!");
-                }
+            if (typeof web3 !== 'undefined') {
+                window.web3 = new Web3(web3.currentProvider)
+            } else {
+                window.web3 = new Web3(new Web3.providers.HttpProvider('https://rinkeby.infura.io:443'))
             }
         }
 
+        //TODO: Move this functions to a utils module
         function initContract(_abi, _address){
             return new web3.eth.Contract(_abi, _address);
         }
@@ -39,6 +27,16 @@
             window.EthStarter = EthStarter = initContract(appSettings.abi.EthStarter, appSettings.addresses.EthStarterAddress);
             BigBrother = initContract(appSettings.abi.BigBrother, appSettings.addresses.BigBrotherAddress);
             window.DataStore = DataStore = initContract(appSettings.abi.DataStore, appSettings.addresses.DataStoreAddress);
+        }
+
+        function subscribeToEvents(){
+            EthStarter.events.CampaignPublished({}, (error, data) => {
+                if (error)
+                    console.log("Error: " + error);
+                else 
+                    console.log("Log data: " + data);
+                }
+            );
         }
 
         function unixTimeStampToDate(_timestamp){
@@ -64,30 +62,10 @@
 
         initWeb3();
         initContracts();
+        subscribeToEvents();
     
 
         return{
-            getAddress : function(){
-                return web3.eth.coinbase;
-            },
-            
-            publishCampaign: async function(_ipfsHash, _endDate, _goalAmount){
-                var date = (new Date(_endDate)).getTime();
-                var unixTimestamp = date / 1000;
-                var goalAmountWei = web3.utils.toWei(_goalAmount.toString(), "ether");
-                
-                return defaultTransact(EthStarter.methods.addCampaign(_ipfsHash, goalAmountWei, unixTimestamp));
-            },
-
-            donate: function(_campaignID, _amount, _callback){
-                var amountWei = web3.utils.toWei(_amount.toString(), "ether");
-                transact(EthStarter.methods.payCampaign(_campaignID), {
-                    gasPrice: web3.utils.toWei("1", "gwei"),
-                    value: amountWei
-                }).then(receipt => {
-                    _callback(receipt);
-                });
-            },
             
             getCampaignById: function(_id){
                 return new Promise((resolve, reject) => {                
@@ -144,7 +122,8 @@
         };
     }
     
-    blockchainFactory.$inject = ['$http', '$log', 'appSettings'];
-    angular.module('EthStarter').factory('Blockchain', blockchainFactory);
+    
+    blockchainListener.$inject = ['$http', '$log', 'appSettings'];
+    angular.module('EthStarter').factory('BlockchainListener', blockchainListener);
 
 }());
