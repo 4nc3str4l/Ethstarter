@@ -9,24 +9,26 @@
         var EthStarter;
         var DataStore;
 
+        var listenerWeb3;
+
         // Init Web3
         function initWeb3(){
             if (typeof web3 !== 'undefined') {
-                window.web3 = new Web3(web3.currentProvider)
+                listenerWeb3 = new Web3(web3.currentProvider)
             } else {
-                window.web3 = new Web3(new Web3.providers.HttpProvider('https://rinkeby.infura.io:443'))
+                listenerWeb3 = new Web3(new Web3.providers.HttpProvider('https://rinkeby.infura.io:443'))
             }
         }
 
         //TODO: Move this functions to a utils module
         function initContract(_abi, _address){
-            return new web3.eth.Contract(_abi, _address);
+            return new listenerWeb3.eth.Contract(_abi, _address);
         }
 
         function initContracts(){
             window.EthStarter = EthStarter = initContract(appSettings.abi.EthStarter, appSettings.addresses.EthStarterAddress);
-            BigBrother = initContract(appSettings.abi.BigBrother, appSettings.addresses.BigBrotherAddress);
-            window.DataStore = DataStore = initContract(appSettings.abi.DataStore, appSettings.addresses.DataStoreAddress);
+            window.BigBrother = BigBrother = initContract(appSettings.abi.BigBrother, appSettings.addresses.BigBrotherAddress);
+            window.DataStore  = DataStore = initContract(appSettings.abi.DataStore, appSettings.addresses.DataStoreAddress);
         }
 
         function subscribeToEvents(){
@@ -44,7 +46,7 @@
         }
 
         function transact(method, obj) {
-            return web3.eth.getAccounts().then(accounts => {
+            return listenerWeb3.eth.getAccounts().then(accounts => {
                 obj.from = accounts[0];
 
                 return method.estimateGas(obj).then(gas => {
@@ -56,7 +58,7 @@
 
         function defaultTransact(method) {
             return transact(method, {
-                gasPrice: web3.utils.toWei("1", "gwei"),
+                gasPrice: listenerWeb3.utils.toWei("1", "gwei"),
             });
         }
 
@@ -72,13 +74,13 @@
                     DataStore.methods.get(_id).call().then(res => {
                         window.res = res;
                         var response = {
-                            id: new web3.utils.BN(res[0]),
+                            id: new listenerWeb3.utils.BN(res[0]),
                             owner: res[1],
-                            goal: web3.utils.fromWei(res[2], "ether"),
+                            goal: listenerWeb3.utils.fromWei(res[2], "ether"),
                             endDate: unixTimeStampToDate(parseInt(res[3])),
-                            balanceCaller: web3.utils.fromWei(res[4], "ether"),
-                            previous: new web3.utils.BN(res[5]),
-                            next: new web3.utils.BN(res[6])
+                            raised: listenerWeb3.utils.fromWei(res[4], "ether"),
+                            previous: new listenerWeb3.utils.BN(res[5]),
+                            next: new listenerWeb3.utils.BN(res[6])
                         }
 
                         resolve(response);
@@ -91,13 +93,13 @@
                     // Get the last Campaign
                     DataStore.methods.last(false).call().then(res => {
                         var campaign = {
-                            id: new web3.utils.BN(res[0]),
+                            id: new listenerWeb3.utils.BN(res[0]),
                             owner: res[1],
-                            goal: web3.utils.fromWei(res[2], "ether"),
+                            goal: listenerWeb3.utils.fromWei(res[2], "ether"),
                             endDate: unixTimeStampToDate(parseInt(res[3])),
-                            balanceCaller: web3.utils.fromWei(res[4], "ether"),
-                            previous: new web3.utils.BN(res[5]),
-                            next: new web3.utils.BN(res[6])
+                            raised: listenerWeb3.utils.fromWei(res[4], "ether"),
+                            previous: new listenerWeb3.utils.BN(res[5]),
+                            next: new listenerWeb3.utils.BN(res[6])
                         }
                             
                         resolve(campaign);
@@ -117,7 +119,7 @@
                     str += byte.toString(16).padStart(2, "0");
                 }
                 
-                return new web3.utils.BN(str, 16);
+                return new listenerWeb3.utils.BN(str, 16);
             },
         };
     }

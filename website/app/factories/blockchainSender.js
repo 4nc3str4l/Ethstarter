@@ -11,42 +11,28 @@
 
         let isInitialized = false;
 
-        var senderWeb3;
+        var senderWeb3 = null;
 
         // Init Web3
         function initWeb3(){
             // Use the truffle provider for senderWeb3
             if(appSettings.development){
-                senderWeb3 = new senderWeb3(new senderWeb3.providers.HttpProvider("http://localhost:9545"));
+                senderWeb3 = new Web3.providers.HttpProvider("http://127.0.0.1:9545/");
+                console.log(senderWeb3);
                 isInitialized = true;
             }else{
-                // Use the current provider (Metamask)
-                if (typeof senderWeb3 !== 'undefined') {
-                    senderWeb3 = new Web3(senderWeb3.currentProvider);
-                    
-                    // If the coinbase is not detected ask the user to unlock metamask
-                    if(senderWeb3.eth.coinbase === null){
-                        alert("Unlock Metamask!");
-                    }else{
-                        isInitialized = true;
-                    }
-                    
-                    // Tell the user that metamask is required
-                }else{
-                    alert("No Metamask Detected!");
+                // Checking if Web3 has been injected by the browser (Mist/MetaMask)
+                if (typeof web3 !== 'undefined') {
+                    // Use Mist/MetaMask's provider
+                    senderWeb3 = new Web3(web3.currentProvider);
+                    console.log(senderWeb3);    
+                    isInitialized = true;
+                } else {
+                    console.log('No web3? You should consider trying MetaMask!')
+                    alert("Download Metamask!");
                 }
+
             }
-        }
-
-        //TODO: Move this functions to a utils module
-        function initContract(_abi, _address){
-            return new senderWeb3.eth.Contract(_abi, _address);
-        }
-
-        function initContracts(){
-            window.EthStarter = EthStarter = initContract(appSettings.abi.EthStarter, appSettings.addresses.EthStarterAddress);
-            BigBrother = initContract(appSettings.abi.BigBrother, appSettings.addresses.BigBrotherAddress);
-            window.DataStore = DataStore = initContract(appSettings.abi.DataStore, appSettings.addresses.DataStoreAddress);
         }
 
         function unixTimeStampToDate(_timestamp){
@@ -66,8 +52,15 @@
 
         function defaultTransact(method) {
             return transact(method, {
-                gasPrice: senderWeb3.utils.toWei("1", "gwei"),
+                gasPrice: Web3.utils.toWei("1", "gwei"),
             });
+        }
+
+        function initContracts(){
+            // TODO: Move this to another file don't keep it public!
+            BigBrother = window.BigBrother;
+            EthStarter = window.EthStarter;
+            DataStore = window.DataStore;
         }
 
         function init(){
@@ -92,7 +85,7 @@
 
                 var date = (new Date(_endDate)).getTime();
                 var unixTimestamp = date / 1000;
-                var goalAmountWei = senderWeb3.utils.toWei(_goalAmount.toString(), "ether");
+                var goalAmountWei = Web3.utils.toWei(_goalAmount.toString(), "ether");
                 
                 return defaultTransact(EthStarter.methods.addCampaign(_ipfsHash, goalAmountWei, unixTimestamp));
             },
@@ -103,8 +96,9 @@
                     return;
                 }
 
+                id = this.ipfsHashToID(_campaignID);
                 var amountWei = senderWeb3.utils.toWei(_amount.toString(), "ether");
-                transact(EthStarter.methods.payCampaign(_campaignID), {
+                transact(EthStarter.methods.payCampaign(id), {
                     gasPrice: senderWeb3.utils.toWei("1", "gwei"),
                     value: amountWei
                 }).then(receipt => {
