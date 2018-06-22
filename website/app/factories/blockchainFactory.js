@@ -8,63 +8,55 @@
         var usingMetamask = false;
 
         // Init Web3
-        function metamaskWeb3(successCallback, errorCallback){
-            // Use the truffle provider for web3
-            if(appSettings.development){
-                web3 = new Web3(new web3.providers.HttpProvider("http://localhost:9545"));
-            }else{
+        function metamaskWeb3(){
+            return new Promise((resolve, reject) => {          
                 // Use the current provider (Metamask)
                 if (typeof web3 !== 'undefined') {
-                    web3 = new Web3(web3.currentProvider);
+                    let web3js = new Web3(web3.currentProvider);
                     
                     // If the coinbase is not detected ask the user to unlock metamask
-                    web3.eth.getAccounts().then((result) => {
+                    web3js.eth.getAccounts().then((result) => {
                         if(result.length == 0){
                             usingMetamask = false;
-                            errorCallback();
+                            reject();
                         }else{
                             usingMetamask = true;
-                            successCallback();
+                            blockchain = new Blockchain(web3js, appSettings);
+                            resolve();
                         }
                     });
-
                 }else{
-                    alert("No Metamask Detected!");
+                    reject();
                 }
-            }
-
-            blockchain = new Blockchain(web3, appSettings);
-
-            return usingMetamask;
+            });
         }
 
         // Init Web3
         function infuraWeb3(){
-            if (typeof web3 !== 'undefined') {
-                web3 = new Web3(web3.currentProvider)
-            } else {
-                web3 = new Web3(new Web3.providers.HttpProvider('https://rinkeby.infura.io:443'))
-                usingMetamask = false;
-            }
-
-            blockchain = new Blockchain(web3, appSettings);
-            return true;
+            let web3js = new Web3(new Web3.providers.HttpProvider('https://rinkeby.infura.io:443'))
+            usingMetamask = false;
+            blockchain = new Blockchain(web3js, appSettings);
         }
 
         infuraWeb3();
 
-        function useMetamask(use, successCallback, errorCallback){
-            var success = false;
-            if(use){
-                success = metamaskWeb3(successCallback, errorCallback);
-                if(!success){
+        function useMetamask(use){
+            return new Promise((resolve, reject) =>{
+                if(use){
+                    metamaskWeb3().then(
+                        function success(){
+                            resolve();
+                        },
+                        function fail(){
+                            infuraWeb3();
+                            reject();
+                        }
+                    );
+                }else{
                     infuraWeb3();
-                }
-            }else{
-                success = infuraWeb3();
-            }
-
-            return success;
+                    resolve();
+                } 
+            });
         }
 
         return{

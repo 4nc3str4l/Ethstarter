@@ -14,7 +14,7 @@
             window.proj = $scope.project;
 
             // Require the system to switch to metamask mode
-            Blockchain.useMetamask(true,
+            Blockchain.useMetamask(true).then(
                 function success(){
                     $scope.isUsingMetamask = true;
                     $scope.$apply();
@@ -24,7 +24,6 @@
                     $scope.$apply();
                 }
             );
-            console.log($scope.isUsingMetamask);
         }
         
         if($scope.contributionAmmount <= 0){
