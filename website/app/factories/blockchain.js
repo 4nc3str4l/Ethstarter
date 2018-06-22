@@ -74,7 +74,7 @@ class Blockchain{
                     owner: res[1],
                     goal: blockchain.web3.utils.fromWei(res[2], "ether"),
                     endDate: blockchain.unixTimeStampToDate(parseInt(res[3])),
-                    balanceCaller: blockchain.web3.utils.fromWei(res[4], "ether"),
+                    raised: blockchain.web3.utils.fromWei(res[4], "ether"),
                     previous: new blockchain.web3.utils.BN(res[5]),
                     next: new blockchain.web3.utils.BN(res[6])
                 }
@@ -94,7 +94,7 @@ class Blockchain{
                     owner: res[1],
                     goal: blockchain.web3.utils.fromWei(res[2], "ether"),
                     endDate: blockchain.unixTimeStampToDate(parseInt(res[3])),
-                    balanceCaller: blockchain.web3.utils.fromWei(res[4], "ether"),
+                    raised: blockchain.web3.utils.fromWei(res[4], "ether"),
                     previous: new blockchain.web3.utils.BN(res[5]),
                     next: new blockchain.web3.utils.BN(res[6])
                 }

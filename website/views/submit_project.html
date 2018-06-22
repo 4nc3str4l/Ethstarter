@@ -13,6 +13,11 @@
                 <div class="project-creation">
                     <form id="contribute-form">
                         
+                        <div id="metamask-required" ng-hide="usingMetamask">
+                            <img src="../res/metamask.svg" alt="metamaskImage">
+                            <p>To submit a campaign, please unlock or install <a href="https://metamask.io/" class="metamask-name" target="_blank"> Metamask</a> and refresh the page.</p>
+                        </div>
+
                         <label for="title">Project's Title</label>
                         <input type="text" placeholder="Project's Title" name="title" ng-model="title">
                         
