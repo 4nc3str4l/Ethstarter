@@ -8,7 +8,7 @@
         var usingMetamask = false;
 
         // Init Web3
-        function metamaskWeb3(){
+        function metamaskWeb3(successCallback, errorCallback){
             // Use the truffle provider for web3
             if(appSettings.development){
                 web3 = new Web3(new web3.providers.HttpProvider("http://localhost:9545"));
@@ -18,14 +18,16 @@
                     web3 = new Web3(web3.currentProvider);
                     
                     // If the coinbase is not detected ask the user to unlock metamask
-                    
-                    if(typeof web3.eth.coinbase === 'undefined'){
-                        alert("Unlock Metamask!");
-                    }else{
-                        usingMetamask = true;
-                    }
-                    
-                    // Tell the user that metamask is required
+                    web3.eth.getAccounts().then((result) => {
+                        if(result.length == 0){
+                            usingMetamask = false;
+                            errorCallback();
+                        }else{
+                            usingMetamask = true;
+                            successCallback();
+                        }
+                    });
+
                 }else{
                     alert("No Metamask Detected!");
                 }
@@ -51,10 +53,10 @@
 
         infuraWeb3();
 
-        function useMetamask(use){
+        function useMetamask(use, successCallback, errorCallback){
             var success = false;
             if(use){
-                success = metamaskWeb3();
+                success = metamaskWeb3(successCallback, errorCallback);
                 if(!success){
                     infuraWeb3();
                 }
