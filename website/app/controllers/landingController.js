@@ -1,6 +1,6 @@
 (function() {
     
-    var LandingController = function ($scope, BlockchainListener, DataFactory, $location) {
+    var LandingController = function ($scope, DataFactory, $location) {
         
         $scope.projects = [];
 
@@ -18,7 +18,7 @@
         init();
     };
     
-    LandingController.$inject = ['$scope', 'BlockchainListener', 'DataFactory', '$location'];
+    LandingController.$inject = ['$scope', 'DataFactory', '$location'];
 
     angular.module('EthStarter')
       .controller('LandingController', LandingController);

@@ -165,7 +165,7 @@ html, body, #view-div {
 }
 
 .project-preview .progress {
-    margin-top: 20px;
+    margin-top: -9px;
     width: calc(100% - 10px);
     margin-left: 5px;
 }
@@ -253,6 +253,32 @@ html, body, #view-div {
 
 .contribute input, .project-creation input, .project-creation textarea {
     width: 98%;
+}
+
+#metamask-required{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0px;
+    top: 0px;
+    background: rgba(0, 0, 0, 0.2);
+    text-align: center;
+    color: white;
+    border-radius: 10px;
+}
+
+#metamask-required img{
+    margin-top: 45px;
+    height: 50%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto; 
+}
+
+.metamask-name{
+    text-decoration: none;
+    color: #F6851B;
+    font-weight: bold;
 }
 
 .project-creation textarea {

@@ -25,6 +25,10 @@
             <div class="contribute">
                 <h3>Contribute: </h3>
                 <form id="contribute-form">
+                    <div id="metamask-required" ng-hide="isUsingMetamask">
+                        <img src="../res/metamask.svg" alt="metamaskImage">
+                        <p>To doante, please unlock or install <a href="https://metamask.io/" class="metamask-name"> Metamask</a> and refresh the page.</p>
+                    </div>
                     <input type="text" placeholder="Name (not required)" ng-model="name">
                     <input type="email" placeholder="Email (not required)" ng-model="email">
                     <input type="number" min="0" id="contribute-ammount" name="ammount" value="1" step="0.0001" ng-model="contributionAmmount"> <span id="currency">ETH</span>

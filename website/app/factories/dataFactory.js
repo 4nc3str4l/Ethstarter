@@ -1,5 +1,5 @@
 (function() {
-    var DataFactory = function(BlockchainListener, appSettings){
+    var DataFactory = function(Blockchain, appSettings){
 
         var downloadedData = {};
         const IPFS_ENDPOINTS = [
@@ -94,7 +94,7 @@
             }
 
             // Get previous and iterate
-            var prevCampaign = await BlockchainListener.getCampaignById(campaign.previous);
+            var prevCampaign = await Blockchain.getCampaignById(campaign.previous);
             iterateCampaigns(self, prevCampaign, order + 1, showCampaign);
         }
 
@@ -110,7 +110,7 @@
                 var buffer = ipfs.types.Buffer(JSON.stringify(campaign));
                 var file = await ipfs.files.add(buffer);
 
-                return BlockchainListener.ipfsHashToID(file[0].hash);
+                return Blockchain.ipfsHashToID(file[0].hash);
             },
 
             getCampaignByIpfsHash: async function(ipfsHash) {
@@ -163,7 +163,7 @@
 
             getCampaigns: function(showCampaign) {
                 var self = this;
-                BlockchainListener.getLastCampaign().then(campaign => {
+                Blockchain.getLastCampaign().then(campaign => {
                     if (campaign.id.toString(16) != "0") {
                         iterateCampaigns(self, campaign, 0, showCampaign);
                     }
@@ -178,6 +178,6 @@
         return promise;
     }
 
-    DataFactory.$inject = ['BlockchainListener', 'appSettings'];    
+    DataFactory.$inject = ['Blockchain', 'appSettings'];    
     return angular.module('EthStarter').factory('DataFactory', DataFactory);
 }());
