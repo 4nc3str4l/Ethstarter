@@ -54,13 +54,11 @@ class Blockchain{
         return this.defaultTransact(this.EthStarter.methods.addCampaign(_ipfsHash, goalAmountWei, unixTimestamp));
     }
 
-    donate(_campaignID, _amount, _callback){
+    donate(_campaignID, _amount){
         var amountWei = this.web3.utils.toWei(_amount.toString(), "ether");
-        this.transact(this.EthStarter.methods.payCampaign(_campaignID), {
+        return this.transact(this.EthStarter.methods.payCampaign(_campaignID), {
             gasPrice: this.web3.utils.toWei("1", "gwei"),
             value: amountWei
-        }).then(receipt => {
-            _callback(receipt);
         });
     }
     

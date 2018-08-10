@@ -46,16 +46,18 @@
         $scope.donate = function(){
             $scope.loading = true;
             let id = Blockchain.ipfsHashToID(projectID);
-            Blockchain.donate(id, $scope.contributionAmmount,
-                (error, result) => {
+            Blockchain.donate(id, $scope.contributionAmmount)
+                .then(() => {
                     Blockchain.getCampaignById(id, (_campaign)=>{
                         $scope.project = _campaign;
                         $scope.loading = false;
                         $scope.$apply();
                     });
-                    alert("Donation Complete!");
-                }
-            );
+                })
+                .catch(e => {
+                    $scope.loading = false;
+                    $scope.$apply();
+                });
         }
 
         init();
